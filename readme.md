@@ -47,7 +47,7 @@ BanG Dream! Card Guess 是从 Koishi 机器人猜卡插件改造成的本地 Web
 - 自己玩模式：单页面输入答案并自动判定
 - 主持密码登录，避免玩家误入控制台
 - 智能裁剪卡面局部，优先选择细节丰富区域
-- 正方形切图，支持主持重切
+- 正方形切图，支持主持和玩家重切
 - 揭晓时完整展示卡面，并用红框标出切图位置
 - 支持单人计分、双队互动、连击、倒计时、自动下一题
 - 支持提前缓存 Bestdori 卡面，减少现场网络依赖
@@ -179,6 +179,12 @@ scripts\start-booth.cmd
 scripts\start-solo.cmd
 ```
 
+关闭本地服务：
+
+```bat
+scripts\stop-server.cmd
+```
+
 ### macOS / Ubuntu
 
 第一次运行：
@@ -198,6 +204,12 @@ chmod +x scripts/install-env.sh scripts/start-booth.sh scripts/start-solo.sh
 
 ```sh
 ./scripts/start-solo.sh
+```
+
+关闭本地服务：
+
+```sh
+./scripts/stop-server.sh
 ```
 
 说明：
@@ -328,6 +340,8 @@ BanG-Dream-Card-Guess/
 │   ├── install-env.sh
 │   ├── start-booth.cmd
 │   ├── start-booth.sh
+│   ├── stop-server.cmd
+│   ├── stop-server.sh
 │   ├── start-solo.cmd
 │   └── start-solo.sh
 └── src/

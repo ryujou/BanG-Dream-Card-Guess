@@ -465,6 +465,12 @@ input:focus {
   gap: 10px;
 }
 
+.player-controls {
+  display: grid;
+  grid-template-columns: minmax(180px, 320px);
+  justify-content: center;
+}
+
 .host-controls {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -967,6 +973,7 @@ input:focus {
 
   .answer-row,
   .controls,
+  .player-controls,
   .solo-answer,
   .solo-controls,
   .host-controls,

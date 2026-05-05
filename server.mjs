@@ -160,8 +160,9 @@ wss.on("connection", (ws, req) => {
 async function handleCommand(ws, command, payload) {
   const client = clients.get(ws);
   const soloCommandAllowed = APP_MODE === "solo" && client?.role === "self" && ["start", "next", "recrop", "reveal", "reset", "selfGuess"].includes(command);
+  const boothPlayerCommandAllowed = APP_MODE === "booth" && client?.role === "player" && command === "recrop";
 
-  if (!client?.authenticated && !soloCommandAllowed) {
+  if (!client?.authenticated && !soloCommandAllowed && !boothPlayerCommandAllowed) {
     throw new Error("请先登录主持端");
   }
 

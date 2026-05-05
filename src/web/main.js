@@ -152,16 +152,27 @@ function renderPlayer() {
   const settings = snapshot?.settings;
   const current = game?.current;
   const revealed = ["revealed", "finished"].includes(game?.status);
+  const canRecrop = game?.status === "playing" && settings?.allowRecrop && game.recrops < settings.maxRecrops;
+  const recropsLeft = Math.max(0, (settings?.maxRecrops || 0) - (game?.recrops || 0));
 
   app.innerHTML = `
     <main class="shell player-shell">
       <section class="game-panel player-panel">
         ${renderTopbar(game, settings, true)}
         ${revealed && current ? renderRevealStage(current, game) : renderStage(game)}
+        ${revealed ? "" : `
+          <div class="player-controls">
+            <button data-command="recrop" ${canRecrop ? "" : "disabled"}>重切 ${recropsLeft}</button>
+          </div>
+        `}
         ${revealed && current ? "" : `<div class="player-result"><strong>${game?.message || "等待主持开始"}</strong></div>`}
       </section>
     </main>
   `;
+
+  app.querySelectorAll("[data-command]").forEach((button) => {
+    button.addEventListener("click", () => command(button.dataset.command));
+  });
 }
 
 function renderHost() {
