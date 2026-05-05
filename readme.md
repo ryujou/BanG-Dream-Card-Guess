@@ -29,9 +29,7 @@
 - [卡面缓存](#卡面缓存)
 - [主持鉴权](#主持鉴权)
 - [资源来源](#资源来源)
-- [加入同好会](#加入同好会)
 - [目录结构](#目录结构)
-- [上传 GitHub 前检查](#上传-github-前检查)
 - [常见问题](#常见问题)
 
 ## 项目简介
@@ -52,7 +50,6 @@ BanG Dream! Card Guess 是从 Koishi 机器人猜卡插件改造成的本地 Web
 - 揭晓时完整展示卡面，并用红框标出切图位置
 - 支持单人计分、双队互动、连击、倒计时、自动下一题
 - 支持提前缓存 Bestdori 卡面，减少现场网络依赖
-- 玩家页内置湘潭 BanG Dream! 同好会加群入口
 - 背景参考 BanG Dream! 官网浅色 pattern 风格，并额外加入猴子 pattern
 
 ## 界面预览
@@ -239,7 +236,7 @@ public/cards/
 
 - 该目录可能占用数 GB 磁盘空间。
 - 运行游戏时会优先读取本地缓存，缺失时才联网下载并补到缓存。
-- `public/cards/` 已写入 `.gitignore`，不要提交到 GitHub。
+- `public/cards/` 已写入 `.gitignore`，不会被版本控制。
 
 ## 主持鉴权
 
@@ -285,12 +282,6 @@ https://bestdori.com/assets/jp/characters/resourceset/...
 - 本项目仅用于同好交流、线下互动与非商业展示。
 - 不建议把批量缓存的卡面立绘提交到公开仓库。
 
-## 加入同好会
-
-玩家页内置加群入口：
-
-[点击链接加入群聊【湘潭BanG Dream!同好会】](https://qm.qq.com/q/6ytGE7qIWQ)
-
 ## 目录结构
 
 ```text
@@ -325,37 +316,6 @@ BanG-Dream-Card-Guess/
         └── styles.css
 ```
 
-## 上传 GitHub 前检查
-
-建议提交：
-
-- `server.mjs`
-- `src/`
-- `resource/`
-- `public/bg/`
-- `scripts/`
-- `screenshots/`
-- `package.json`
-- `package-lock.json`
-- `vite.config.mjs`
-- `index.html`
-- `readme.md`
-
-不要提交：
-
-- `node_modules/`
-- `dist/`
-- `public/cards/`
-- 日志文件
-- 临时文件
-
-检查命令：
-
-```sh
-git status --short --ignored
-git check-ignore -v public/cards
-```
-
 ## 常见问题
 
 **Q: 为什么不把下载好的卡面传到 GitHub？**  
@@ -372,3 +332,5 @@ A: `/host` 和 `/settings` 都需要密码登录。公网部署时请用 `HOST_P
 
 **Q: 自己玩模式为什么不需要登录？**  
 A: 自己玩模式只开放 `/solo` 的自玩命令，不开放主持设置页，适合个人练习和线上自测。
+
+欢迎加入湘潭 BanG Dream! 同好会：[点击链接加入群聊【湘潭BanG Dream!同好会】](https://qm.qq.com/q/6ytGE7qIWQ)
