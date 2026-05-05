@@ -1,0 +1,16 @@
+{
+  "name": "BanG Dream! Card Guess",
+  "short_name": "邦邦猜",
+  "description": "BanG Dream! 本地摊位猜卡互动游戏",
+  "start_url": "/player",
+  "display": "standalone",
+  "background_color": "#fff7fb",
+  "theme_color": "#ff3d6e",
+  "icons": [
+    {
+      "src": "/bg/monkey.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ]
+}

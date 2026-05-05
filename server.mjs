@@ -29,6 +29,25 @@ const cardPool = Object.entries(cards)
   .map(([id, card]) => ({ ...card, id }))
   .filter((card) => card?.resourceSetName && nicknames[String(card.characterId)]?.length);
 
+const BAND_OPTIONS = [
+  { id: "poppin-party", name: "Poppin'Party", characters: [1, 2, 3, 4, 5] },
+  { id: "afterglow", name: "Afterglow", characters: [6, 7, 8, 9, 10] },
+  { id: "hello-happy-world", name: "Hello, Happy World!", characters: [11, 12, 13, 14, 15] },
+  { id: "pastel-palettes", name: "Pastel*Palettes", characters: [16, 17, 18, 19, 20] },
+  { id: "roselia", name: "Roselia", characters: [21, 22, 23, 24, 25] },
+  { id: "morfonica", name: "Morfonica", characters: [26, 27, 28, 29, 30] },
+  { id: "raise-a-suilen", name: "RAISE A SUILEN", characters: [31, 32, 33, 34, 35] },
+  { id: "mygo", name: "MyGO!!!!!", characters: [36, 37, 38, 39, 40] },
+];
+const BAND_BY_CHARACTER = new Map(BAND_OPTIONS.flatMap((band) => band.characters.map((id) => [id, band.id])));
+const RARITY_OPTIONS = [1, 2, 3, 4, 5];
+const ATTRIBUTE_OPTIONS = ["cool", "happy", "powerful", "pure"];
+const DIFFICULTY_PRESETS = {
+  easy: { cropSize: 230, candidateCount: 90 },
+  normal: { cropSize: 180, candidateCount: 120 },
+  hard: { cropSize: 130, candidateCount: 170 },
+};
+
 const MIME = {
   ".html": "text/html; charset=utf-8",
   ".js": "text/javascript; charset=utf-8",
@@ -44,13 +63,21 @@ const MIME = {
 
 const defaultSettings = {
   mode: "single",
+  difficulty: "normal",
   roundSeconds: 60,
   questionsPerPlayer: 3,
   allowRecrop: true,
   showPlayerRecrop: true,
+  soundEnabled: true,
   maxRecrops: 3,
   cropSize: 180,
   candidateCount: 120,
+  avoidRecentCards: 20,
+  avoidRecentCharacters: 8,
+  cardBands: BAND_OPTIONS.map((band) => band.id),
+  cardRarities: RARITY_OPTIONS,
+  cardAttributes: ATTRIBUTE_OPTIONS,
+  cardImageVariant: "mixed",
   correctPoints: 1,
   wrongPenalty: 0,
   streakBonus: false,
@@ -75,6 +102,9 @@ const game = {
   total: 0,
   recrops: 0,
   cropHistory: [],
+  recentCards: [],
+  recentCharacters: [],
+  undoStack: [],
   current: null,
   history: [],
   teams: {
@@ -87,6 +117,9 @@ const game = {
 const clients = new Map();
 let timer = null;
 let roundToken = 0;
+let preparedRoundPromise = null;
+let preparedRoundKey = "";
+let healthCache = { at: 0, value: null };
 
 const server = createServer(async (req, res) => {
   try {
@@ -94,6 +127,11 @@ const server = createServer(async (req, res) => {
 
     if (url.pathname === "/api/network" && req.method === "GET") {
       sendJson(res, networkState(req));
+      return;
+    }
+
+    if (url.pathname === "/api/health" && req.method === "GET") {
+      sendJson(res, healthSnapshot());
       return;
     }
 
@@ -203,6 +241,9 @@ async function handleCommand(ws, command, payload) {
     case "skip":
       finishRound("skip");
       break;
+    case "undo":
+      undoLastJudgement();
+      break;
     case "reveal":
       game.status = "revealed";
       game.message = "答案揭晓";
@@ -221,6 +262,9 @@ async function handleCommand(ws, command, payload) {
       resetGame();
       break;
     case "settings":
+      updateSettings(payload);
+      break;
+    case "importSettings":
       updateSettings(payload);
       break;
     case "team":
@@ -407,6 +451,150 @@ function unique(values) {
   return [...new Set(values.filter(Boolean))];
 }
 
+function arraySetting(value, fallback, allowed = null) {
+  const items = Array.isArray(value)
+    ? value
+    : value === undefined || value === null || value === ""
+      ? []
+      : String(value).split(",");
+  const normalized = items.map((item) => String(item).trim()).filter(Boolean);
+  const filtered = allowed ? normalized.filter((item) => allowed.includes(item)) : normalized;
+  return filtered.length ? unique(filtered) : [...fallback];
+}
+
+function numberArraySetting(value, fallback, allowed) {
+  const items = arraySetting(value, fallback.map(String), allowed.map(String));
+  return items.map(Number).filter((item) => Number.isFinite(item));
+}
+
+function roundConfigKey() {
+  return JSON.stringify({
+    cropSize: settings.cropSize,
+    candidateCount: settings.candidateCount,
+    difficulty: settings.difficulty,
+    cardBands: settings.cardBands,
+    cardRarities: settings.cardRarities,
+    cardAttributes: settings.cardAttributes,
+    cardImageVariant: settings.cardImageVariant,
+    avoidRecentCards: settings.avoidRecentCards,
+    avoidRecentCharacters: settings.avoidRecentCharacters,
+  });
+}
+
+function filteredCardPool() {
+  const bandSet = new Set(settings.cardBands || []);
+  const raritySet = new Set((settings.cardRarities || []).map(Number));
+  const attributeSet = new Set(settings.cardAttributes || []);
+
+  const filtered = cardPool.filter((card) => {
+    const band = BAND_BY_CHARACTER.get(Number(card.characterId));
+    if (bandSet.size && !bandSet.has(band)) return false;
+    if (raritySet.size && !raritySet.has(Number(card.rarity))) return false;
+    if (attributeSet.size && !attributeSet.has(card.attribute)) return false;
+    if (settings.cardImageVariant === "trained" && !card.stat?.training) return false;
+    return true;
+  });
+
+  return filtered.length ? filtered : cardPool;
+}
+
+function pickRoundCard() {
+  const pool = filteredCardPool();
+  const recentCards = new Set(game.recentCards.slice(0, settings.avoidRecentCards));
+  const recentCharacters = new Set(game.recentCharacters.slice(0, settings.avoidRecentCharacters));
+  const passes = [
+    (card) => !recentCards.has(String(card.id)) && !recentCharacters.has(Number(card.characterId)),
+    (card) => !recentCards.has(String(card.id)),
+    () => true,
+  ];
+
+  for (const pass of passes) {
+    const candidates = pool.filter(pass);
+    if (candidates.length) return pick(candidates);
+  }
+
+  return pick(pool);
+}
+
+function rememberRound(round) {
+  game.recentCards.unshift(String(round.cardId));
+  game.recentCharacters.unshift(Number(round.characterId));
+  game.recentCards = unique(game.recentCards).slice(0, Math.max(4, settings.avoidRecentCards + 8));
+  game.recentCharacters = unique(game.recentCharacters).slice(0, Math.max(4, settings.avoidRecentCharacters + 4));
+}
+
+function prepareNextRound() {
+  const key = roundConfigKey();
+  if (preparedRoundPromise && preparedRoundKey === key) return;
+  preparedRoundKey = key;
+  preparedRoundPromise = createRound()
+    .catch((error) => {
+      console.warn(`Failed to preload next round: ${error instanceof Error ? error.message : error}`);
+      return null;
+    });
+}
+
+async function takePreparedRound() {
+  const key = roundConfigKey();
+  if (!preparedRoundPromise || preparedRoundKey !== key) return null;
+  const round = await preparedRoundPromise;
+  preparedRoundPromise = null;
+  preparedRoundKey = "";
+  return round;
+}
+
+function clearPreparedRound() {
+  preparedRoundPromise = null;
+  preparedRoundKey = "";
+}
+
+function healthSnapshot() {
+  const now = Date.now();
+  const roleCounts = { player: 0, host: 0, settings: 0, self: 0 };
+
+  for (const client of clients.values()) {
+    if (roleCounts[client.role] !== undefined) roleCounts[client.role] += 1;
+  }
+
+  if (healthCache.value && now - healthCache.at < 10000) {
+    return {
+      ...healthCache.value,
+      clients: clients.size,
+      roleCounts,
+      preloaded: Boolean(preparedRoundPromise),
+      filteredCards: filteredCardPool().length,
+      uptimeSeconds: Math.floor(process.uptime()),
+    };
+  }
+
+  const cachedSets = cardPool.reduce((count, card) => {
+    const dir = path.join(cardCacheDir, `${card.resourceSetName}_rip`);
+    return count + (existsSync(dir) ? 1 : 0);
+  }, 0);
+
+  healthCache = {
+    at: now,
+    value: {
+      totalCards: cardPool.length,
+      cachedSets,
+      cachePercent: Math.round((cachedSets / Math.max(1, cardPool.length)) * 100),
+      lanHosts: lanHosts(),
+      bands: BAND_OPTIONS,
+      rarities: RARITY_OPTIONS,
+      attributes: ATTRIBUTE_OPTIONS,
+    },
+  };
+
+  return {
+    ...healthCache.value,
+    clients: clients.size,
+    roleCounts,
+    preloaded: Boolean(preparedRoundPromise),
+    filteredCards: filteredCardPool().length,
+    uptimeSeconds: Math.floor(process.uptime()),
+  };
+}
+
 async function startRound() {
   const token = roundToken + 1;
   roundToken = token;
@@ -421,9 +609,22 @@ async function startRound() {
   game.message = "图片加载中";
   broadcast();
 
-  const round = await createRound();
+  let round = null;
+  try {
+    round = await takePreparedRound() || await createRound();
+  } catch (error) {
+    if (token === roundToken) {
+      game.status = "idle";
+      game.loading = false;
+      game.message = error instanceof Error ? error.message : "题目加载失败";
+      broadcast();
+    }
+    throw error;
+  }
   if (token !== roundToken) return;
 
+  rememberRound(round);
+  rememberCrop(round.crop);
   game.current = round;
   game.status = "playing";
   game.loading = false;
@@ -431,17 +632,18 @@ async function startRound() {
   game.message = "答题中";
   broadcast();
   startTimer();
+  prepareNextRound();
 }
 
 async function recrop() {
-  if (!game.current || game.loading || !settings.allowRecrop || game.recrops >= settings.maxRecrops) return;
+  if (!game.current || game.status !== "playing" || game.loading || !settings.allowRecrop || game.recrops >= settings.maxRecrops) return;
 
   game.loading = true;
   game.message = "重新裁剪中";
   broadcast();
 
   const image = await Jimp.read(game.current.sourceBuffer);
-  const crop = await smartCrop(image, settings.cropSize);
+  const crop = await smartCrop(image, settings.cropSize, game.cropHistory);
   rememberCrop(crop);
   game.current.crop = crop;
   game.recrops += 1;
@@ -451,8 +653,10 @@ async function recrop() {
 }
 
 function finishRound(result) {
-  if (!game.current || game.status === "idle") return;
+  if (!game.current || game.status !== "playing") return;
 
+  game.undoStack.unshift(captureUndoState());
+  game.undoStack = game.undoStack.slice(0, 8);
   stopTimer();
   game.total += 1;
   game.status = settings.revealAfterJudge ? "revealed" : "finished";
@@ -467,7 +671,7 @@ function finishRound(result) {
   } else {
     game.score = Math.max(0, game.score - settings.wrongPenalty);
     game.streak = 0;
-    game.message = result === "wrong" ? "回答错误" : "已跳过";
+    game.message = result === "wrong" ? "回答错误" : result === "timeout" ? "时间到" : "已跳过";
   }
 
   game.history.unshift({
@@ -484,6 +688,58 @@ function finishRound(result) {
       if (game.status === "revealed" || game.status === "finished") startRound();
     }, settings.autoNextDelay);
   }
+}
+
+function captureUndoState() {
+  return {
+    status: game.status,
+    leftSeconds: game.leftSeconds,
+    loading: game.loading,
+    score: game.score,
+    streak: game.streak,
+    total: game.total,
+    recrops: game.recrops,
+    cropHistory: game.cropHistory.map((item) => ({ ...item })),
+    recentCards: [...game.recentCards],
+    recentCharacters: [...game.recentCharacters],
+    current: game.current,
+    history: game.history.map((item) => ({ ...item })),
+    teams: {
+      A: { ...game.teams.A },
+      B: { ...game.teams.B },
+    },
+    message: game.message,
+  };
+}
+
+function undoLastJudgement() {
+  const previous = game.undoStack.shift();
+  if (!previous) {
+    game.message = "没有可撤销的判定";
+    broadcast();
+    return;
+  }
+
+  stopTimer();
+  Object.assign(game, {
+    status: previous.status,
+    leftSeconds: previous.leftSeconds,
+    loading: previous.loading,
+    score: previous.score,
+    streak: previous.streak,
+    total: previous.total,
+    recrops: previous.recrops,
+    cropHistory: previous.cropHistory,
+    recentCards: previous.recentCards,
+    recentCharacters: previous.recentCharacters,
+    current: previous.current,
+    history: previous.history,
+    message: "已撤销上次判定",
+  });
+  game.teams.A = previous.teams.A;
+  game.teams.B = previous.teams.B;
+  if (game.status === "playing") startTimer();
+  broadcast();
 }
 
 function judgeSelfGuess(guess) {
@@ -512,17 +768,21 @@ function resetGame() {
   game.total = 0;
   game.recrops = 0;
   game.cropHistory = [];
+  game.recentCards = [];
+  game.recentCharacters = [];
+  game.undoStack = [];
   game.current = null;
   game.history = [];
   game.teams.A.score = 0;
   game.teams.B.score = 0;
   game.message = "等待开始";
+  clearPreparedRound();
   broadcast();
 }
 
 function updateSettings(next) {
-  const numberKeys = ["roundSeconds", "questionsPerPlayer", "maxRecrops", "cropSize", "candidateCount", "correctPoints", "wrongPenalty", "autoNextDelay"];
-  const boolKeys = ["allowRecrop", "showPlayerRecrop", "streakBonus", "showTimer", "revealAfterJudge", "autoNext"];
+  const numberKeys = ["roundSeconds", "questionsPerPlayer", "maxRecrops", "cropSize", "candidateCount", "avoidRecentCards", "avoidRecentCharacters", "correctPoints", "wrongPenalty", "autoNextDelay"];
+  const boolKeys = ["allowRecrop", "showPlayerRecrop", "soundEnabled", "streakBonus", "showTimer", "revealAfterJudge", "autoNext"];
 
   for (const key of numberKeys) {
     if (next[key] !== undefined) settings[key] = Math.max(0, Number(next[key]));
@@ -533,22 +793,28 @@ function updateSettings(next) {
   }
 
   if (["single", "versus", "self"].includes(next.mode)) settings.mode = next.mode;
+  if (Object.keys(DIFFICULTY_PRESETS).includes(next.difficulty)) settings.difficulty = next.difficulty;
+  if (["mixed", "normal", "trained"].includes(next.cardImageVariant)) settings.cardImageVariant = next.cardImageVariant;
+  if (next.cardBands !== undefined) settings.cardBands = arraySetting(next.cardBands, defaultSettings.cardBands, defaultSettings.cardBands);
+  if (next.cardRarities !== undefined) settings.cardRarities = numberArraySetting(next.cardRarities, defaultSettings.cardRarities, defaultSettings.cardRarities);
+  if (next.cardAttributes !== undefined) settings.cardAttributes = arraySetting(next.cardAttributes, defaultSettings.cardAttributes, defaultSettings.cardAttributes);
   if (next.currentTeam === "A" || next.currentTeam === "B") settings.currentTeam = next.currentTeam;
   if (next.teamAName) game.teams.A.name = String(next.teamAName).slice(0, 16);
   if (next.teamBName) game.teams.B.name = String(next.teamBName).slice(0, 16);
 
   if (game.status === "idle") game.leftSeconds = settings.roundSeconds;
+  clearPreparedRound();
+  if (game.status === "playing") prepareNextRound();
   savePersistentConfigSoon();
   broadcast();
 }
 
 async function createRound() {
-  const card = pick(cardPool);
+  const card = pickRoundCard();
   const names = nicknames[String(card.characterId)];
-  const { buffer, imageUrl } = await loadCardImage(card);
+  const { buffer, imageUrl, variant } = await loadCardImage(card);
   const image = await Jimp.read(buffer);
   const crop = await smartCrop(image, settings.cropSize);
-  rememberCrop(crop);
 
   return {
     cardId: card.id,
@@ -556,6 +822,10 @@ async function createRound() {
     displayName: names[7] || names[0],
     acceptedAnswers: names,
     imageUrl,
+    variant,
+    rarity: card.rarity,
+    attribute: card.attribute,
+    band: BAND_BY_CHARACTER.get(Number(card.characterId)) || "",
     imageWidth: image.bitmap.width,
     imageHeight: image.bitmap.height,
     sourceBuffer: buffer,
@@ -564,9 +834,13 @@ async function createRound() {
 }
 
 async function loadCardImage(card) {
-  const variants = Math.random() > 0.5
+  const variants = settings.cardImageVariant === "trained"
     ? ["card_after_training.png", "card_normal.png"]
-    : ["card_normal.png", "card_after_training.png"];
+    : settings.cardImageVariant === "normal"
+      ? ["card_normal.png", "card_after_training.png"]
+      : Math.random() > 0.5
+        ? ["card_after_training.png", "card_normal.png"]
+        : ["card_normal.png", "card_after_training.png"];
 
   for (const file of variants) {
     const cacheRelativePath = `${card.resourceSetName}_rip/${file}`;
@@ -578,6 +852,7 @@ async function loadCardImage(card) {
       return {
         buffer: readFileSync(cachePath),
         imageUrl,
+        variant: file === "card_after_training.png" ? "trained" : "normal",
       };
     }
 
@@ -588,7 +863,7 @@ async function loadCardImage(card) {
       const buffer = Buffer.from(await response.arrayBuffer());
       await mkdir(path.dirname(cachePath), { recursive: true });
       await writeFile(cachePath, buffer);
-      return { buffer, imageUrl };
+      return { buffer, imageUrl, variant: file === "card_after_training.png" ? "trained" : "normal" };
     } catch {
       continue;
     }
@@ -597,7 +872,7 @@ async function loadCardImage(card) {
   throw new Error("下载卡面失败");
 }
 
-async function smartCrop(image, size) {
+async function smartCrop(image, size, history = []) {
   const cropSize = Math.max(60, Math.min(260, Math.floor(size)));
   const candidates = Array.from({ length: Math.max(30, settings.candidateCount) }, () => {
     const point = randomCropPoint(image, cropSize);
@@ -606,7 +881,7 @@ async function smartCrop(image, size) {
     .filter((crop) => crop.score > 0)
     .sort((a, b) => b.score - a.score);
 
-  const crop = pickCrop(candidates, cropSize) || randomCropPoint(image, cropSize);
+  const crop = pickCrop(candidates, cropSize, history) || randomCropPoint(image, cropSize);
   const dataUrl = await cropToDataUrl(image, crop.x, crop.y, cropSize);
   return { x: crop.x, y: crop.y, size: cropSize, image: dataUrl };
 }
@@ -624,11 +899,11 @@ function randomCropPoint(image, size) {
   };
 }
 
-function pickCrop(candidates, size) {
+function pickCrop(candidates, size, history = []) {
   const passes = [size * 1.85, size * 1.2, 0];
   for (const minDistance of passes) {
     const crop = candidates.find((candidate) => {
-      return game.cropHistory.every((old) => Math.hypot(old.x - candidate.x, old.y - candidate.y) >= minDistance);
+      return history.every((old) => Math.hypot(old.x - candidate.x, old.y - candidate.y) >= minDistance);
     });
     if (crop) return crop;
   }
@@ -765,10 +1040,21 @@ function publicState(role) {
   return {
     appMode: APP_MODE,
     settings,
+    meta: {
+      bands: BAND_OPTIONS,
+      rarities: RARITY_OPTIONS,
+      attributes: ATTRIBUTE_OPTIONS,
+      difficultyPresets: DIFFICULTY_PRESETS,
+    },
+    health: healthSnapshot(),
     game: {
       ...game,
       current,
       cropHistory: undefined,
+      recentCards: undefined,
+      recentCharacters: undefined,
+      undoStack: undefined,
+      canUndo: game.undoStack.length > 0,
       loading: game.loading,
     },
   };
