@@ -101,12 +101,14 @@ BanG Dream! Card Guess 是从 Koishi 机器人猜卡插件改造成的本地 Web
 | 登录页 | `http://127.0.0.1:5173/login` | 主持登录 |
 | 主持页 | `http://127.0.0.1:5173/host` | 控制题目与判定 |
 | 设置页 | `http://127.0.0.1:5173/settings` | 调整规则与模式 |
+| 二维码页 | `http://127.0.0.1:5173/qr` | 打印玩家页、主持页等入口二维码 |
 
 自己玩模式：
 
 | 页面 | 地址 | 说明 |
 | --- | --- | --- |
 | 自玩页 | `http://127.0.0.1:5173/solo` | 输入答案并自动判定 |
+| 二维码页 | `http://127.0.0.1:5173/qr` | 打印自玩入口二维码 |
 
 ## 环境与依赖
 
@@ -117,6 +119,7 @@ BanG Dream! Card Guess 是从 Koishi 机器人猜卡插件改造成的本地 Web
 | Vite | 前端构建 | 已写入 `devDependencies` |
 | ws | WebSocket 服务 | 已写入 `dependencies` |
 | Jimp | 服务端裁图 | 已写入 `dependencies` |
+| qrcode | 本地二维码生成 | 已写入 `dependencies` |
 
 ## 快速开始
 
@@ -137,6 +140,7 @@ npm run booth
 - 玩家页：`http://127.0.0.1:5173/player`
 - 主持页：`http://127.0.0.1:5173/host`
 - 设置页：`http://127.0.0.1:5173/settings`
+- 二维码页：`http://127.0.0.1:5173/qr`
 
 ### 3. 启动自己玩模式
 
@@ -147,6 +151,7 @@ npm run solo
 打开：
 
 - 自玩页：`http://127.0.0.1:5173/solo`
+- 二维码页：`http://127.0.0.1:5173/qr`
 
 ### 4. 生产构建
 
@@ -226,10 +231,14 @@ chmod +x scripts/install-env.sh scripts/start-booth.sh scripts/start-solo.sh
 
 1. 笔记本运行 `scripts/start-booth.cmd` 或 `./scripts/start-booth.sh`。
 2. 平板、主持手机、玩家屏幕连接同一个 Wi-Fi 或笔记本热点。
-3. 玩家设备打开笔记本局域网 IP，例如 `http://192.168.1.23:5173/player`。
-4. 主持设备打开 `http://192.168.1.23:5173/host`。
+3. 启动日志会打印 `127.0.0.1` 和检测到的局域网入口。
+4. 打开 `http://127.0.0.1:5173/qr`，页面会优先使用检测到的局域网地址生成二维码。
+5. 玩家设备扫码打开笔记本局域网 IP，例如 `http://192.168.1.23:5173/player`。
+6. 主持设备打开 `http://192.168.1.23:5173/login`，登录后进入主持页。
 
 如果现场 Wi-Fi 不稳定，可以使用手机热点或 USB 共享网络。游戏控制和图片读取仍优先走本地服务，提前缓存卡面后对公网依赖会更低。
+
+设置页保存后会写入本地 `data/settings.json`，重启服务后会保留模式、规则和队伍名称。`data/` 是运行时配置目录，不需要提交到 GitHub。
 
 ## 卡面缓存
 
@@ -325,6 +334,7 @@ BanG-Dream-Card-Guess/
 ├── readme.md                   # 项目说明
 ├── server.mjs                  # 本地 HTTP/WebSocket 服务
 ├── vite.config.mjs             # Vite 配置
+├── data/                       # 运行时设置保存目录，不提交 GitHub
 ├── public/                     # 静态资源
 │   ├── bg/                     # 背景 pattern 与猴子素材
 │   └── cards/                  # 卡面缓存，不提交 GitHub
@@ -359,7 +369,7 @@ A: 卡面缓存体积很大，而且涉及版权边界。项目会在本地运�
 A: 可以。提前执行 `npm run cache-cards` 后，题目数据和大部分卡面都在本地。玩家页、主持页和设置页只需要连上同一个局域网。
 
 **Q: 玩家扫码连 Wi-Fi 后能自动打开玩家页吗？**  
-A: 普通 Wi-Fi 二维码不能自动继续打开网页。推荐打印两个二维码：一个连 Wi-Fi，一个打开 `/player`。
+A: 普通 Wi-Fi 二维码不能自动继续打开网页。推荐打印两个二维码：一个连 Wi-Fi，一个由 `/qr` 页面生成并打开 `/player`。
 
 **Q: 主持页怎么防止玩家误入？**  
 A: `/host` 和 `/settings` 都需要密码登录。公网部署时请用 `HOST_PASSWORD` 环境变量修改默认密码。

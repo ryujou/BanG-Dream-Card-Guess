@@ -1,10 +1,12 @@
 import { createServer } from "node:http";
 import { readFileSync, existsSync, createReadStream } from "node:fs";
 import { mkdir, stat, writeFile } from "node:fs/promises";
+import { networkInterfaces } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { randomBytes, timingSafeEqual } from "node:crypto";
 import { Jimp } from "jimp";
+import QRCode from "qrcode";
 import { WebSocketServer } from "ws";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -12,6 +14,8 @@ const distDir = path.join(__dirname, "dist");
 const publicDir = path.join(__dirname, "public");
 const cardCacheDir = path.join(publicDir, "cards");
 const resourceDir = path.join(__dirname, "resource");
+const dataDir = process.env.DATA_DIR ? path.resolve(process.env.DATA_DIR) : path.join(__dirname, "data");
+const settingsStorePath = path.join(dataDir, "settings.json");
 const BESTDORI_ORIGIN = "https://bestdori.com";
 const BESTDORI_BASE = `${BESTDORI_ORIGIN}/assets/jp/characters/resourceset`;
 const APP_MODE = process.env.APP_MODE === "solo" || process.argv.includes("--solo") ? "solo" : "booth";
@@ -38,7 +42,7 @@ const MIME = {
   ".ico": "image/x-icon",
 };
 
-const settings = {
+const defaultSettings = {
   mode: "single",
   roundSeconds: 60,
   questionsPerPlayer: 3,
@@ -56,6 +60,11 @@ const settings = {
   autoNextDelay: 1800,
   currentTeam: "A",
 };
+const persistedConfig = readPersistedConfig();
+const settings = {
+  ...defaultSettings,
+  ...(persistedConfig.settings || {}),
+};
 
 const game = {
   status: "idle",
@@ -69,8 +78,8 @@ const game = {
   current: null,
   history: [],
   teams: {
-    A: { name: "A 队", score: 0 },
-    B: { name: "B 队", score: 0 },
+    A: { name: persistedTeamName("A", "A 队"), score: 0 },
+    B: { name: persistedTeamName("B", "B 队"), score: 0 },
   },
   message: "等待开始",
 };
@@ -82,6 +91,16 @@ let roundToken = 0;
 const server = createServer(async (req, res) => {
   try {
     const url = new URL(req.url, `http://${req.headers.host}`);
+
+    if (url.pathname === "/api/network" && req.method === "GET") {
+      sendJson(res, networkState(req));
+      return;
+    }
+
+    if (url.pathname === "/api/qr" && req.method === "GET") {
+      await sendQrCode(url, res);
+      return;
+    }
 
     if (url.pathname === "/api/login" && req.method === "POST") {
       await handleLogin(req, res);
@@ -206,6 +225,7 @@ async function handleCommand(ws, command, payload) {
       break;
     case "team":
       settings.currentTeam = payload.team === "B" ? "B" : "A";
+      savePersistentConfigSoon();
       broadcast();
       break;
     default:
@@ -259,11 +279,132 @@ function parseCookies(header) {
   }).filter(([key]) => key));
 }
 
+function readPersistedConfig() {
+  try {
+    if (!existsSync(settingsStorePath)) return {};
+    const value = JSON.parse(readFileSync(settingsStorePath, "utf-8"));
+    return value && typeof value === "object" ? value : {};
+  } catch (error) {
+    console.warn(`Failed to read settings store: ${error instanceof Error ? error.message : error}`);
+    return {};
+  }
+}
+
+function persistedTeamName(team, fallback) {
+  const name = persistedConfig.teams?.[team]?.name;
+  return typeof name === "string" && name.trim() ? name.slice(0, 16) : fallback;
+}
+
+async function savePersistentConfig() {
+  await mkdir(dataDir, { recursive: true });
+  await writeFile(settingsStorePath, `${JSON.stringify({
+    settings,
+    teams: {
+      A: { name: game.teams.A.name },
+      B: { name: game.teams.B.name },
+    },
+  }, null, 2)}\n`);
+}
+
+function savePersistentConfigSoon() {
+  savePersistentConfig().catch((error) => {
+    console.warn(`Failed to save settings store: ${error instanceof Error ? error.message : error}`);
+  });
+}
+
 function sameSecret(a, b) {
   const left = Buffer.from(String(a));
   const right = Buffer.from(String(b));
   if (left.length !== right.length) return false;
   return timingSafeEqual(left, right);
+}
+
+function sendJson(res, value, status = 200) {
+  res.writeHead(status, {
+    "Content-Type": "application/json; charset=utf-8",
+    "Cache-Control": "no-cache",
+  });
+  res.end(JSON.stringify(value));
+}
+
+async function sendQrCode(url, res) {
+  const text = url.searchParams.get("text") || "";
+  if (!text || text.length > 1024) {
+    res.writeHead(400, { "Content-Type": "text/plain; charset=utf-8" });
+    res.end("Missing or too long QR text");
+    return;
+  }
+
+  const svg = await QRCode.toString(text, {
+    type: "svg",
+    width: 320,
+    margin: 1,
+    color: {
+      dark: "#17171f",
+      light: "#ffffff",
+    },
+  });
+
+  res.writeHead(200, {
+    "Content-Type": "image/svg+xml; charset=utf-8",
+    "Cache-Control": "no-cache",
+  });
+  res.end(svg);
+}
+
+function networkState(req) {
+  const currentOrigin = currentOriginFromRequest(req);
+  const origins = unique([currentOrigin, ...originList(port)]);
+
+  return {
+    appMode: APP_MODE,
+    port,
+    currentOrigin,
+    origins,
+    pages: pageUrls(currentOrigin),
+    entries: origins.map((origin) => ({
+      origin,
+      pages: pageUrls(origin),
+      local: origin.includes("127.0.0.1") || origin.includes("localhost"),
+    })),
+  };
+}
+
+function currentOriginFromRequest(req) {
+  const host = req.headers.host || `127.0.0.1:${port}`;
+  const forwardedProto = String(req.headers["x-forwarded-proto"] || "http").split(",")[0].trim();
+  return `${forwardedProto || "http"}://${host}`;
+}
+
+function originList(activePort) {
+  return ["127.0.0.1", ...lanHosts()].map((host) => `http://${host}:${activePort}`);
+}
+
+function lanHosts() {
+  const hosts = [];
+  for (const items of Object.values(networkInterfaces())) {
+    for (const item of items || []) {
+      if ((item.family === "IPv4" || item.family === 4) && !item.internal) {
+        hosts.push(item.address);
+      }
+    }
+  }
+  return unique(hosts);
+}
+
+function pageUrls(origin) {
+  return {
+    player: `${origin}/player`,
+    login: `${origin}/login`,
+    host: `${origin}/host`,
+    settings: `${origin}/settings`,
+    solo: `${origin}/solo`,
+    qr: `${origin}/qr`,
+  };
+}
+
+function unique(values) {
+  return [...new Set(values.filter(Boolean))];
 }
 
 async function startRound() {
@@ -397,6 +538,7 @@ function updateSettings(next) {
   if (next.teamBName) game.teams.B.name = String(next.teamBName).slice(0, 16);
 
   if (game.status === "idle") game.leftSeconds = settings.roundSeconds;
+  savePersistentConfigSoon();
   broadcast();
 }
 
@@ -695,13 +837,12 @@ function pick(list) {
 
 const port = Number(process.env.PORT || 5173);
 server.listen(port, "0.0.0.0", () => {
-  const urls = APP_MODE === "solo"
-    ? [`http://127.0.0.1:${port}/solo`]
-    : [
-        `http://127.0.0.1:${port}/player`,
-        `http://127.0.0.1:${port}/login`,
-        `http://127.0.0.1:${port}/host`,
-        `http://127.0.0.1:${port}/settings`,
-      ];
-  console.log(`BangBangCai ${APP_MODE} server running:\n${urls.join("\n")}`);
+  const labels = APP_MODE === "solo"
+    ? [["Solo", "solo"], ["QR", "qr"]]
+    : [["Player", "player"], ["Host login", "login"], ["Host", "host"], ["Settings", "settings"], ["QR", "qr"]];
+  const lines = originList(port).flatMap((origin) => {
+    const pages = pageUrls(origin);
+    return labels.map(([label, key]) => `${label.padEnd(10)} ${pages[key]}`);
+  });
+  console.log(`BangBangCai ${APP_MODE} server running:\n${lines.join("\n")}`);
 });

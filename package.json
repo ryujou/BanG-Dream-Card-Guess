@@ -27,6 +27,7 @@
   ],
   "dependencies": {
     "jimp": "^1.6.0",
+    "qrcode": "^1.5.4",
     "ws": "^8.20.0"
   },
   "devDependencies": {

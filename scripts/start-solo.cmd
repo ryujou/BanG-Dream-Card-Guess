@@ -55,6 +55,7 @@ start "" "http://127.0.0.1:%PORT%/solo"
 
 echo.
 echo Solo: http://127.0.0.1:%PORT%/solo
+echo QR:   http://127.0.0.1:%PORT%/qr
 echo.
 echo A server window has been opened. Close that window to stop the game.
 echo.

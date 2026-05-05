@@ -9,13 +9,16 @@ let loginError = "";
 let soloGuess = "";
 let settingsDirty = false;
 let settingsSaving = false;
+let qrInfo = null;
+let qrLoading = false;
+let qrError = "";
 
 render();
-if (route !== "login") connect();
+if (!["login", "qr"].includes(route)) connect();
 
 function normalizeRoute(pathname) {
   const routeName = pathname.replace(/^\/+/, "").split("/")[0];
-  if (["player", "solo", "host", "settings", "login"].includes(routeName)) return routeName;
+  if (["player", "solo", "host", "settings", "login", "qr"].includes(routeName)) return routeName;
   return "player";
 }
 
@@ -55,10 +58,115 @@ function command(command, payload = {}) {
 
 function render() {
   if (route === "login") renderLogin();
+  else if (route === "qr") renderQr();
   else if (route === "solo") renderSolo();
   else if (route === "host") renderHost();
   else if (route === "settings") renderSettings();
   else renderPlayer();
+}
+
+function renderQr() {
+  if (!qrInfo && !qrLoading && !qrError) loadQrInfo();
+
+  const fallbackPages = pageUrlsFromOrigin(location.origin);
+  const info = qrInfo || {
+    appMode: "booth",
+    currentOrigin: location.origin,
+    pages: fallbackPages,
+    entries: [{ origin: location.origin, pages: fallbackPages, local: false }],
+  };
+  const primaryEntry = (info.entries || []).find((entry) => !entry.local) || {
+    origin: info.currentOrigin,
+    pages: info.pages || fallbackPages,
+  };
+  const pages = primaryEntry.pages || fallbackPages;
+  const qrCards = info.appMode === "solo"
+    ? [
+        { title: "自己玩模式", tag: "Solo", url: pages.solo, note: "扫码直接进入单人答题页" },
+        { title: "入口总览", tag: "QR", url: pages.qr, note: "重新打开这张二维码页" },
+      ]
+    : [
+        { title: "玩家页", tag: "Player", url: pages.player, note: "给玩家或展示屏扫码打开" },
+        { title: "主持登录", tag: "Host", url: pages.login, note: "主持扫码后输入密码进入后台" },
+        { title: "设置页", tag: "Setup", url: pages.settings, note: "开场前调整规则和显示选项" },
+      ];
+  const lanEntries = (info.entries || []).filter((entry) => !entry.local);
+
+  app.innerHTML = `
+    <main class="qr-shell">
+      <section class="qr-panel">
+        <div class="qr-head">
+          <div>
+            <p class="eyebrow">Booth QR Codes</p>
+            <h1>扫码入口</h1>
+          </div>
+          <div class="qr-actions">
+            <button class="primary" id="printQr" type="button">打印</button>
+            <a href="/player">玩家页</a>
+            <a href="/login">主持登录</a>
+          </div>
+        </div>
+
+        ${qrError ? `<div class="login-error">${escapeHtml(qrError)}</div>` : ""}
+        <div class="qr-grid">
+          ${qrCards.map(renderQrCard).join("")}
+        </div>
+
+        <div class="qr-note">
+          <strong>现场使用</strong>
+          <span>把玩家页二维码打印出来贴在摊位上；Wi-Fi 二维码建议单独用手机热点或路由器后台生成。</span>
+        </div>
+
+        ${lanEntries.length ? `
+          <div class="qr-lan">
+            <strong>检测到的局域网入口</strong>
+            ${lanEntries.map((entry) => `<code>${escapeHtml(entry.pages?.player || `${entry.origin}/player`)}</code>`).join("")}
+          </div>
+        ` : ""}
+      </section>
+    </main>
+  `;
+
+  app.querySelector("#printQr")?.addEventListener("click", () => window.print());
+}
+
+async function loadQrInfo() {
+  qrLoading = true;
+  try {
+    const response = await fetch("/api/network");
+    if (!response.ok) throw new Error("读取本机地址失败");
+    qrInfo = await response.json();
+  } catch (error) {
+    qrError = error instanceof Error ? error.message : "读取本机地址失败";
+  } finally {
+    qrLoading = false;
+    renderQr();
+  }
+}
+
+function renderQrCard(item) {
+  return `
+    <article class="qr-card">
+      <div>
+        <span>${escapeHtml(item.tag)}</span>
+        <h2>${escapeHtml(item.title)}</h2>
+        <p>${escapeHtml(item.note)}</p>
+      </div>
+      <img src="/api/qr?text=${encodeURIComponent(item.url)}" alt="${escapeAttr(item.title)}二维码" />
+      <code>${escapeHtml(item.url)}</code>
+    </article>
+  `;
+}
+
+function pageUrlsFromOrigin(origin) {
+  return {
+    player: `${origin}/player`,
+    login: `${origin}/login`,
+    host: `${origin}/host`,
+    settings: `${origin}/settings`,
+    solo: `${origin}/solo`,
+    qr: `${origin}/qr`,
+  };
 }
 
 function renderSolo() {
@@ -208,6 +316,7 @@ function renderHost() {
             <span>主持信息</span>
             <div class="panel-links">
               <a class="text-link" href="/settings">设置</a>
+              <a class="text-link" href="/qr">二维码</a>
               <button class="link-button" id="logoutButton" type="button">退出</button>
             </div>
           </div>
@@ -252,6 +361,7 @@ function renderSettings() {
           <div class="nav-links">
             <a href="/player">玩家页</a>
             <a href="/host">主持页</a>
+            <a href="/qr">二维码</a>
             <button type="button" id="logoutButton">退出</button>
           </div>
         </div>
@@ -495,4 +605,14 @@ function checkField(name, label, checked) {
 
 function escapeAttr(value) {
   return String(value).replace(/[&"]/g, (char) => ({ "&": "&amp;", '"': "&quot;" }[char]));
+}
+
+function escapeHtml(value) {
+  return String(value).replace(/[&<>"']/g, (char) => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;",
+  }[char]));
 }

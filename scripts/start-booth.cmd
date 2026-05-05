@@ -58,6 +58,7 @@ echo.
 echo Player: http://127.0.0.1:%PORT%/player
 echo Host:   http://127.0.0.1:%PORT%/host
 echo Setup:  http://127.0.0.1:%PORT%/settings
+echo QR:     http://127.0.0.1:%PORT%/qr
 echo.
 echo A server window has been opened. Close that window to stop the game.
 echo.

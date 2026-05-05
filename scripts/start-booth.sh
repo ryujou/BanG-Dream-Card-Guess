@@ -51,6 +51,7 @@ echo
 echo "Player: $player_url"
 echo "Host:   http://127.0.0.1:$PORT/host"
 echo "Setup:  http://127.0.0.1:$PORT/settings"
+echo "QR:     http://127.0.0.1:$PORT/qr"
 echo
 echo "Press Ctrl+C in this terminal to stop the game."
 

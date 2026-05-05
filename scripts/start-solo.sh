@@ -46,6 +46,7 @@ fi
 
 echo
 echo "Solo: $solo_url"
+echo "QR:   http://127.0.0.1:$PORT/qr"
 echo
 echo "Press Ctrl+C in this terminal to stop the game."
 
