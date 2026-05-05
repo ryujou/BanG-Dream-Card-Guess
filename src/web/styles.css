@@ -659,8 +659,9 @@ input:focus {
 
 .setting-check {
   display: flex;
-  min-height: 52px;
+  height: 52px;
   align-items: center;
+  align-self: end;
   gap: 10px;
   border: 1px solid rgba(23, 23, 31, 0.08);
   border-radius: 8px;
