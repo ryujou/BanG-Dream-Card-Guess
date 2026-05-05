@@ -43,6 +43,7 @@ const settings = {
   roundSeconds: 60,
   questionsPerPlayer: 3,
   allowRecrop: true,
+  showPlayerRecrop: true,
   maxRecrops: 3,
   cropSize: 180,
   candidateCount: 120,
@@ -380,7 +381,7 @@ function resetGame() {
 
 function updateSettings(next) {
   const numberKeys = ["roundSeconds", "questionsPerPlayer", "maxRecrops", "cropSize", "candidateCount", "correctPoints", "wrongPenalty", "autoNextDelay"];
-  const boolKeys = ["allowRecrop", "streakBonus", "showTimer", "revealAfterJudge", "autoNext"];
+  const boolKeys = ["allowRecrop", "showPlayerRecrop", "streakBonus", "showTimer", "revealAfterJudge", "autoNext"];
 
   for (const key of numberKeys) {
     if (next[key] !== undefined) settings[key] = Math.max(0, Number(next[key]));

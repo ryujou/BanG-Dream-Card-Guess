@@ -152,6 +152,7 @@ function renderPlayer() {
   const settings = snapshot?.settings;
   const current = game?.current;
   const revealed = ["revealed", "finished"].includes(game?.status);
+  const showRecropButton = settings?.showPlayerRecrop !== false;
   const canRecrop = game?.status === "playing" && settings?.allowRecrop && game.recrops < settings.maxRecrops;
   const recropsLeft = Math.max(0, (settings?.maxRecrops || 0) - (game?.recrops || 0));
 
@@ -160,7 +161,7 @@ function renderPlayer() {
       <section class="game-panel player-panel">
         ${renderTopbar(game, settings, true)}
         ${revealed && current ? renderRevealStage(current, game) : renderStage(game)}
-        ${revealed ? "" : `
+        ${revealed || !showRecropButton ? "" : `
           <div class="player-controls">
             <button data-command="recrop" ${canRecrop ? "" : "disabled"}>重切 ${recropsLeft}</button>
           </div>
@@ -271,6 +272,7 @@ function renderSettings() {
           ${textField("teamAName", "A 队名称", game.teams?.A?.name || "A 队")}
           ${textField("teamBName", "B 队名称", game.teams?.B?.name || "B 队")}
           ${checkField("allowRecrop", "允许重切", settings.allowRecrop)}
+          ${checkField("showPlayerRecrop", "玩家页显示重切", settings.showPlayerRecrop)}
           ${checkField("showTimer", "显示倒计时", settings.showTimer)}
           ${checkField("revealAfterJudge", "判定后揭晓答案", settings.revealAfterJudge)}
           ${checkField("streakBonus", "连击加分", settings.streakBonus)}
@@ -302,6 +304,7 @@ function renderSettings() {
       teamAName: form.get("teamAName"),
       teamBName: form.get("teamBName"),
       allowRecrop: form.has("allowRecrop"),
+      showPlayerRecrop: form.has("showPlayerRecrop"),
       showTimer: form.has("showTimer"),
       revealAfterJudge: form.has("revealAfterJudge"),
       streakBonus: form.has("streakBonus"),
