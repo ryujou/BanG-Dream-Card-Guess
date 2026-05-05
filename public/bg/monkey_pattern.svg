@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="1280" viewBox="0 0 960 1280">
+  <image href="/bg/monkey.png" x="132" y="180" width="54" height="54" opacity="0.2" transform="rotate(-10 159 207)" />
+  <image href="/bg/monkey.png" x="714" y="536" width="46" height="46" opacity="0.18" transform="rotate(12 737 559)" />
+  <image href="/bg/monkey.png" x="402" y="994" width="50" height="50" opacity="0.18" transform="rotate(-4 427 1019)" />
+</svg>

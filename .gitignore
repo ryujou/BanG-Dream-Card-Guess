@@ -1,6 +1,8 @@
 lib
 dist
 external
+public/cards/
+screenshots/*.tmp.*
 
 node_modules
 npm-debug.log

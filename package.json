@@ -1,39 +1,35 @@
 {
-  "name": "koishi-plugin-bangbangcai",
-  "description": "[<ruby>邦多利卡面猜猜看<rp>（</rp><rt>点我查看效果预览</rt><rp>）</rp></ruby>](https://i0.hdslb.com/bfs/article/198ba51e2b3ffce9b1275a003c87c9dc312276085.png) 角色立绘切分、猜测人物名称 ...",
+  "name": "bangbangcai-booth-game",
+  "description": "邦邦猜本地摊位互动 Web 游戏",
   "version": "1.5.1",
-  "main": "lib/index.js",
-  "typings": "lib/index.d.ts",
-  "files": [
-    "lib",
-    "dist",
-    "resource"
-  ],
+  "private": true,
+  "main": "server.mjs",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1",
+    "build": "vite build",
+    "preview": "vite preview --host 127.0.0.1",
+    "start": "node server.mjs --booth",
+    "booth": "npm run build && node server.mjs --booth",
+    "solo": "npm run build && node server.mjs --solo",
+    "cache-cards": "node scripts/cache-cards.mjs"
+  },
   "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/xsjh/koishi-plugin-bangbangcai"
-  },
-  "homepage": "https://github.com/xsjh/koishi-plugin-bangbangcai",
-  "bugs": {
-    "url": "https://github.com/xsjh/koishi-plugin-bangbangcai/issues"
-  },
   "contributors": [
     "azigongzhu <437831752@qq.com>",
     "shangxueink <1919892171@qq.com>",
     "windbullet <2536810643@qq.com>"
   ],
   "keywords": [
-    "chatbot",
-    "koishi",
-    "plugin",
     "bangdream",
-    "邦多利卡面"
+    "booth-game",
+    "邦多利卡面",
+    "本地互动游戏"
   ],
-  "peerDependencies": {
-    "koishi": "^4.18.3"
-  },
   "dependencies": {
-    "jimp": "^1.6.0"
+    "jimp": "^1.6.0",
+    "ws": "^8.20.0"
+  },
+  "devDependencies": {
+    "vite": "^5.4.21"
   }
 }
