@@ -149,6 +149,7 @@ function renderQr() {
               <option value="WPA" ${wifiQr.auth === "WPA" ? "selected" : ""}>WPA/WPA2</option>
               <option value="nopass" ${wifiQr.auth === "nopass" ? "selected" : ""}>无密码</option>
             </select>
+            <button class="primary" type="submit">生成 Wi-Fi 码</button>
           </form>
           ${wifiText ? `
             <div class="wifi-qr">
@@ -169,8 +170,7 @@ function renderQr() {
   `;
 
   app.querySelector("#printQr")?.addEventListener("click", () => window.print());
-  app.querySelector("#wifiForm")?.addEventListener("input", handleWifiForm);
-  app.querySelector("#wifiForm")?.addEventListener("change", handleWifiForm);
+  app.querySelector("#wifiForm")?.addEventListener("submit", handleWifiForm);
 }
 
 async function loadQrInfo() {
@@ -862,7 +862,8 @@ function loadWifiQr() {
 }
 
 function handleWifiForm(event) {
-  const form = new FormData(event.currentTarget.form || event.currentTarget);
+  event.preventDefault();
+  const form = new FormData(event.currentTarget);
   wifiQr = {
     ssid: form.get("ssid") || "",
     password: form.get("password") || "",

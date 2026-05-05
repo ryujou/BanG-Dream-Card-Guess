@@ -1158,7 +1158,7 @@ input:focus {
 
 .wifi-form {
   display: grid;
-  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1.2fr) minmax(120px, 0.6fr);
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1.2fr) minmax(120px, 0.6fr) minmax(140px, 0.7fr);
   gap: 10px;
 }
 
