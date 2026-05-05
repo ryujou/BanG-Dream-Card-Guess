@@ -14,6 +14,7 @@ let qrLoading = false;
 let qrError = "";
 let wifiQr = loadWifiQr();
 let previousStateKey = "";
+let lastStageCropKey = "";
 let audioContext = null;
 
 const DIFFICULTY_PRESETS = {
@@ -563,6 +564,9 @@ function renderTopbar(game, settings, showCommunityLink = false) {
 
 function renderStage(game) {
   const crop = game?.current?.crop;
+  const cropKey = crop ? `${game?.current?.imageUrl || ""}:${crop.x}:${crop.y}:${crop.size}` : "";
+  const isNewCrop = Boolean(cropKey && cropKey !== lastStageCropKey);
+  if (cropKey) lastStageCropKey = cropKey;
   const status = statusText(game?.status);
   return `
     <div class="stage">
@@ -577,7 +581,7 @@ function renderStage(game) {
         <div class="round-state">${status}</div>
       </div>
       <div class="crop-grid" aria-live="polite">
-        ${game?.loading ? `<div class="crop-tile skeleton"></div>` : crop ? `<div class="crop-tile"><img src="${crop.image}" alt="裁剪卡面" /></div>` : `<div class="empty-state"><span>?</span></div>`}
+        ${game?.loading ? `<div class="crop-tile skeleton"></div>` : crop ? `<div class="crop-tile ${isNewCrop ? "is-new-crop" : ""}"><img src="${crop.image}" alt="裁剪卡面" /></div>` : `<div class="empty-state"><span>?</span></div>`}
       </div>
     </div>
   `;
