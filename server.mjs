@@ -121,6 +121,7 @@ const game = {
 };
 
 const clients = new Map();
+const queueScoreStreams = new Set();
 let timer = null;
 let roundToken = 0;
 let preparedRoundPromise = null;
@@ -148,6 +149,11 @@ const server = createServer(async (req, res) => {
 
     if (url.pathname === "/api/queue-scores" && req.method === "GET") {
       sendJson(res, queueScoreState());
+      return;
+    }
+
+    if (url.pathname === "/api/queue-scores/events" && req.method === "GET") {
+      handleQueueScoreEvents(req, res);
       return;
     }
 
@@ -332,8 +338,34 @@ async function handleQueueScore(req, res) {
     at: Date.now(),
   });
 
-  await writeQueueScores(scores.slice(0, 1000));
-  sendJson(res, { ok: true, ...queueScoreState(scores) });
+  const savedScores = scores.slice(0, 1000);
+  await writeQueueScores(savedScores);
+  const state = queueScoreState(savedScores);
+  broadcastQueueScores(state);
+  sendJson(res, { ok: true, ...state });
+}
+
+function handleQueueScoreEvents(req, res) {
+  res.writeHead(200, {
+    "Content-Type": "text/event-stream; charset=utf-8",
+    "Cache-Control": "no-cache, no-transform",
+    "Connection": "keep-alive",
+    "X-Accel-Buffering": "no",
+  });
+  res.write(`event: scores\ndata: ${JSON.stringify(queueScoreState())}\n\n`);
+  queueScoreStreams.add(res);
+  req.on("close", () => queueScoreStreams.delete(res));
+}
+
+function broadcastQueueScores(state = queueScoreState()) {
+  const payload = `event: scores\ndata: ${JSON.stringify(state)}\n\n`;
+  for (const stream of queueScoreStreams) {
+    try {
+      stream.write(payload);
+    } catch {
+      queueScoreStreams.delete(stream);
+    }
+  }
 }
 
 function parseRequestPayload(req, body) {
@@ -564,6 +596,7 @@ function pageUrls(origin) {
   return {
     player: `${origin}/player`,
     queue: `${origin}/queue`,
+    scores: `${origin}/scores`,
     login: `${origin}/login`,
     host: `${origin}/host`,
     settings: `${origin}/settings`,
@@ -1408,8 +1441,8 @@ function pick(list) {
 const port = Number(process.env.PORT || 5173);
 server.listen(port, "0.0.0.0", () => {
   const labels = APP_MODE === "solo"
-    ? [["Solo", "solo"], ["Queue", "queue"], ["QR", "qr"]]
-    : [["Player", "player"], ["Queue", "queue"], ["Host login", "login"], ["Host", "host"], ["Settings", "settings"], ["QR", "qr"]];
+    ? [["Solo", "solo"], ["Queue", "queue"], ["Scores", "scores"], ["QR", "qr"]]
+    : [["Player", "player"], ["Queue", "queue"], ["Scores", "scores"], ["Host login", "login"], ["Host", "host"], ["Settings", "settings"], ["QR", "qr"]];
   const lines = originList(port).flatMap((origin) => {
     const pages = pageUrls(origin);
     return labels.map(([label, key]) => `${label.padEnd(10)} ${pages[key]}`);

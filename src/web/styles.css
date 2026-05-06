@@ -1357,6 +1357,126 @@ input:focus {
   grid-template-columns: minmax(0, 1fr) auto;
 }
 
+.scores-panel {
+  min-height: calc(100vh - 56px);
+}
+
+.scores-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(320px, 0.65fr);
+  gap: 16px;
+  align-items: start;
+}
+
+.score-live-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.score-live-meta strong,
+.score-live-meta span,
+.live-dot {
+  border-radius: 999px;
+  padding: 8px 12px;
+  background: #f4f6fa;
+  color: #5e6472;
+  font-weight: 850;
+}
+
+.score-live-meta strong,
+.live-dot {
+  background: linear-gradient(135deg, #28dec0, #7c5cff);
+  color: #ffffff;
+}
+
+.score-main-board,
+.score-recent-board {
+  display: grid;
+  gap: 14px;
+  border: 1px solid rgba(23, 23, 31, 0.08);
+  border-radius: 8px;
+  padding: 16px;
+  background: #ffffff;
+}
+
+.score-rank-list,
+.score-recent-list {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.score-rank-list li {
+  display: grid;
+  grid-template-columns: 54px minmax(0, 1fr) auto 52px;
+  gap: 12px;
+  align-items: center;
+  border-radius: 8px;
+  padding: 14px 16px;
+  background: #f4f6fa;
+}
+
+.score-rank-list li.is-top {
+  background: linear-gradient(135deg, rgba(255, 61, 110, 0.14), rgba(124, 92, 255, 0.14));
+}
+
+.score-rank-list li span {
+  display: inline-flex;
+  width: 42px;
+  height: 42px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ff3d6e, #7c5cff);
+  color: #ffffff;
+  font-weight: 950;
+}
+
+.score-rank-list li strong,
+.score-recent-list strong {
+  overflow: hidden;
+  color: #17171f;
+  font-size: 1.2rem;
+  font-weight: 950;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.score-rank-list li b,
+.score-recent-list b {
+  color: #ff3d6e;
+  font-size: 1.45rem;
+  font-weight: 950;
+}
+
+.score-rank-list li em,
+.score-recent-list span {
+  color: #777d8d;
+  font-style: normal;
+  font-weight: 800;
+}
+
+.score-recent-list article {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: center;
+  border-radius: 8px;
+  padding: 12px 14px;
+  background: #f4f6fa;
+}
+
+.score-recent-list article div {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+}
+
 @media (max-width: 920px) {
   body::before {
     background-image:
@@ -1395,6 +1515,10 @@ input:focus {
   }
 
   .queue-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .scores-layout {
     grid-template-columns: 1fr;
   }
 

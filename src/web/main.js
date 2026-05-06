@@ -15,6 +15,8 @@ let qrError = "";
 let queueScores = null;
 let queueScoresLoading = false;
 let queueScoreError = "";
+let queueScoreEvents = null;
+let queueScoresUpdatedAt = 0;
 let queuePlayerName = localStorage.getItem("bangdreamQueueName") || "";
 let queueLastResult = null;
 let queueGame = null;
@@ -49,14 +51,14 @@ const FACE_CROP_MODES = [
 ];
 
 render();
-if (!["login", "qr", "queue"].includes(route)) connect();
+if (!["login", "qr", "queue", "scores"].includes(route)) connect();
 registerServiceWorker();
 document.addEventListener("pointerdown", unlockAudio, { once: true });
 document.addEventListener("keydown", handleGlobalShortcut);
 
 function normalizeRoute(pathname) {
   const routeName = pathname.replace(/^\/+/, "").split("/")[0];
-  if (["player", "solo", "host", "settings", "login", "qr", "queue"].includes(routeName)) return routeName;
+  if (["player", "solo", "host", "settings", "login", "qr", "queue", "scores"].includes(routeName)) return routeName;
   return "player";
 }
 
@@ -99,6 +101,7 @@ function render() {
   if (route === "login") renderLogin();
   else if (route === "qr") renderQr();
   else if (route === "queue") renderQueue();
+  else if (route === "scores") renderScores();
   else if (route === "solo") renderSolo();
   else if (route === "host") renderHost();
   else if (route === "settings") renderSettings();
@@ -223,6 +226,7 @@ function pageUrlsFromOrigin(origin) {
   return {
     player: `${origin}/player`,
     queue: `${origin}/queue`,
+    scores: `${origin}/scores`,
     login: `${origin}/login`,
     host: `${origin}/host`,
     settings: `${origin}/settings`,
@@ -326,6 +330,124 @@ function renderQueueRecent(items) {
   `;
 }
 
+function renderScores() {
+  if (!queueScores && !queueScoresLoading && !queueScoreError) loadQueueScores();
+  startQueueScoreStream();
+
+  const leaderboard = queueScores?.leaderboard || [];
+  const recent = queueScores?.recent || [];
+  const updatedText = queueScoresUpdatedAt ? new Date(queueScoresUpdatedAt).toLocaleTimeString() : "等待同步";
+
+  app.innerHTML = `
+    <main class="queue-shell scores-shell">
+      <section class="queue-panel scores-panel">
+        <div class="queue-head scores-head">
+          <div>
+            <p class="eyebrow">Live Scores</p>
+            <h1>成绩榜</h1>
+            <span>排队小游戏成绩会实时更新，适合单独投屏或给工作人员查看。</span>
+          </div>
+          <div class="qr-actions">
+            <a href="/queue">小游戏</a>
+            <a href="/qr">二维码</a>
+            <a href="/player">玩家页</a>
+          </div>
+        </div>
+
+        <div class="score-live-meta">
+          <strong>${queueScoresLoading ? "同步中" : "实时同步"}</strong>
+          <span>最后更新 ${escapeHtml(updatedText)}</span>
+          <span>总记录 ${Number(queueScores?.total) || 0}</span>
+        </div>
+        ${queueScoreError ? `<div class="login-error">${escapeHtml(queueScoreError)}</div>` : ""}
+
+        <div class="scores-layout">
+          <section class="score-main-board">
+            <div class="queue-board-head">
+              <strong>排行榜</strong>
+              <button id="refreshQueueScores" type="button">刷新</button>
+            </div>
+            ${queueScoresLoading && !leaderboard.length ? `<div class="muted">读取中...</div>` : renderScoreLeaderboard(leaderboard)}
+          </section>
+          <aside class="score-recent-board">
+            <div class="queue-board-head">
+              <strong>最近成绩</strong>
+              <span class="live-dot">LIVE</span>
+            </div>
+            ${renderScoreRecent(recent)}
+          </aside>
+        </div>
+      </section>
+    </main>
+  `;
+
+  app.querySelector("#refreshQueueScores")?.addEventListener("click", () => loadQueueScores(true));
+}
+
+function renderScoreLeaderboard(items) {
+  if (!items.length) return `<div class="muted">暂无成绩</div>`;
+  return `
+    <ol class="score-rank-list">
+      ${items.map((item, index) => `
+        <li class="${index < 3 ? "is-top" : ""}">
+          <span>${index + 1}</span>
+          <strong>${escapeHtml(item.username)}</strong>
+          <b>${Number(item.score) || 0}</b>
+          <em>${formatQueueDuration(item.duration)}</em>
+        </li>
+      `).join("")}
+    </ol>
+  `;
+}
+
+function renderScoreRecent(items) {
+  if (!items.length) return `<div class="muted">暂无记录</div>`;
+  return `
+    <div class="score-recent-list">
+      ${items.map((item) => `
+        <article>
+          <div>
+            <strong>${escapeHtml(item.username)}</strong>
+            <span>${formatQueueTime(item.at)}</span>
+          </div>
+          <b>${Number(item.score) || 0}</b>
+        </article>
+      `).join("")}
+    </div>
+  `;
+}
+
+function formatQueueDuration(value) {
+  const seconds = Math.max(0, Math.floor(Number(value) || 0));
+  return seconds ? `${seconds}s` : "-";
+}
+
+function formatQueueTime(value) {
+  const time = Number(value);
+  if (!Number.isFinite(time)) return "-";
+  return new Date(time).toLocaleTimeString();
+}
+
+function startQueueScoreStream() {
+  if (queueScoreEvents || !("EventSource" in window)) return;
+  queueScoreEvents = new EventSource("/api/queue-scores/events");
+  queueScoreEvents.addEventListener("scores", (event) => {
+    try {
+      queueScores = JSON.parse(event.data);
+      queueScoresUpdatedAt = Date.now();
+      queueScoreError = "";
+      if (route === "scores") renderScores();
+      if (route === "queue" && !queueGame?.running) renderQueue();
+    } catch {
+      queueScoreError = "成绩数据解析失败";
+    }
+  });
+  queueScoreEvents.onerror = () => {
+    queueScoreError = "实时连接暂时中断，正在自动重连";
+    if (route === "scores") renderScores();
+  };
+}
+
 async function loadQueueScores(force = false) {
   if (queueScoresLoading && !force) return;
   queueScoresLoading = true;
@@ -339,6 +461,7 @@ async function loadQueueScores(force = false) {
   } finally {
     queueScoresLoading = false;
     if (route === "queue" && !queueGame?.running) renderQueue();
+    if (route === "scores") renderScores();
   }
 }
 
