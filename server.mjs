@@ -18,6 +18,7 @@ const dataDir = process.env.DATA_DIR ? path.resolve(process.env.DATA_DIR) : path
 const settingsStorePath = path.join(dataDir, "settings.json");
 const faceBoxesStorePath = path.join(dataDir, "face-boxes.json");
 const queueScoresStorePath = path.join(dataDir, "queue-scores.json");
+const noteShooterScoresStorePath = path.join(dataDir, "note-shooter-scores.json");
 const BESTDORI_ORIGIN = "https://bestdori.com";
 const BESTDORI_BASE = `${BESTDORI_ORIGIN}/assets/jp/characters/resourceset`;
 const APP_MODE = process.env.APP_MODE === "solo" || process.argv.includes("--solo") ? "solo" : "booth";
@@ -62,6 +63,7 @@ const MIME = {
   ".jpg": "image/jpeg",
   ".jpeg": "image/jpeg",
   ".webp": "image/webp",
+  ".mp3": "audio/mpeg",
   ".svg": "image/svg+xml; charset=utf-8",
   ".ico": "image/x-icon",
 };
@@ -122,6 +124,7 @@ const game = {
 
 const clients = new Map();
 const queueScoreStreams = new Set();
+const noteShooterScoreStreams = new Set();
 let timer = null;
 let roundToken = 0;
 let preparedRoundPromise = null;
@@ -152,8 +155,23 @@ const server = createServer(async (req, res) => {
       return;
     }
 
+    if (url.pathname === "/api/note-shooter-scores" && req.method === "GET") {
+      sendJson(res, noteShooterScoreState());
+      return;
+    }
+
+    if (url.pathname === "/api/note-shooter-scores" && req.method === "DELETE") {
+      await handleDeleteNoteShooterScore(req, res);
+      return;
+    }
+
     if (url.pathname === "/api/queue-scores/events" && req.method === "GET") {
       handleQueueScoreEvents(req, res);
+      return;
+    }
+
+    if (url.pathname === "/api/note-shooter-scores/events" && req.method === "GET") {
+      handleNoteShooterScoreEvents(req, res);
       return;
     }
 
@@ -177,6 +195,11 @@ const server = createServer(async (req, res) => {
 
     if (url.pathname.startsWith("/bestdori/")) {
       await proxyBestdori(url, res);
+      return;
+    }
+
+    if (url.pathname.startsWith("/note-shooter-api/")) {
+      await handleNoteShooterApi(url, req, res);
       return;
     }
 
@@ -345,6 +368,34 @@ async function handleQueueScore(req, res) {
   sendJson(res, { ok: true, ...state });
 }
 
+async function handleDeleteNoteShooterScore(req, res) {
+  const body = parseRequestPayload(req, await readRequestBody(req));
+  const password = String(body.password || "");
+  const id = String(body.id || "").trim();
+
+  if (!sameSecret(password, HOST_PASSWORD)) {
+    sendJson(res, { ok: false, message: "主持密码错误" }, 401);
+    return;
+  }
+
+  if (!id) {
+    sendJson(res, { ok: false, message: "缺少成绩 ID" }, 400);
+    return;
+  }
+
+  const scores = readNoteShooterScores();
+  const nextScores = scores.filter((entry) => entry.id !== id);
+  if (nextScores.length === scores.length) {
+    sendJson(res, { ok: false, message: "成绩不存在或已删除" }, 404);
+    return;
+  }
+
+  await writeNoteShooterScores(nextScores);
+  const state = noteShooterScoreState(nextScores);
+  broadcastNoteShooterScores(state);
+  sendJson(res, { ok: true, ...state });
+}
+
 function handleQueueScoreEvents(req, res) {
   res.writeHead(200, {
     "Content-Type": "text/event-stream; charset=utf-8",
@@ -366,6 +417,71 @@ function broadcastQueueScores(state = queueScoreState()) {
       queueScoreStreams.delete(stream);
     }
   }
+}
+
+function handleNoteShooterScoreEvents(req, res) {
+  res.writeHead(200, {
+    "Content-Type": "text/event-stream; charset=utf-8",
+    "Cache-Control": "no-cache, no-transform",
+    "Connection": "keep-alive",
+    "X-Accel-Buffering": "no",
+  });
+  res.write(`event: scores\ndata: ${JSON.stringify(noteShooterScoreState())}\n\n`);
+  noteShooterScoreStreams.add(res);
+  req.on("close", () => noteShooterScoreStreams.delete(res));
+}
+
+function broadcastNoteShooterScores(state = noteShooterScoreState()) {
+  const payload = `event: scores\ndata: ${JSON.stringify(state)}\n\n`;
+  for (const stream of noteShooterScoreStreams) {
+    try {
+      stream.write(payload);
+    } catch {
+      noteShooterScoreStreams.delete(stream);
+    }
+  }
+}
+
+async function handleNoteShooterApi(url, req, res) {
+  const endpoint = url.pathname.replace(/^\/note-shooter-api\/?/, "");
+  if (endpoint === "openStat" && req.method === "POST") {
+    const body = parseRequestPayload(req, await readRequestBody(req));
+    const playerId = normalizeNoteShooterPlayerId(body.playerId) || `P${randomBytes(3).toString("hex").toUpperCase()}`;
+    sendJson(res, { ok: true, online: 1, playerId });
+    return;
+  }
+
+  if (endpoint === "gameStat" && req.method === "POST") {
+    const body = parseRequestPayload(req, await readRequestBody(req));
+    const score = normalizeNoteShooterScore(body);
+    if (!score) {
+      sendJson(res, { ok: false, message: "成绩无效" }, 400);
+      return;
+    }
+    const scores = readNoteShooterScores();
+    scores.unshift(score);
+    await writeNoteShooterScores(scores.slice(0, 2000));
+    broadcastNoteShooterScores();
+    sendJson(res, { ok: true });
+    return;
+  }
+
+  if ((endpoint === "getRanking" || endpoint === "getMyRanking") && req.method === "GET") {
+    const levels = normalizeNoteShooterLevel(url.searchParams.get("levels"));
+    const difficulty = normalizeNoteShooterDifficulty(url.searchParams.get("difficulty"));
+    const type = endpoint === "getMyRanking" ? "myRank" : String(url.searchParams.get("type") || "top");
+    const playerId = normalizeNoteShooterPlayerId(url.searchParams.get("playerId"));
+    sendJson(res, { ok: true, data: noteShooterRanking({ levels, difficulty, type, playerId }) });
+    return;
+  }
+
+  if (endpoint === "bilibiliContact" && req.method === "POST") {
+    await readRequestBody(req);
+    sendJson(res, { ok: true });
+    return;
+  }
+
+  sendJson(res, { ok: false, message: "Not found" }, 404);
 }
 
 function parseRequestPayload(req, body) {
@@ -490,6 +606,179 @@ function normalizeQueueUsername(value) {
     .slice(0, 20);
 }
 
+function readNoteShooterScores() {
+  try {
+    if (!existsSync(noteShooterScoresStorePath)) return [];
+    const value = JSON.parse(readFileSync(noteShooterScoresStorePath, "utf-8"));
+    return Array.isArray(value) ? value.map(normalizeNoteShooterScore).filter(Boolean) : [];
+  } catch (error) {
+    console.warn(`Failed to read note shooter scores: ${error instanceof Error ? error.message : error}`);
+    return [];
+  }
+}
+
+async function writeNoteShooterScores(scores) {
+  await mkdir(dataDir, { recursive: true });
+  await writeFile(noteShooterScoresStorePath, `${JSON.stringify(scores.map(normalizeNoteShooterScore).filter(Boolean), null, 2)}\n`);
+}
+
+function noteShooterScoreState(scores = readNoteShooterScores()) {
+  const normalized = scores.map(normalizeNoteShooterScore).filter(Boolean);
+  const bestByPlayer = new Map();
+  for (const entry of normalized) {
+    const old = bestByPlayer.get(entry.player_id);
+    if (!old || entry.final_score > old.final_score || (entry.final_score === old.final_score && entry.duration < old.duration)) {
+      bestByPlayer.set(entry.player_id, entry);
+    }
+  }
+
+  const toScoreItem = (entry) => ({
+    id: entry.id,
+    username: entry.player_name || entry.player_id,
+    playerId: entry.player_id,
+    score: entry.final_score,
+    duration: entry.duration,
+    rank: entry.ranks,
+    level: entry.levels,
+    difficulty: entry.difficulty,
+    at: entry.at,
+  });
+
+  return {
+    total: normalized.length,
+    leaderboard: [...bestByPlayer.values()]
+      .sort((a, b) => b.final_score - a.final_score || a.duration - b.duration || a.at - b.at)
+      .slice(0, 20)
+      .map(toScoreItem),
+    recent: normalized
+      .slice()
+      .sort((a, b) => b.at - a.at)
+      .slice(0, 20)
+      .map(toScoreItem),
+  };
+}
+
+function noteShooterRanking({ levels, difficulty, type, playerId }) {
+  const scores = readNoteShooterScores()
+    .filter((entry) => entry.levels === levels && entry.difficulty === difficulty);
+  const ranked = scores
+    .slice()
+    .sort((a, b) => b.final_score - a.final_score || a.duration - b.duration || a.at - b.at)
+    .map((entry, index) => ({ ...entry, user_rank: index + 1 }));
+
+  if (type === "recent") {
+    return scores
+      .slice()
+      .sort((a, b) => b.at - a.at)
+      .slice(0, 30)
+      .map((entry, index) => ({ ...entry, user_rank: index + 1 }));
+  }
+
+  if (type === "best") {
+    return noteShooterBestByPlayer(ranked).slice(0, 30).map((entry, index) => ({ ...entry, user_rank: index + 1 }));
+  }
+
+  if (type === "myRank") {
+    if (!playerId) return [];
+    return ranked.filter((entry) => entry.player_id === playerId).slice(0, 30);
+  }
+
+  if (type === "myBest") {
+    if (!playerId) return [];
+    return ranked.filter((entry) => entry.player_id === playerId).slice(0, 30);
+  }
+
+  if (type === "myRecent") {
+    if (!playerId) return [];
+    return scores
+      .filter((entry) => entry.player_id === playerId)
+      .sort((a, b) => b.at - a.at)
+      .slice(0, 30)
+      .map((entry, index) => ({ ...entry, user_rank: index + 1 }));
+  }
+
+  return ranked.slice(0, 30);
+}
+
+function noteShooterBestByPlayer(ranked) {
+  const best = new Map();
+  for (const entry of ranked) {
+    if (!best.has(entry.player_id)) best.set(entry.player_id, entry);
+  }
+  return [...best.values()];
+}
+
+function normalizeNoteShooterScore(entry) {
+  const playerId = normalizeNoteShooterPlayerId(entry?.playerId || entry?.player_id);
+  const playerName = normalizeNoteShooterPlayerName(entry?.playerName || entry?.player_name);
+  const levels = normalizeNoteShooterLevel(entry?.levels);
+  const difficulty = normalizeNoteShooterDifficulty(entry?.difficulty);
+  const finalScore = Math.max(0, Math.min(99999999, Math.floor(Number(entry?.finalScore ?? entry?.final_score))));
+  if (!playerId || !Number.isFinite(finalScore)) return null;
+
+  const duration = Math.max(0, Math.min(3600, Math.floor(Number(entry?.duration || 0))));
+  const ranks = normalizeNoteShooterRank(entry?.ranks);
+  const maxCombo = Math.max(0, Math.min(99999, Math.floor(Number(entry?.maxCombo ?? entry?.max_combo ?? 0))));
+  return {
+    id: String(entry.id || randomBytes(8).toString("hex")),
+    player_id: playerId,
+    player_name: playerName || playerId,
+    levels,
+    difficulty,
+    fps: Math.max(0, Math.min(300, Math.floor(Number(entry?.fps || 0)))),
+    win: Number(entry?.win) ? 1 : 0,
+    ranks,
+    duration,
+    kuma_kill: Math.max(0, Math.min(99999, Math.floor(Number(entry?.kumaKill ?? entry?.kuma_kill ?? 0)))),
+    kuma_live: Math.max(0, Math.min(99999, Math.floor(Number(entry?.kumaLive ?? entry?.kuma_live ?? 0)))),
+    max_combo: maxCombo,
+    life: Math.max(0, Math.min(999, Math.floor(Number(entry?.life || 0)))),
+    life_lost: Math.max(0, Math.min(999, Math.floor(Number(entry?.lifeLost ?? entry?.life_lost ?? 0)))),
+    boss_ratio: Number(entry?.bossRatio ?? entry?.boss_ratio ?? 0) || 0,
+    bullet_ratio: Number(entry?.bulletRatio ?? entry?.bullet_ratio ?? 0) || 0,
+    item_ratio: Number(entry?.itemRatio ?? entry?.item_ratio ?? 0) || 0,
+    final_score: finalScore,
+    full_combo: maxCombo > 0 && Number(entry?.kumaLive ?? entry?.kuma_live ?? 0) <= 0 ? 1 : 0,
+    create_time: entry?.create_time || formatLocalDateTime(entry?.at),
+    at: Number.isFinite(Number(entry?.at)) ? Number(entry.at) : Date.now(),
+  };
+}
+
+function normalizeNoteShooterPlayerId(value) {
+  return String(value || "")
+    .trim()
+    .replace(/[^\w-]/g, "")
+    .slice(0, 24);
+}
+
+function normalizeNoteShooterPlayerName(value) {
+  return String(value || "")
+    .trim()
+    .replace(/\s+/g, " ")
+    .slice(0, 16);
+}
+
+function normalizeNoteShooterLevel(value) {
+  const level = Math.floor(Number(value));
+  return [1, 2, 3].includes(level) ? level : 1;
+}
+
+function normalizeNoteShooterDifficulty(value) {
+  const difficulty = String(value || "easy");
+  return ["easy", "normal", "hard", "endless"].includes(difficulty) ? difficulty : "easy";
+}
+
+function normalizeNoteShooterRank(value) {
+  const rank = String(value || "d").toLowerCase();
+  return ["sss", "ssp", "ss", "sp", "s", "ap", "a", "bp", "b", "cp", "c", "d"].includes(rank) ? rank : "d";
+}
+
+function formatLocalDateTime(value = Date.now()) {
+  const date = new Date(Number(value) || Date.now());
+  const pad = (number) => String(number).padStart(2, "0");
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())} ${pad(date.getHours())}:${pad(date.getMinutes())}`;
+}
+
 function persistedTeamName(team, fallback) {
   const name = persistedConfig.teams?.[team]?.name;
   return typeof name === "string" && name.trim() ? name.slice(0, 16) : fallback;
@@ -595,7 +884,8 @@ function lanHosts() {
 function pageUrls(origin) {
   return {
     player: `${origin}/player`,
-    queue: `${origin}/queue`,
+    noteShooter: `${origin}/note-shooter`,
+    queue: `${origin}/note-shooter`,
     scores: `${origin}/scores`,
     login: `${origin}/login`,
     host: `${origin}/host`,
@@ -1441,8 +1731,8 @@ function pick(list) {
 const port = Number(process.env.PORT || 5173);
 server.listen(port, "0.0.0.0", () => {
   const labels = APP_MODE === "solo"
-    ? [["Solo", "solo"], ["Queue", "queue"], ["Scores", "scores"], ["QR", "qr"]]
-    : [["Player", "player"], ["Queue", "queue"], ["Scores", "scores"], ["Host login", "login"], ["Host", "host"], ["Settings", "settings"], ["QR", "qr"]];
+    ? [["Solo", "solo"], ["NoteShooter", "noteShooter"], ["Scores", "scores"], ["QR", "qr"]]
+    : [["Player", "player"], ["NoteShooter", "noteShooter"], ["Scores", "scores"], ["Host login", "login"], ["Host", "host"], ["Settings", "settings"], ["QR", "qr"]];
   const lines = originList(port).flatMap((origin) => {
     const pages = pageUrls(origin);
     return labels.map(([label, key]) => `${label.padEnd(10)} ${pages[key]}`);

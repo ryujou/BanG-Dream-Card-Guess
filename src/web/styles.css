@@ -149,6 +149,10 @@ button svg {
   gap: 18px;
 }
 
+.topbar > :first-child {
+  flex: 0 0 auto;
+}
+
 .eyebrow {
   margin: 0 0 4px;
   color: #ff3d6e;
@@ -163,10 +167,12 @@ h1 {
   font-size: clamp(2rem, 5vw, 4.75rem);
   line-height: 0.98;
   letter-spacing: 0;
+  white-space: nowrap;
 }
 
 .scoreboard {
   display: grid;
+  flex: 0 0 auto;
   min-width: 300px;
   grid-template-columns: repeat(3, 1fr);
   gap: 8px;
@@ -343,18 +349,29 @@ input {
 }
 
 select {
+  appearance: none;
   width: 100%;
   min-height: 52px;
   border: 1px solid rgba(23, 23, 31, 0.1);
   border-radius: 8px;
-  padding: 0 16px;
+  padding: 0 44px 0 16px;
   outline: none;
-  background: #ffffff;
+  background:
+    linear-gradient(45deg, transparent 50%, #17171f 50%) calc(100% - 22px) 50% / 6px 6px no-repeat,
+    linear-gradient(135deg, #17171f 50%, transparent 50%) calc(100% - 16px) 50% / 6px 6px no-repeat,
+    #ffffff;
   color: #17171f;
   box-shadow: 0 12px 30px rgba(48, 57, 82, 0.08);
+  cursor: pointer;
 }
 
-input:focus {
+select option {
+  color: #17171f;
+  background: #ffffff;
+}
+
+input:focus,
+select:focus {
   border-color: #ff3d6e;
   box-shadow: 0 0 0 4px rgba(255, 61, 110, 0.14), 0 12px 30px rgba(48, 57, 82, 0.08);
 }
@@ -401,7 +418,7 @@ input:focus {
 }
 
 .player-shell {
-  width: min(1280px, calc(100% - 32px));
+  width: min(1720px, calc(100% - 32px));
   grid-template-columns: 1fr;
 }
 
@@ -456,9 +473,12 @@ input:focus {
 
 .player-top-actions {
   display: flex;
-  flex-wrap: wrap;
+  flex: 1 1 auto;
+  flex-wrap: nowrap;
   align-items: center;
+  justify-content: center;
   gap: 10px;
+  min-width: 0;
 }
 
 .fullscreen-button {
@@ -547,10 +567,36 @@ input:focus {
 
 .team-score {
   display: grid;
+  flex: 0 0 auto;
   gap: 6px;
   min-width: 150px;
   color: #17171f;
   font-weight: 850;
+}
+
+@media (min-width: 1180px) {
+  .player-shell .topbar {
+    flex-wrap: nowrap;
+  }
+
+  .player-shell h1 {
+    font-size: clamp(3.2rem, 4.2vw, 4.35rem);
+  }
+
+  .player-shell .community-link {
+    min-height: 44px;
+    padding: 0 12px 0 14px;
+  }
+
+  .player-shell .community-link::after {
+    width: 24px;
+    height: 24px;
+  }
+
+  .player-shell .fullscreen-button {
+    min-height: 44px;
+    padding: 0 16px;
+  }
 }
 
 .host-answer-card {
@@ -1182,6 +1228,21 @@ input:focus {
   overflow-wrap: anywhere;
 }
 
+.note-shooter-shell {
+  position: relative;
+  z-index: 1;
+  width: 100vw;
+  height: 100dvh;
+  background: #333333;
+}
+
+.note-shooter-frame {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
 .queue-shell {
   position: relative;
   z-index: 1;
@@ -1413,7 +1474,7 @@ input:focus {
 
 .score-rank-list li {
   display: grid;
-  grid-template-columns: 54px minmax(0, 1fr) auto 52px;
+  grid-template-columns: 54px minmax(0, 1fr) auto 52px auto;
   gap: 12px;
   align-items: center;
   border-radius: 8px;
@@ -1463,7 +1524,7 @@ input:focus {
 
 .score-recent-list article {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-columns: minmax(0, 1fr) auto auto;
   gap: 12px;
   align-items: center;
   border-radius: 8px;
@@ -1475,6 +1536,22 @@ input:focus {
   display: grid;
   gap: 3px;
   min-width: 0;
+}
+
+.score-delete {
+  border: 1px solid rgba(255, 61, 110, 0.22);
+  border-radius: 8px;
+  padding: 8px 10px;
+  background: rgba(255, 255, 255, 0.72);
+  color: #ff3d6e;
+  font-size: 0.92rem;
+  font-weight: 900;
+  box-shadow: none;
+}
+
+.score-delete:hover {
+  border-color: rgba(255, 61, 110, 0.48);
+  background: #ffffff;
 }
 
 @media (max-width: 920px) {
@@ -1522,6 +1599,25 @@ input:focus {
     grid-template-columns: 1fr;
   }
 
+  .score-rank-list li,
+  .score-recent-list article {
+    grid-template-columns: 44px minmax(0, 1fr) auto;
+  }
+
+  .score-rank-list li em {
+    grid-column: 2;
+  }
+
+  .score-rank-list .score-delete {
+    grid-column: 3;
+    grid-row: 2;
+  }
+
+  .score-recent-list .score-delete {
+    grid-column: 3;
+    grid-row: 1;
+  }
+
   .queue-head,
   .queue-board-head,
   .queue-hud {
@@ -1564,8 +1660,21 @@ input:focus {
     flex-direction: column;
   }
 
+  .topbar > :first-child {
+    min-width: 0;
+  }
+
+  h1 {
+    white-space: normal;
+  }
+
   .community-link {
     width: fit-content;
+  }
+
+  .player-top-actions {
+    justify-content: flex-start;
+    flex-wrap: wrap;
   }
 
   .scoreboard {

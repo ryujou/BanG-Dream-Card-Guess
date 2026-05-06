@@ -4,6 +4,8 @@ external
 public/cards/
 data/*
 !data/face-boxes.json
+Server/
+image.png
 weight/*
 !weight/best.pt
 screenshots/*.tmp.*

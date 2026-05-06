@@ -1,8 +1,9 @@
-const CACHE_NAME = "bangbangcai-v4";
+const CACHE_NAME = "bangbangcai-v11";
 const PRECACHE_URLS = [
   "/",
   "/player",
-  "/queue",
+  "/note-shooter",
+  "/note-shooter/bangdream.html",
   "/scores",
   "/solo",
   "/login",
@@ -38,7 +39,22 @@ self.addEventListener("fetch", (event) => {
   if (request.method !== "GET") return;
 
   const url = new URL(request.url);
-  if (url.pathname.startsWith("/api/") || url.pathname === "/ws") return;
+  if (url.pathname.startsWith("/api/") || url.pathname.startsWith("/note-shooter-api/") || url.pathname === "/ws") return;
+
+  if (request.mode === "navigate" || url.pathname.endsWith(".html") || url.pathname === "/note-shooter") {
+    event.respondWith(
+      fetch(request)
+        .then((response) => {
+          if (response.ok && url.origin === location.origin) {
+            const copy = response.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(request, copy));
+          }
+          return response;
+        })
+        .catch(() => caches.match(request))
+    );
+    return;
+  }
 
   event.respondWith(
     caches.match(request).then((cached) => {
