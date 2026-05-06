@@ -22,9 +22,9 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--weights", default=str(root / "weight" / "best.pt"), help="YOLO .pt weights path")
     parser.add_argument("--cards", default=str(root / "public" / "cards"), help="cached cards directory")
     parser.add_argument("--output", default=str(root / "data" / "face-boxes.json"), help="output JSON path")
-    parser.add_argument("--imgsz", type=int, default=960, help="YOLO inference image size")
-    parser.add_argument("--conf", type=float, default=0.25, help="confidence threshold")
-    parser.add_argument("--batch", type=int, default=16, help="batch size")
+    parser.add_argument("--imgsz", type=int, default=1280, help="YOLO inference image size")
+    parser.add_argument("--conf", type=float, default=0.10, help="confidence threshold")
+    parser.add_argument("--batch", type=int, default=8, help="batch size")
     parser.add_argument("--device", default="", help="YOLO device, for example cpu, 0, or 0,1")
     parser.add_argument("--force", action="store_true", help="redetect images already present in output")
     return parser.parse_args()
@@ -91,6 +91,7 @@ def main() -> None:
 
     output.parent.mkdir(parents=True, exist_ok=True)
     model = YOLO(str(weights))
+    names = {int(key): value for key, value in model.names.items()}
     done = 0
 
     for batch in chunks(pending, max(1, args.batch)):
@@ -112,14 +113,18 @@ def main() -> None:
             if result.boxes is not None and len(result.boxes):
                 xyxy = result.boxes.xyxy.cpu().tolist()
                 confidences = result.boxes.conf.cpu().tolist()
-                for coords, confidence in zip(xyxy, confidences):
+                classes = result.boxes.cls.cpu().tolist()
+                for coords, confidence, class_id in zip(xyxy, confidences, classes):
                     x1, y1, x2, y2 = coords
+                    class_id = int(class_id)
                     boxes.append({
                         "x": round(float(x1), 2),
                         "y": round(float(y1), 2),
                         "w": round(float(x2 - x1), 2),
                         "h": round(float(y2 - y1), 2),
                         "conf": round(float(confidence), 4),
+                        "cls": class_id,
+                        "label": names.get(class_id, str(class_id)),
                     })
 
             images[key] = {
@@ -139,6 +144,7 @@ def main() -> None:
         "cardsDir": portable_path(cards_dir, Path(__file__).resolve().parents[1]),
         "imgsz": args.imgsz,
         "conf": args.conf,
+        "names": names,
     })
 
     with output.open("w", encoding="utf-8") as file:

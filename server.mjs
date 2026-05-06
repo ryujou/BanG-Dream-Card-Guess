@@ -50,6 +50,7 @@ const DIFFICULTY_PRESETS = {
   hard: { cropSize: 130, candidateCount: 170 },
 };
 const FACE_CROP_MODES = ["auto", "none", "avoid", "prefer", "only"];
+const FACE_LABELS_BY_CLASS = { 0: "eyes", 1: "face", 2: "mouth" };
 
 const MIME = {
   ".html": "text/html; charset=utf-8",
@@ -509,6 +510,7 @@ function effectiveFaceCropMode() {
 function faceBoxesFor(relativePath) {
   const entry = faceBoxStore.images?.[relativePath.replaceAll("\\", "/")];
   if (!entry?.faces?.length) return [];
+  const imageArea = Math.max(1, Number(entry.width || 0) * Number(entry.height || 0));
   return entry.faces
     .map((face) => ({
       x: Number(face.x),
@@ -516,8 +518,22 @@ function faceBoxesFor(relativePath) {
       w: Number(face.w),
       h: Number(face.h),
       conf: Number(face.conf || 0),
+      cls: Number.isFinite(Number(face.cls)) ? Number(face.cls) : null,
+      label: faceLabel(face),
     }))
-    .filter((face) => Number.isFinite(face.x) && Number.isFinite(face.y) && face.w > 0 && face.h > 0);
+    .filter((face) => {
+      if (!Number.isFinite(face.x) || !Number.isFinite(face.y) || face.w <= 0 || face.h <= 0) return false;
+      const areaRatio = (face.w * face.h) / imageArea;
+      return !(face.label === "face" && areaRatio > 0.22 && face.conf < 0.9);
+    });
+}
+
+function faceLabel(face) {
+  const value = String(face.label || FACE_LABELS_BY_CLASS[Number(face.cls)] || "").toLowerCase();
+  if (value.includes("eye")) return "eyes";
+  if (value.includes("mouth")) return "mouth";
+  if (value.includes("face")) return "face";
+  return "face";
 }
 
 function filteredCardPool() {
@@ -930,12 +946,12 @@ async function smartCrop(image, size, history = [], faceBoxes = []) {
   const faceMode = effectiveFaceCropMode();
   const randomPoints = Array.from({ length: Math.max(30, settings.candidateCount) }, () => randomCropPoint(image, cropSize));
   const facePoints = faceMode === "prefer" || faceMode === "only" ? faceCropPoints(image, cropSize, faceBoxes) : [];
-  const candidates = [...randomPoints, ...facePoints]
+  const scoredCandidates = [...randomPoints, ...facePoints]
     .map((point) => ({ ...point, score: scoreCrop(image, point.x, point.y, cropSize, faceBoxes, faceMode) }))
-    .filter((crop) => crop.score > 0)
     .sort((a, b) => b.score - a.score);
+  const candidates = scoredCandidates.filter((crop) => crop.score > 0);
 
-  const crop = pickCrop(candidates, cropSize, history) || randomCropPoint(image, cropSize);
+  const crop = pickCrop(candidates.length ? candidates : scoredCandidates, cropSize, history) || randomCropPoint(image, cropSize);
   const dataUrl = await cropToDataUrl(image, crop.x, crop.y, cropSize);
   return { x: crop.x, y: crop.y, size: cropSize, image: dataUrl };
 }
@@ -973,8 +989,9 @@ function faceCropPoints(image, size, faceBoxes) {
   const points = [];
   const seen = new Set();
   for (const face of faceBoxes) {
-    const cx = face.x + face.w / 2;
-    const cy = face.y + face.h / 2;
+    const target = expandedFaceZone(face);
+    const cx = target.x + target.w / 2;
+    const cy = target.y + target.h / 2;
     for (const [ox, oy] of offsets) {
       const x = Math.round(Math.max(0, Math.min(maxX, cx - size / 2 + ox * size)));
       const y = Math.round(Math.max(0, Math.min(maxY, cy - size / 2 + oy * size)));
@@ -1090,33 +1107,59 @@ function scoreCrop(image, x, y, size, faceBoxes = [], faceMode = "none") {
 function scoreFacePolicy(crop, faceBoxes, mode) {
   if (!faceBoxes.length || mode === "none") return 0;
 
-  let maxFaceCoverage = 0;
+  let maxZoneCoverage = 0;
   let maxCropCoverage = 0;
+  let maxWeightedCoverage = 0;
 
   for (const face of faceBoxes) {
-    const overlap = overlapArea(crop, face);
+    const zone = expandedFaceZone(face);
+    const overlap = overlapArea(crop, zone);
     if (!overlap) continue;
-    const faceArea = face.w * face.h;
+    const labelWeight = face.label === "face" ? 1.15 : 0.9;
+    const faceArea = zone.w * zone.h;
     const cropArea = crop.w * crop.h;
-    maxFaceCoverage = Math.max(maxFaceCoverage, overlap / faceArea);
-    maxCropCoverage = Math.max(maxCropCoverage, overlap / cropArea);
+    const zoneCoverage = overlap / faceArea;
+    const cropCoverage = overlap / cropArea;
+    maxZoneCoverage = Math.max(maxZoneCoverage, zoneCoverage);
+    maxCropCoverage = Math.max(maxCropCoverage, cropCoverage);
+    maxWeightedCoverage = Math.max(maxWeightedCoverage, zoneCoverage * labelWeight + cropCoverage);
   }
 
   if (mode === "avoid") {
-    if (maxFaceCoverage > 0.15 || maxCropCoverage > 0.12) return Number.NEGATIVE_INFINITY;
-    return -(maxFaceCoverage * 250 + maxCropCoverage * 180);
+    return -(maxZoneCoverage * 620 + maxCropCoverage * 950 + (maxCropCoverage > 0.08 ? 520 : 0));
   }
 
   if (mode === "only") {
-    if (maxFaceCoverage < 0.35 && maxCropCoverage < 0.18) return Number.NEGATIVE_INFINITY;
-    return maxFaceCoverage * 120 + maxCropCoverage * 90;
+    if (maxZoneCoverage < 0.18 && maxCropCoverage < 0.08) return Number.NEGATIVE_INFINITY;
+    return maxWeightedCoverage * 160;
   }
 
   if (mode === "prefer") {
-    return maxFaceCoverage * 140 + maxCropCoverage * 110;
+    return maxWeightedCoverage * 135;
   }
 
   return 0;
+}
+
+function expandedFaceZone(face) {
+  const label = face.label || faceLabel(face);
+  const config =
+    label === "eyes"
+      ? { scaleX: 4.6, scaleY: 5.4, offsetY: 1.25 }
+      : label === "mouth"
+        ? { scaleX: 4.0, scaleY: 4.8, offsetY: -1.15 }
+        : { scaleX: 1.85, scaleY: 1.95, offsetY: 0.08 };
+
+  const cx = face.x + face.w / 2;
+  const cy = face.y + face.h / 2 + face.h * config.offsetY;
+  const w = face.w * config.scaleX;
+  const h = face.h * config.scaleY;
+  return {
+    x: cx - w / 2,
+    y: cy - h / 2,
+    w,
+    h,
+  };
 }
 
 function overlapArea(a, b) {
