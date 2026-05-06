@@ -1,4 +1,4 @@
-const CACHE_NAME = "bangbangcai-v11";
+const CACHE_NAME = "bangbangcai-v12";
 const PRECACHE_URLS = [
   "/",
   "/player",

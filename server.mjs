@@ -165,6 +165,11 @@ const server = createServer(async (req, res) => {
       return;
     }
 
+    if (url.pathname === "/api/note-shooter-scores/delete" && req.method === "POST") {
+      await handleDeleteNoteShooterScore(req, res);
+      return;
+    }
+
     if (url.pathname === "/api/queue-scores/events" && req.method === "GET") {
       handleQueueScoreEvents(req, res);
       return;

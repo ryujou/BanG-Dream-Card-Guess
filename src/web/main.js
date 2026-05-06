@@ -17,6 +17,7 @@ let queueScoresLoading = false;
 let queueScoreError = "";
 let queueScoreEvents = null;
 let queueScoresUpdatedAt = 0;
+let scoreDeleteTarget = null;
 let queueAnimationFrame = 0;
 let wifiQr = loadWifiQr();
 let previousStateKey = "";
@@ -339,6 +340,7 @@ function renderScores() {
             ${renderScoreRecent(recent, true)}
           </aside>
         </div>
+        ${scoreDeleteTarget ? renderScoreDeleteDialog(scoreDeleteTarget) : ""}
       </section>
     </main>
   `;
@@ -348,8 +350,18 @@ function renderScores() {
     const button = event.target.closest("[data-delete-score]");
     if (!button) return;
     event.preventDefault();
-    deleteNoteShooterScore(button.dataset.deleteScore || "");
+    openNoteShooterScoreDelete(button.dataset.deleteScore || "");
   });
+  app.querySelector("#cancelDeleteScore")?.addEventListener("click", () => {
+    scoreDeleteTarget = null;
+    renderScores();
+  });
+  app.querySelector("#deleteScoreForm")?.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const form = new FormData(event.currentTarget);
+    deleteNoteShooterScore(scoreDeleteTarget?.id || "", String(form.get("password") || ""));
+  });
+  app.querySelector("#deleteScorePassword")?.focus();
 }
 
 function renderScoreLeaderboard(items, canDelete = false) {
@@ -387,14 +399,35 @@ function renderScoreRecent(items, canDelete = false) {
   `;
 }
 
-async function deleteNoteShooterScore(id) {
-  if (!id) return;
-  const password = window.prompt("输入主持密码删除这条成绩");
-  if (password === null) return;
+function renderScoreDeleteDialog(item) {
+  return `
+    <div class="score-delete-dialog" role="dialog" aria-modal="true" aria-labelledby="deleteScoreTitle">
+      <form id="deleteScoreForm" class="score-delete-card">
+        <strong id="deleteScoreTitle">删除成绩</strong>
+        <span>${escapeHtml(item.username)} · ${Number(item.score) || 0}</span>
+        <input id="deleteScorePassword" name="password" type="password" autocomplete="current-password" placeholder="输入主持密码" required />
+        <div>
+          <button id="cancelDeleteScore" type="button">取消</button>
+          <button class="danger" type="submit">确认删除</button>
+        </div>
+      </form>
+    </div>
+  `;
+}
 
+function openNoteShooterScoreDelete(id) {
+  const item = [...(queueScores?.leaderboard || []), ...(queueScores?.recent || [])].find((entry) => entry.id === id);
+  if (!id) return;
+  scoreDeleteTarget = item || { id, username: "这条成绩", score: 0 };
+  queueScoreError = "";
+  renderScores();
+}
+
+async function deleteNoteShooterScore(id, password) {
+  if (!id) return;
   try {
-    const response = await fetch("/api/note-shooter-scores", {
-      method: "DELETE",
+    const response = await fetch("/api/note-shooter-scores/delete", {
+      method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8" },
       body: new URLSearchParams({ id, password }),
     });
@@ -405,6 +438,7 @@ async function deleteNoteShooterScore(id) {
     queueScores = result;
     queueScoresUpdatedAt = Date.now();
     queueScoreError = "";
+    scoreDeleteTarget = null;
   } catch (error) {
     queueScoreError = error instanceof Error ? error.message : "删除失败";
   } finally {
