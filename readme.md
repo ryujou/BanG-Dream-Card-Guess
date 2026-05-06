@@ -215,7 +215,7 @@ npm install
 npm run cache-cards
 ```
 
-如果本地 `weight/best.pt` 已放好 YOLO 动漫人脸权重，可以继续生成人脸框数据库：
+仓库已包含默认 YOLO 动漫人脸权重 `weight/best.pt`。如需更新人脸框数据库，可以继续执行：
 
 ```sh
 pip install ultralytics
@@ -396,7 +396,7 @@ PORT=5180 ./scripts/start-booth.sh
 
 如果现场 Wi-Fi 不稳定，可以使用手机热点或 USB 共享网络。游戏控制和图片读取仍优先走本地服务，提前缓存卡面后对公网依赖会更低。
 
-设置页保存后会写入本地 `data/settings.json`，重启服务后会保留模式、规则和队伍名称。`data/` 是运行时配置目录，不需要提交到 GitHub。
+设置页保存后会写入本地 `data/settings.json`，重启服务后会保留模式、规则和队伍名称。`data/settings.json` 是运行时配置文件，不需要提交到 GitHub；`data/face-boxes.json` 是开源的人脸框数据库，会随仓库提供。
 
 现场建议提前检查：
 
@@ -448,9 +448,9 @@ public/cards/
 
 准备步骤：
 
-1. 把 YOLO 权重放到本地 `weight/best.pt`。`weight/` 已写入 `.gitignore`，不会提交到 GitHub。
-2. 先执行 `npm run cache-cards`，确保 `public/cards/` 里有卡面。
-3. 安装 Python 依赖并生成检测框：
+1. 仓库已提供默认 YOLO 权重 `weight/best.pt` 和人脸框数据库 `data/face-boxes.json`，普通使用不需要重新检测。
+2. 如果更换权重或卡面缓存，先执行 `npm run cache-cards`，确保 `public/cards/` 里有卡面。
+3. 安装 Python 依赖并重新生成检测框：
 
 ```sh
 pip install ultralytics
@@ -608,7 +608,7 @@ HOST_PASSWORD="你的强密码" ./scripts/start-booth.sh
 | 角色昵称 | `resource/nickname.json` | 来自原 Koishi 插件整理数据 |
 | 背景 pattern | `public/bg/bg_pattern_*` | 参考 BanG Dream! 官网浅色 pattern 风格 |
 | 猴子图案 | `public/bg/monkey.png` | 项目自备/用户提供素材 |
-| 人脸检测权重 | `weight/best.pt` | 本地可选 YOLO 动漫人脸权重，不提交 GitHub |
+| 人脸检测权重 | `weight/best.pt` | 开源 YOLO 动漫人脸权重，随仓库提供 |
 
 Bestdori 卡面资源路径示例：
 
@@ -647,9 +647,9 @@ BanG-Dream-Card-Guess/
 ├── readme.md                   # 项目说明
 ├── server.mjs                  # 本地 HTTP/WebSocket 服务
 ├── vite.config.mjs             # Vite 配置
-├── data/                       # 运行时设置和人脸框数据，不提交 GitHub
-│   ├── settings.json           # 设置页保存结果
-│   └── face-boxes.json         # 人脸检测框数据库
+├── data/
+│   ├── settings.json           # 设置页保存结果，本地运行生成，不提交 GitHub
+│   └── face-boxes.json         # 人脸检测框数据库，随仓库提供
 ├── public/                     # 静态资源
 │   ├── manifest.webmanifest    # PWA 配置
 │   ├── sw.js                   # 离线缓存 Service Worker
@@ -672,7 +672,7 @@ BanG-Dream-Card-Guess/
 │   ├── stop-server.sh
 │   ├── start-solo.cmd
 │   └── start-solo.sh
-├── weight/                     # 本地 YOLO 权重目录，不提交 GitHub
+├── weight/                     # YOLO 动漫人脸权重目录，随仓库提供
 │   └── best.pt
 └── src/
     └── web/                    # 前端页面

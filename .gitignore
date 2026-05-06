@@ -2,8 +2,10 @@ lib
 dist
 external
 public/cards/
-data/
-weight/
+data/*
+!data/face-boxes.json
+weight/*
+!weight/best.pt
 screenshots/*.tmp.*
 
 node_modules

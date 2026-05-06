@@ -46,6 +46,13 @@ def image_key(cards_dir: Path, path: Path) -> str:
     return path.relative_to(cards_dir).as_posix()
 
 
+def portable_path(path: Path, root: Path) -> str:
+    try:
+        return path.resolve().relative_to(root).as_posix()
+    except ValueError:
+        return str(path)
+
+
 def iter_images(cards_dir: Path) -> list[Path]:
     return sorted(
         path for path in cards_dir.rglob("*")
@@ -128,8 +135,8 @@ def main() -> None:
     data.update({
         "version": 1,
         "generatedAt": datetime.now(timezone.utc).isoformat(),
-        "weights": str(weights),
-        "cardsDir": str(cards_dir),
+        "weights": portable_path(weights, Path(__file__).resolve().parents[1]),
+        "cardsDir": portable_path(cards_dir, Path(__file__).resolve().parents[1]),
         "imgsz": args.imgsz,
         "conf": args.conf,
     })
