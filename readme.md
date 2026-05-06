@@ -114,7 +114,7 @@ BanG Dream! Card Guess 是从 Koishi 机器人猜卡插件改造成的本地 Web
 
 ### 离线与现场稳定性
 
-项目内置 PWA Service Worker，会缓存基础页面、背景图和已访问过的静态资源。卡面体积较大，不建议放进 GitHub；现场前建议先执行 `npm run cache-cards` 下载卡面到 `public/cards/`。
+项目内置 PWA Service Worker，会缓存基础页面、背景图和已访问过的静态资源。卡面体积较大，现场前建议先执行 `npm run cache-cards` 下载卡面到 `public/cards/`。
 
 实际离线能力取决于两部分：
 
@@ -215,7 +215,7 @@ npm install
 npm run cache-cards
 ```
 
-仓库已包含默认 YOLO 动漫人脸权重 `weight/best.pt`。如需更新人脸框数据库，可以继续执行：
+项目已包含默认 YOLO 动漫人脸权重 `weight/best.pt`。如需更新人脸框数据库，可以继续执行：
 
 ```sh
 pip install ultralytics
@@ -396,7 +396,7 @@ PORT=5180 ./scripts/start-booth.sh
 
 如果现场 Wi-Fi 不稳定，可以使用手机热点或 USB 共享网络。游戏控制和图片读取仍优先走本地服务，提前缓存卡面后对公网依赖会更低。
 
-设置页保存后会写入本地 `data/settings.json`，重启服务后会保留模式、规则和队伍名称。`data/settings.json` 是运行时配置文件，不需要提交到 GitHub；`data/face-boxes.json` 是开源的人脸框数据库，会随仓库提供。
+设置页保存后会写入本地 `data/settings.json`，重启服务后会保留模式、规则和队伍名称。`data/settings.json` 是运行时配置文件；`data/face-boxes.json` 是项目自带的人脸框数据库。
 
 现场建议提前检查：
 
@@ -439,7 +439,7 @@ public/cards/
 
 - 该目录可能占用数 GB 磁盘空间。
 - 运行游戏时会优先读取本地缓存，缺失时才联网下载并补到缓存。
-- `public/cards/` 已写入 `.gitignore`，不会被版本控制。
+- `public/cards/` 是本地卡面缓存目录，可按需要重新下载或清空。
 - 浏览器会通过 PWA Service Worker 缓存基础页面和静态背景；卡面仍建议提前执行缓存脚本。
 
 ## 人脸检测与裁剪策略
@@ -448,7 +448,7 @@ public/cards/
 
 准备步骤：
 
-1. 仓库已提供默认 YOLO 权重 `weight/best.pt` 和人脸框数据库 `data/face-boxes.json`，普通使用不需要重新检测。
+1. 项目已提供默认 YOLO 权重 `weight/best.pt` 和人脸框数据库 `data/face-boxes.json`，普通使用不需要重新检测。
 2. 如果更换权重或卡面缓存，先执行 `npm run cache-cards`，确保 `public/cards/` 里有卡面。
 3. 安装 Python 依赖并重新生成检测框：
 
@@ -608,7 +608,7 @@ HOST_PASSWORD="你的强密码" ./scripts/start-booth.sh
 | 角色昵称 | `resource/nickname.json` | 来自原 Koishi 插件整理数据 |
 | 背景 pattern | `public/bg/bg_pattern_*` | 参考 BanG Dream! 官网浅色 pattern 风格 |
 | 猴子图案 | `public/bg/monkey.png` | 项目自备/用户提供素材 |
-| 人脸检测权重 | `weight/best.pt` | 开源 YOLO 动漫人脸权重，随仓库提供 |
+| 人脸检测权重 | `weight/best.pt` | YOLO 动漫人脸权重，项目自带 |
 
 Bestdori 卡面资源路径示例：
 
@@ -620,7 +620,7 @@ https://bestdori.com/assets/jp/characters/resourceset/...
 
 - BanG Dream! 相关角色、卡面与素材版权归对应权利方所有。
 - 本项目仅用于同好交流、线下互动与非商业展示。
-- 不建议把批量缓存的卡面立绘提交到公开仓库。
+- 批量缓存的卡面立绘建议只作为本地活动素材使用。
 
 ## 内置接口
 
@@ -640,7 +640,6 @@ https://bestdori.com/assets/jp/characters/resourceset/...
 
 ```text
 BanG-Dream-Card-Guess/
-├── .gitignore                  # Git 忽略规则
 ├── index.html                  # Vite HTML 入口
 ├── package.json                # npm 脚本与依赖
 ├── package-lock.json           # npm 锁定文件
@@ -648,13 +647,13 @@ BanG-Dream-Card-Guess/
 ├── server.mjs                  # 本地 HTTP/WebSocket 服务
 ├── vite.config.mjs             # Vite 配置
 ├── data/
-│   ├── settings.json           # 设置页保存结果，本地运行生成，不提交 GitHub
-│   └── face-boxes.json         # 人脸检测框数据库，随仓库提供
+│   ├── settings.json           # 设置页保存结果，本地运行生成
+│   └── face-boxes.json         # 人脸检测框数据库
 ├── public/                     # 静态资源
 │   ├── manifest.webmanifest    # PWA 配置
 │   ├── sw.js                   # 离线缓存 Service Worker
 │   ├── bg/                     # 背景 pattern 与猴子素材
-│   └── cards/                  # 卡面缓存，不提交 GitHub
+│   └── cards/                  # 本地卡面缓存
 ├── resource/                   # 题库与昵称数据
 │   ├── all5_2.json
 │   └── nickname.json
@@ -672,7 +671,7 @@ BanG-Dream-Card-Guess/
 │   ├── stop-server.sh
 │   ├── start-solo.cmd
 │   └── start-solo.sh
-├── weight/                     # YOLO 动漫人脸权重目录，随仓库提供
+├── weight/                     # YOLO 动漫人脸权重目录
 │   └── best.pt
 └── src/
     └── web/                    # 前端页面
@@ -681,9 +680,6 @@ BanG-Dream-Card-Guess/
 ```
 
 ## 常见问题
-
-**Q: 为什么不把下载好的卡面传到 GitHub？**  
-A: 卡面缓存体积很大，而且涉及版权边界。项目会在本地运行时自动读取或补齐缓存。
 
 **Q: 现场没有公网还能玩吗？**  
 A: 可以。提前执行 `npm run cache-cards` 后，题目数据和大部分卡面都在本地。玩家页、主持页和设置页只需要连上同一个局域网。
