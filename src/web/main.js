@@ -135,15 +135,15 @@ function renderQr() {
   const wifiText = wifiQr.ssid ? wifiQrText(wifiQr) : "";
   const qrCards = info.appMode === "solo"
     ? [
-        { title: "自己玩模式", tag: "Solo", url: pages.solo, note: "扫码直接进入单人答题页" },
-        { title: "音符射手", tag: "Note Shooter", url: pages.noteShooter, note: "等待时扫码游玩开源音符射击小游戏" },
-        { title: "入口总览", tag: "QR", url: pages.qr, note: "重新打开这张二维码页" },
+        { title: "自己玩模式", tag: "Solo", url: pages.solo },
+        { title: "音符射手", tag: "Note Shooter", url: pages.noteShooter },
+        { title: "入口总览", tag: "QR", url: pages.qr },
       ]
     : [
-        { title: "玩家页", tag: "Player", url: pages.player, note: "给玩家或展示屏扫码打开" },
-        { title: "音符射手", tag: "Note Shooter", url: pages.noteShooter, note: "等待猜角色时给玩家扫码游玩" },
-        { title: "主持登录", tag: "Host", url: pages.login, note: "主持扫码后输入密码进入后台" },
-        { title: "设置页", tag: "Setup", url: pages.settings, note: "开场前调整规则和显示选项" },
+        { title: "玩家页", tag: "Player", url: pages.player },
+        { title: "音符射手", tag: "Note Shooter", url: pages.noteShooter },
+        { title: "主持登录", tag: "Host", url: pages.login },
+        { title: "设置页", tag: "Setup", url: pages.settings },
       ];
   const lanEntries = (info.entries || []).filter((entry) => !entry.local);
 
@@ -170,7 +170,6 @@ function renderQr() {
         <div class="wifi-panel">
           <div>
             <strong>Wi-Fi 二维码</strong>
-            <span>填入现场热点信息后，可以和玩家入口一起打印。</span>
           </div>
           <form id="wifiForm" class="wifi-form">
             <input name="ssid" type="text" placeholder="Wi-Fi 名称" value="${escapeAttr(wifiQr.ssid)}" />
@@ -223,7 +222,6 @@ function renderQrCard(item) {
       <div>
         <span>${escapeHtml(item.tag)}</span>
         <h2>${escapeHtml(item.title)}</h2>
-        <p>${escapeHtml(item.note)}</p>
       </div>
       <img src="/api/qr?text=${encodeURIComponent(item.url)}" alt="${escapeAttr(item.title)}二维码" />
       <code>${escapeHtml(item.url)}</code>
@@ -307,7 +305,6 @@ function renderScores() {
           <div>
             <p class="eyebrow">Live Scores</p>
             <h1>成绩榜</h1>
-            <span>音符射手本地成绩会实时更新，适合单独投屏或给工作人员查看。</span>
           </div>
           <div class="qr-actions">
             <a href="/note-shooter">音符射手</a>
