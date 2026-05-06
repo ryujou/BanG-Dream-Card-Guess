@@ -767,7 +767,7 @@ input:focus {
 .health-panel {
   display: grid;
   grid-column: 1 / -1;
-  grid-template-columns: repeat(6, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 10px;
   border: 1px solid rgba(23, 23, 31, 0.08);
   border-radius: 8px;

@@ -16,6 +16,7 @@ const cardCacheDir = path.join(publicDir, "cards");
 const resourceDir = path.join(__dirname, "resource");
 const dataDir = process.env.DATA_DIR ? path.resolve(process.env.DATA_DIR) : path.join(__dirname, "data");
 const settingsStorePath = path.join(dataDir, "settings.json");
+const faceBoxesStorePath = path.join(dataDir, "face-boxes.json");
 const BESTDORI_ORIGIN = "https://bestdori.com";
 const BESTDORI_BASE = `${BESTDORI_ORIGIN}/assets/jp/characters/resourceset`;
 const APP_MODE = process.env.APP_MODE === "solo" || process.argv.includes("--solo") ? "solo" : "booth";
@@ -25,6 +26,7 @@ const AUTH_TOKEN = randomBytes(32).toString("hex");
 
 const cards = JSON.parse(readFileSync(path.join(resourceDir, "all5_2.json"), "utf-8"));
 const nicknames = JSON.parse(readFileSync(path.join(resourceDir, "nickname.json"), "utf-8"));
+const faceBoxStore = readFaceBoxStore();
 const cardPool = Object.entries(cards)
   .map(([id, card]) => ({ ...card, id }))
   .filter((card) => card?.resourceSetName && nicknames[String(card.characterId)]?.length);
@@ -47,6 +49,7 @@ const DIFFICULTY_PRESETS = {
   normal: { cropSize: 180, candidateCount: 120 },
   hard: { cropSize: 130, candidateCount: 170 },
 };
+const FACE_CROP_MODES = ["auto", "none", "avoid", "prefer", "only"];
 
 const MIME = {
   ".html": "text/html; charset=utf-8",
@@ -64,6 +67,7 @@ const MIME = {
 const defaultSettings = {
   mode: "single",
   difficulty: "normal",
+  faceCropMode: "auto",
   roundSeconds: 60,
   questionsPerPlayer: 3,
   allowRecrop: true,
@@ -334,6 +338,19 @@ function readPersistedConfig() {
   }
 }
 
+function readFaceBoxStore() {
+  try {
+    if (!existsSync(faceBoxesStorePath)) return { images: {} };
+    const value = JSON.parse(readFileSync(faceBoxesStorePath, "utf-8"));
+    return value && typeof value === "object" && value.images && typeof value.images === "object"
+      ? value
+      : { images: {} };
+  } catch (error) {
+    console.warn(`Failed to read face box store: ${error instanceof Error ? error.message : error}`);
+    return { images: {} };
+  }
+}
+
 function persistedTeamName(team, fallback) {
   const name = persistedConfig.teams?.[team]?.name;
   return typeof name === "string" && name.trim() ? name.slice(0, 16) : fallback;
@@ -476,9 +493,31 @@ function roundConfigKey() {
     cardRarities: settings.cardRarities,
     cardAttributes: settings.cardAttributes,
     cardImageVariant: settings.cardImageVariant,
+    faceCropMode: settings.faceCropMode,
     avoidRecentCards: settings.avoidRecentCards,
     avoidRecentCharacters: settings.avoidRecentCharacters,
   });
+}
+
+function effectiveFaceCropMode() {
+  if (FACE_CROP_MODES.includes(settings.faceCropMode) && settings.faceCropMode !== "auto") return settings.faceCropMode;
+  if (settings.difficulty === "easy") return "prefer";
+  if (settings.difficulty === "hard") return "avoid";
+  return "none";
+}
+
+function faceBoxesFor(relativePath) {
+  const entry = faceBoxStore.images?.[relativePath.replaceAll("\\", "/")];
+  if (!entry?.faces?.length) return [];
+  return entry.faces
+    .map((face) => ({
+      x: Number(face.x),
+      y: Number(face.y),
+      w: Number(face.w),
+      h: Number(face.h),
+      conf: Number(face.conf || 0),
+    }))
+    .filter((face) => Number.isFinite(face.x) && Number.isFinite(face.y) && face.w > 0 && face.h > 0);
 }
 
 function filteredCardPool() {
@@ -563,6 +602,7 @@ function healthSnapshot() {
       roleCounts,
       preloaded: Boolean(preparedRoundPromise),
       filteredCards: filteredCardPool().length,
+      effectiveFaceCropMode: effectiveFaceCropMode(),
       uptimeSeconds: Math.floor(process.uptime()),
     };
   }
@@ -582,6 +622,8 @@ function healthSnapshot() {
       bands: BAND_OPTIONS,
       rarities: RARITY_OPTIONS,
       attributes: ATTRIBUTE_OPTIONS,
+      faceBoxImages: Object.keys(faceBoxStore.images || {}).length,
+      faceBoxesPath: faceBoxesStorePath,
     },
   };
 
@@ -591,6 +633,7 @@ function healthSnapshot() {
     roleCounts,
     preloaded: Boolean(preparedRoundPromise),
     filteredCards: filteredCardPool().length,
+    effectiveFaceCropMode: effectiveFaceCropMode(),
     uptimeSeconds: Math.floor(process.uptime()),
   };
 }
@@ -643,7 +686,7 @@ async function recrop() {
   broadcast();
 
   const image = await Jimp.read(game.current.sourceBuffer);
-  const crop = await smartCrop(image, settings.cropSize, game.cropHistory);
+  const crop = await smartCrop(image, settings.cropSize, game.cropHistory, game.current.faceBoxes || []);
   rememberCrop(crop);
   game.current.crop = crop;
   game.recrops += 1;
@@ -794,6 +837,7 @@ function updateSettings(next) {
 
   if (["single", "versus", "self"].includes(next.mode)) settings.mode = next.mode;
   if (Object.keys(DIFFICULTY_PRESETS).includes(next.difficulty)) settings.difficulty = next.difficulty;
+  if (FACE_CROP_MODES.includes(next.faceCropMode)) settings.faceCropMode = next.faceCropMode;
   if (["mixed", "normal", "trained"].includes(next.cardImageVariant)) settings.cardImageVariant = next.cardImageVariant;
   if (next.cardBands !== undefined) settings.cardBands = arraySetting(next.cardBands, defaultSettings.cardBands, defaultSettings.cardBands);
   if (next.cardRarities !== undefined) settings.cardRarities = numberArraySetting(next.cardRarities, defaultSettings.cardRarities, defaultSettings.cardRarities);
@@ -812,9 +856,10 @@ function updateSettings(next) {
 async function createRound() {
   const card = pickRoundCard();
   const names = nicknames[String(card.characterId)];
-  const { buffer, imageUrl, variant } = await loadCardImage(card);
+  const { buffer, imageUrl, variant, cacheRelativePath } = await loadCardImage(card);
+  const faceBoxes = faceBoxesFor(cacheRelativePath);
   const image = await Jimp.read(buffer);
-  const crop = await smartCrop(image, settings.cropSize);
+  const crop = await smartCrop(image, settings.cropSize, [], faceBoxes);
 
   return {
     cardId: card.id,
@@ -826,6 +871,8 @@ async function createRound() {
     rarity: card.rarity,
     attribute: card.attribute,
     band: BAND_BY_CHARACTER.get(Number(card.characterId)) || "",
+    faceBoxes,
+    faceCropMode: effectiveFaceCropMode(),
     imageWidth: image.bitmap.width,
     imageHeight: image.bitmap.height,
     sourceBuffer: buffer,
@@ -852,6 +899,7 @@ async function loadCardImage(card) {
       return {
         buffer: readFileSync(cachePath),
         imageUrl,
+        cacheRelativePath: cacheRelativePath.replaceAll("\\", "/"),
         variant: file === "card_after_training.png" ? "trained" : "normal",
       };
     }
@@ -863,7 +911,12 @@ async function loadCardImage(card) {
       const buffer = Buffer.from(await response.arrayBuffer());
       await mkdir(path.dirname(cachePath), { recursive: true });
       await writeFile(cachePath, buffer);
-      return { buffer, imageUrl, variant: file === "card_after_training.png" ? "trained" : "normal" };
+      return {
+        buffer,
+        imageUrl,
+        cacheRelativePath: cacheRelativePath.replaceAll("\\", "/"),
+        variant: file === "card_after_training.png" ? "trained" : "normal",
+      };
     } catch {
       continue;
     }
@@ -872,12 +925,13 @@ async function loadCardImage(card) {
   throw new Error("下载卡面失败");
 }
 
-async function smartCrop(image, size, history = []) {
+async function smartCrop(image, size, history = [], faceBoxes = []) {
   const cropSize = Math.max(60, Math.min(260, Math.floor(size)));
-  const candidates = Array.from({ length: Math.max(30, settings.candidateCount) }, () => {
-    const point = randomCropPoint(image, cropSize);
-    return { ...point, score: scoreCrop(image, point.x, point.y, cropSize) };
-  })
+  const faceMode = effectiveFaceCropMode();
+  const randomPoints = Array.from({ length: Math.max(30, settings.candidateCount) }, () => randomCropPoint(image, cropSize));
+  const facePoints = faceMode === "prefer" || faceMode === "only" ? faceCropPoints(image, cropSize, faceBoxes) : [];
+  const candidates = [...randomPoints, ...facePoints]
+    .map((point) => ({ ...point, score: scoreCrop(image, point.x, point.y, cropSize, faceBoxes, faceMode) }))
     .filter((crop) => crop.score > 0)
     .sort((a, b) => b.score - a.score);
 
@@ -899,6 +953,41 @@ function randomCropPoint(image, size) {
   };
 }
 
+function faceCropPoints(image, size, faceBoxes) {
+  if (!faceBoxes.length) return [];
+
+  const maxX = Math.max(0, image.bitmap.width - size);
+  const maxY = Math.max(0, image.bitmap.height - size);
+  const offsets = [
+    [0, 0],
+    [-0.28, 0],
+    [0.28, 0],
+    [0, -0.28],
+    [0, 0.28],
+    [-0.22, -0.22],
+    [0.22, -0.22],
+    [-0.22, 0.22],
+    [0.22, 0.22],
+  ];
+
+  const points = [];
+  const seen = new Set();
+  for (const face of faceBoxes) {
+    const cx = face.x + face.w / 2;
+    const cy = face.y + face.h / 2;
+    for (const [ox, oy] of offsets) {
+      const x = Math.round(Math.max(0, Math.min(maxX, cx - size / 2 + ox * size)));
+      const y = Math.round(Math.max(0, Math.min(maxY, cy - size / 2 + oy * size)));
+      const key = `${x}:${y}`;
+      if (!seen.has(key)) {
+        seen.add(key);
+        points.push({ x, y });
+      }
+    }
+  }
+  return points;
+}
+
 function pickCrop(candidates, size, history = []) {
   const passes = [size * 1.85, size * 1.2, 0];
   for (const minDistance of passes) {
@@ -915,7 +1004,7 @@ function rememberCrop(crop) {
   game.cropHistory = game.cropHistory.slice(-8);
 }
 
-function scoreCrop(image, x, y, size) {
+function scoreCrop(image, x, y, size, faceBoxes = [], faceMode = "none") {
   const data = image.bitmap.data;
   const width = image.bitmap.width;
   const step = 6;
@@ -984,14 +1073,58 @@ function scoreCrop(image, x, y, size) {
   if (colorVariance < 28 && edgeDensity < 0.1) return 0;
   if (lumaVariance < 180 && solidRatio > 0.38) return 0;
 
+  const faceScore = scoreFacePolicy({ x, y, w: size, h: size }, faceBoxes, faceMode);
+  if (faceScore === Number.NEGATIVE_INFINITY) return 0;
+
   return (
     colorVariance * 1.4 +
     Math.sqrt(Math.max(0, lumaVariance)) * 3.2 +
     edgeDensity * 150 +
     saturation * 0.32 -
     flatPenalty -
-    brightnessPenalty
+    brightnessPenalty +
+    faceScore
   );
+}
+
+function scoreFacePolicy(crop, faceBoxes, mode) {
+  if (!faceBoxes.length || mode === "none") return 0;
+
+  let maxFaceCoverage = 0;
+  let maxCropCoverage = 0;
+
+  for (const face of faceBoxes) {
+    const overlap = overlapArea(crop, face);
+    if (!overlap) continue;
+    const faceArea = face.w * face.h;
+    const cropArea = crop.w * crop.h;
+    maxFaceCoverage = Math.max(maxFaceCoverage, overlap / faceArea);
+    maxCropCoverage = Math.max(maxCropCoverage, overlap / cropArea);
+  }
+
+  if (mode === "avoid") {
+    if (maxFaceCoverage > 0.15 || maxCropCoverage > 0.12) return Number.NEGATIVE_INFINITY;
+    return -(maxFaceCoverage * 250 + maxCropCoverage * 180);
+  }
+
+  if (mode === "only") {
+    if (maxFaceCoverage < 0.35 && maxCropCoverage < 0.18) return Number.NEGATIVE_INFINITY;
+    return maxFaceCoverage * 120 + maxCropCoverage * 90;
+  }
+
+  if (mode === "prefer") {
+    return maxFaceCoverage * 140 + maxCropCoverage * 110;
+  }
+
+  return 0;
+}
+
+function overlapArea(a, b) {
+  const left = Math.max(a.x, b.x);
+  const top = Math.max(a.y, b.y);
+  const right = Math.min(a.x + a.w, b.x + b.w);
+  const bottom = Math.min(a.y + a.h, b.y + b.h);
+  return Math.max(0, right - left) * Math.max(0, bottom - top);
 }
 
 function pixel(data, width, x, y) {
@@ -1045,6 +1178,7 @@ function publicState(role) {
       rarities: RARITY_OPTIONS,
       attributes: ATTRIBUTE_OPTIONS,
       difficultyPresets: DIFFICULTY_PRESETS,
+      faceCropModes: FACE_CROP_MODES,
     },
     health: healthSnapshot(),
     game: {

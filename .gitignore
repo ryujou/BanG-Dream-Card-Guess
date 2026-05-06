@@ -3,9 +3,12 @@ dist
 external
 public/cards/
 data/
+weight/
 screenshots/*.tmp.*
 
 node_modules
+__pycache__/
+*.pyc
 npm-debug.log
 yarn-debug.log
 yarn-error.log

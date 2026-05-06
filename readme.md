@@ -29,6 +29,7 @@
 - [默认配置](#默认配置)
 - [现场部署建议](#现场部署建议)
 - [卡面缓存](#卡面缓存)
+- [人脸检测与裁剪策略](#人脸检测与裁剪策略)
 - [二维码与离线](#二维码与离线)
 - [智能裁剪算法](#智能裁剪算法)
 - [主持鉴权](#主持鉴权)
@@ -51,6 +52,7 @@ BanG Dream! Card Guess 是从 Koishi 机器人猜卡插件改造成的本地 Web
 - 自己玩模式：单页面输入答案并自动判定
 - 主持密码登录，避免玩家误入控制台
 - 智能裁剪卡面局部，优先选择细节丰富区域
+- 支持 YOLO 动漫人脸预检测，可设置避开人脸、优先人脸或只切人脸
 - 正方形切图，支持主持和玩家重切
 - 揭晓时完整展示卡面，并用红框标出切图位置
 - 支持单人计分、双队互动、连击、倒计时、玩家页重切按钮开关、自动下一题
@@ -91,12 +93,13 @@ BanG Dream! Card Guess 是从 Koishi 机器人猜卡插件改造成的本地 Web
 
 - 玩法模式：单人挑战 / 双队互动。
 - 难度预设：简单 / 普通 / 困难，会自动调整裁剪尺寸和候选数。
-- 裁剪参数：裁剪尺寸、智能候选数、最大重切次数。
+- 裁剪参数：裁剪尺寸、智能候选数、最大重切次数、人脸裁剪策略。
 - 计分规则：答对加分、答错扣分、连击加分、自动下一题。
 - 玩家显示：是否显示倒计时、是否允许重切、玩家页是否显示重切按钮、是否启用音效。
 - 卡池筛选：乐队、稀有度、属性、训练前/训练后/随机。
 - 去重规则：短时间内避免重复卡面和重复角色。
 - 运行状态：显示卡池数量、本地缓存数量、玩家/主持连接数、下一题预加载状态。
+- 人脸状态：显示已生成人脸框数据的卡面数量，以及当前实际使用的人脸策略。
 - 设置导入/导出：可以把一套活动配置保存成 JSON，下次直接导入。
 
 ### 二维码页
@@ -193,6 +196,8 @@ BangBang@2026
 | ws | WebSocket 服务 | 已写入 `dependencies` |
 | Jimp | 服务端裁图 | 已写入 `dependencies` |
 | qrcode | 本地二维码生成 | 已写入 `dependencies` |
+| Python | 3.9+ | 仅在人脸预检测时需要 |
+| ultralytics | YOLO 推理 | 仅在人脸预检测时需要，`pip install ultralytics` |
 
 ## 快速开始
 
@@ -202,7 +207,24 @@ BangBang@2026
 npm install
 ```
 
-### 2. 启动摊位模式
+### 2. 可选：提前缓存卡面和人脸框
+
+现场使用前建议先缓存卡面：
+
+```sh
+npm run cache-cards
+```
+
+如果本地 `weight/best.pt` 已放好 YOLO 动漫人脸权重，可以继续生成人脸框数据库：
+
+```sh
+pip install ultralytics
+npm run detect-faces
+```
+
+生成结果会保存到 `data/face-boxes.json`，游戏启动时会自动读取。
+
+### 3. 启动摊位模式
 
 ```sh
 npm run booth
@@ -222,7 +244,7 @@ npm run booth
 BangBang@2026
 ```
 
-### 3. 启动自己玩模式
+### 4. 启动自己玩模式
 
 ```sh
 npm run solo
@@ -233,7 +255,7 @@ npm run solo
 - 自玩页：`http://127.0.0.1:5173/solo`
 - 二维码页：`http://127.0.0.1:5173/qr`
 
-### 4. 生产构建
+### 5. 生产构建
 
 ```sh
 npm run build
@@ -328,6 +350,7 @@ PORT=5180 ./scripts/start-booth.sh
 | 每题秒数 | `60` | 倒计时秒数 |
 | 每人题数 | `3` | 现场轮换时参考 |
 | 难度 | `normal` | 普通难度 |
+| 人脸策略 | `auto` | 跟随难度：简单优先人脸，普通不限制，困难避开人脸 |
 | 裁剪尺寸 | `180` | 正方形裁剪边长，单位像素 |
 | 智能候选数 | `120` | 每题随机评估的候选裁剪区域数量 |
 | 最大重切 | `3` | 每题可重切次数 |
@@ -419,6 +442,71 @@ public/cards/
 - `public/cards/` 已写入 `.gitignore`，不会被版本控制。
 - 浏览器会通过 PWA Service Worker 缓存基础页面和静态背景；卡面仍建议提前执行缓存脚本。
 
+## 人脸检测与裁剪策略
+
+项目支持把动漫人脸识别提前离线跑完，运行游戏时只读取检测框，不在现场实时跑 YOLO。这样可以把“难度不切人脸区域”做成设置项，同时避免游戏过程中卡顿。
+
+准备步骤：
+
+1. 把 YOLO 权重放到本地 `weight/best.pt`。`weight/` 已写入 `.gitignore`，不会提交到 GitHub。
+2. 先执行 `npm run cache-cards`，确保 `public/cards/` 里有卡面。
+3. 安装 Python 依赖并生成检测框：
+
+```sh
+pip install ultralytics
+npm run detect-faces
+```
+
+检测结果会写入：
+
+```text
+data/face-boxes.json
+```
+
+`data/face-boxes.json` 会按卡面相对路径保存图片宽高和人脸框，例如：
+
+```json
+{
+  "images": {
+    "res001001_rip/card_normal.png": {
+      "width": 1334,
+      "height": 1002,
+      "faces": [
+        { "x": 512.4, "y": 218.6, "w": 96.3, "h": 102.1, "conf": 0.91 }
+      ]
+    }
+  }
+}
+```
+
+设置页的人脸策略：
+
+| 策略 | 说明 |
+| --- | --- |
+| 跟随难度 | 默认值。简单模式优先切人脸，普通模式不限制，困难模式避开人脸 |
+| 不限制 | 只使用原本的智能裁剪评分，不参考人脸框 |
+| 避开人脸 | 候选区域如果和人脸重叠过多会被丢弃，适合提高难度 |
+| 优先人脸 | 人脸附近候选会加分，适合降低难度或暖场 |
+| 只切人脸 | 尽量只选择覆盖人脸的区域；如果该卡没有检测框，会回退到普通智能裁剪 |
+
+检测脚本支持增量更新。已经写入 `data/face-boxes.json` 的图片默认不会重复检测；如果更换权重或想重跑全部图片，可以使用：
+
+```sh
+python scripts/detect-faces.py --force
+```
+
+常用参数：
+
+| 参数 | 默认值 | 说明 |
+| --- | --- | --- |
+| `--weights` | `weight/best.pt` | YOLO 权重路径 |
+| `--cards` | `public/cards` | 本地卡面目录 |
+| `--output` | `data/face-boxes.json` | 检测框输出路径 |
+| `--imgsz` | `960` | YOLO 推理尺寸 |
+| `--conf` | `0.25` | 置信度阈值 |
+| `--batch` | `16` | 批处理数量 |
+| `--device` | 空 | 可指定 `cpu`、`0` 等设备 |
+
 ## 二维码与离线
 
 ### `/qr` 二维码页
@@ -463,11 +551,12 @@ public/cards/
 1. 随机生成多个候选正方形裁剪点，候选数量由设置项“智能候选数”控制。
 2. 对每个候选区域采样，计算颜色变化、亮度方差、饱和度、边缘密度等指标。
 3. 如果区域颜色过于集中、亮度变化太小、边缘过少，会直接降权或丢弃，避免选中大色块背景。
-4. 对高分候选按分数排序，优先选择细节更多的区域。
-5. 记录最近几次裁剪位置，重切时要求新位置和历史位置保持一定距离。
-6. 如果距离要求太严格导致没有合适候选，会逐级放宽距离，最后才回退到最高分候选。
+4. 如果启用了“优先人脸”或“只切人脸”，会额外围绕已检测到的人脸框生成候选点，避免纯随机采样碰不到人脸。
+5. 对高分候选按分数排序，优先选择细节更多的区域。
+6. 记录最近几次裁剪位置，重切时要求新位置和历史位置保持一定距离。
+7. 如果距离要求太严格导致没有合适候选，会逐级放宽距离，最后才回退到最高分候选。
 
-这套策略不是识别人脸或角色部位，而是用图像统计特征估算“这块图有没有足够可猜的信息”。好处是速度快、离线可用，不需要额外 AI 模型；缺点是遇到复杂背景时仍可能切到误导区域，所以主持端保留了“重切”功能。
+基础智能裁剪会用图像统计特征估算“这块图有没有足够可猜的信息”。如果已经运行 `npm run detect-faces` 生成 `data/face-boxes.json`，裁剪评分还会叠加人脸框策略：困难时可以避开人脸，简单时可以优先人脸，或者由设置强制指定。游戏运行时不会加载 YOLO 模型，只读取 JSON 检测框，所以现场性能开销很小。
 
 ## 主持鉴权
 
@@ -519,6 +608,7 @@ HOST_PASSWORD="你的强密码" ./scripts/start-booth.sh
 | 角色昵称 | `resource/nickname.json` | 来自原 Koishi 插件整理数据 |
 | 背景 pattern | `public/bg/bg_pattern_*` | 参考 BanG Dream! 官网浅色 pattern 风格 |
 | 猴子图案 | `public/bg/monkey.png` | 项目自备/用户提供素材 |
+| 人脸检测权重 | `weight/best.pt` | 本地可选 YOLO 动漫人脸权重，不提交 GitHub |
 
 Bestdori 卡面资源路径示例：
 
@@ -539,7 +629,7 @@ https://bestdori.com/assets/jp/characters/resourceset/...
 | 接口 | 说明 |
 | --- | --- |
 | `GET /api/network` | 返回本机端口、当前访问地址、检测到的局域网入口 |
-| `GET /api/health` | 返回卡池数量、缓存数量、连接数、预加载状态 |
+| `GET /api/health` | 返回卡池数量、缓存数量、连接数、预加载状态、人脸框数据数量 |
 | `GET /api/qr?text=...` | 生成 SVG 二维码 |
 | `POST /api/login` | 主持登录 |
 | `POST /api/logout` | 主持退出 |
@@ -557,7 +647,9 @@ BanG-Dream-Card-Guess/
 ├── readme.md                   # 项目说明
 ├── server.mjs                  # 本地 HTTP/WebSocket 服务
 ├── vite.config.mjs             # Vite 配置
-├── data/                       # 运行时设置保存目录，不提交 GitHub
+├── data/                       # 运行时设置和人脸框数据，不提交 GitHub
+│   ├── settings.json           # 设置页保存结果
+│   └── face-boxes.json         # 人脸检测框数据库
 ├── public/                     # 静态资源
 │   ├── manifest.webmanifest    # PWA 配置
 │   ├── sw.js                   # 离线缓存 Service Worker
@@ -571,6 +663,7 @@ BanG-Dream-Card-Guess/
 │   └── solo.png
 ├── scripts/                    # 一键安装与启动脚本
 │   ├── cache-cards.mjs
+│   ├── detect-faces.py
 │   ├── install-env.cmd
 │   ├── install-env.sh
 │   ├── start-booth.cmd
@@ -579,6 +672,8 @@ BanG-Dream-Card-Guess/
 │   ├── stop-server.sh
 │   ├── start-solo.cmd
 │   └── start-solo.sh
+├── weight/                     # 本地 YOLO 权重目录，不提交 GitHub
+│   └── best.pt
 └── src/
     └── web/                    # 前端页面
         ├── main.js
@@ -604,5 +699,8 @@ A: 自己玩模式只开放 `/solo` 的自玩命令，不开放主持设置页�
 
 **Q: PWA 离线是不是完全不需要网络？**
 A: 基础页面、背景和已打开过的静态资源可以离线缓存；题目卡面仍取决于 `public/cards/` 是否提前缓存完整。现场建议先执行 `npm run cache-cards`。
+
+**Q: 设置了避开人脸但还是偶尔切到脸怎么办？**
+A: 先确认已经执行 `npm run detect-faces`，并在设置页运行状态里看到“人脸框数据”不是 0。检测框来自本地 `data/face-boxes.json`，如果更换了卡面缓存或权重，可以用 `python scripts/detect-faces.py --force` 重新生成。
 
 欢迎加入湘潭 BanG Dream! 同好会：[点击链接加入群聊【湘潭BanG Dream!同好会】](https://qm.qq.com/q/6ytGE7qIWQ)

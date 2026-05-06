@@ -11,7 +11,8 @@
     "start": "node server.mjs --booth",
     "booth": "npm run build && node server.mjs --booth",
     "solo": "npm run build && node server.mjs --solo",
-    "cache-cards": "node scripts/cache-cards.mjs"
+    "cache-cards": "node scripts/cache-cards.mjs",
+    "detect-faces": "python scripts/detect-faces.py"
   },
   "license": "MIT",
   "contributors": [

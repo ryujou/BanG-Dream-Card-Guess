@@ -33,6 +33,13 @@ const IMAGE_VARIANTS = [
   ["normal", "训练前"],
   ["trained", "训练后"],
 ];
+const FACE_CROP_MODES = [
+  ["auto", "跟随难度"],
+  ["none", "不限制"],
+  ["avoid", "避开人脸"],
+  ["prefer", "优先人脸"],
+  ["only", "只切人脸"],
+];
 
 render();
 if (!["login", "qr"].includes(route)) connect();
@@ -432,6 +439,7 @@ function renderSettings() {
             ["versus", "双队互动"],
           ])}
           ${selectField("difficulty", "难度预设", settings.difficulty, Object.entries(DIFFICULTY_PRESETS).map(([id, preset]) => [id, preset.label]))}
+          ${selectField("faceCropMode", "人脸策略", settings.faceCropMode, FACE_CROP_MODES)}
           ${selectField("cardImageVariant", "卡面版本", settings.cardImageVariant, IMAGE_VARIANTS)}
           ${numberField("roundSeconds", "每题秒数", settings.roundSeconds, 10, 300)}
           ${numberField("questionsPerPlayer", "每人题数", settings.questionsPerPlayer, 1, 30)}
@@ -476,6 +484,7 @@ function renderSettings() {
     command("settings", {
       mode: form.get("mode"),
       difficulty: form.get("difficulty"),
+      faceCropMode: form.get("faceCropMode"),
       cardImageVariant: form.get("cardImageVariant"),
       roundSeconds: form.get("roundSeconds"),
       questionsPerPlayer: form.get("questionsPerPlayer"),
@@ -728,8 +737,14 @@ function renderHealthPanel(health) {
       <div><span>玩家连接</span><strong>${health.roleCounts?.player ?? 0}</strong></div>
       <div><span>主持连接</span><strong>${health.roleCounts?.host ?? 0}</strong></div>
       <div><span>下一题预载</span><strong>${health.preloaded ? "就绪" : "等待"}</strong></div>
+      <div><span>人脸框数据</span><strong>${health.faceBoxImages ?? 0}</strong></div>
+      <div><span>当前人脸策略</span><strong>${faceModeLabel(health.effectiveFaceCropMode)}</strong></div>
     </section>
   `;
+}
+
+function faceModeLabel(mode) {
+  return FACE_CROP_MODES.find(([id]) => id === mode)?.[1] || mode || "--";
 }
 
 function exportSettings() {
