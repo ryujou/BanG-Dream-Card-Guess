@@ -400,7 +400,7 @@ async function handleDeleteNoteShooterScore(req, res) {
   }
 
   await writeNoteShooterScores(nextScores);
-  const state = noteShooterScoreState(nextScores);
+  const state = noteShooterScoreState();
   broadcastNoteShooterScores(state);
   sendJson(res, { ok: true, ...state });
 }
@@ -820,7 +820,9 @@ function sameSecret(a, b) {
 function sendJson(res, value, status = 200) {
   res.writeHead(status, {
     "Content-Type": "application/json; charset=utf-8",
-    "Cache-Control": "no-cache",
+    "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate",
+    "Pragma": "no-cache",
+    "Expires": "0",
   });
   res.end(JSON.stringify(value));
 }

@@ -410,6 +410,7 @@ async function deleteNoteShooterScore({ id, playerId = "", scope = "" }) {
     queueScores = result;
     queueScoresUpdatedAt = Date.now();
     queueScoreError = "";
+    await loadQueueScores(true);
   } catch (error) {
     queueScoreError = error instanceof Error ? error.message : "删除失败";
   } finally {
@@ -452,7 +453,7 @@ async function loadQueueScores(force = false) {
   queueScoresLoading = true;
   queueScoreError = "";
   try {
-    const response = await fetch("/api/note-shooter-scores");
+    const response = await fetch(`/api/note-shooter-scores?t=${Date.now()}`, { cache: "no-store" });
     if (!response.ok) throw new Error("读取排行榜失败");
     queueScores = await response.json();
   } catch (error) {
