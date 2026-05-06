@@ -214,8 +214,8 @@ const server = createServer(async (req, res) => {
       return;
     }
 
-    if (["/host", "/settings"].includes(url.pathname) && !isAuthenticated(req)) {
-      res.writeHead(302, { Location: "/login" });
+    if (["/host", "/settings", "/scores"].includes(url.pathname) && !isAuthenticated(req)) {
+      res.writeHead(302, { Location: `/login?next=${encodeURIComponent(url.pathname)}` });
       res.end();
       return;
     }
@@ -377,19 +377,23 @@ async function handleDeleteNoteShooterScore(req, res) {
   const body = parseRequestPayload(req, await readRequestBody(req));
   const password = String(body.password || "");
   const id = String(body.id || "").trim();
+  const playerId = normalizeNoteShooterPlayerId(body.playerId);
+  const scope = String(body.scope || "");
 
-  if (!sameSecret(password, HOST_PASSWORD)) {
+  if (!isAuthenticated(req) && !sameSecret(password, HOST_PASSWORD)) {
     sendJson(res, { ok: false, message: "主持密码错误" }, 401);
     return;
   }
 
-  if (!id) {
+  if (!id && !playerId) {
     sendJson(res, { ok: false, message: "缺少成绩 ID" }, 400);
     return;
   }
 
   const scores = readNoteShooterScores();
-  const nextScores = scores.filter((entry) => entry.id !== id);
+  const nextScores = scope === "player" && playerId
+    ? scores.filter((entry) => entry.player_id !== playerId)
+    : scores.filter((entry) => entry.id !== id);
   if (nextScores.length === scores.length) {
     sendJson(res, { ok: false, message: "成绩不存在或已删除" }, 404);
     return;

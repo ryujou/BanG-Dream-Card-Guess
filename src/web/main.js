@@ -17,7 +17,6 @@ let queueScoresLoading = false;
 let queueScoreError = "";
 let queueScoreEvents = null;
 let queueScoresUpdatedAt = 0;
-let scoreDeleteTarget = null;
 let queueAnimationFrame = 0;
 let wifiQr = loadWifiQr();
 let previousStateKey = "";
@@ -340,7 +339,6 @@ function renderScores() {
             ${renderScoreRecent(recent, true)}
           </aside>
         </div>
-        ${scoreDeleteTarget ? renderScoreDeleteDialog(scoreDeleteTarget) : ""}
       </section>
     </main>
   `;
@@ -350,18 +348,12 @@ function renderScores() {
     const button = event.target.closest("[data-delete-score]");
     if (!button) return;
     event.preventDefault();
-    openNoteShooterScoreDelete(button.dataset.deleteScore || "");
+    deleteNoteShooterScore({
+      id: button.dataset.deleteScore || "",
+      playerId: button.dataset.deletePlayer || "",
+      scope: button.dataset.deleteScope || "",
+    });
   });
-  app.querySelector("#cancelDeleteScore")?.addEventListener("click", () => {
-    scoreDeleteTarget = null;
-    renderScores();
-  });
-  app.querySelector("#deleteScoreForm")?.addEventListener("submit", (event) => {
-    event.preventDefault();
-    const form = new FormData(event.currentTarget);
-    deleteNoteShooterScore(scoreDeleteTarget?.id || "", String(form.get("password") || ""));
-  });
-  app.querySelector("#deleteScorePassword")?.focus();
 }
 
 function renderScoreLeaderboard(items, canDelete = false) {
@@ -374,7 +366,7 @@ function renderScoreLeaderboard(items, canDelete = false) {
           <strong>${escapeHtml(item.username)}</strong>
           <b>${Number(item.score) || 0}</b>
           <em>${formatQueueDuration(item.duration)}</em>
-          ${canDelete ? `<button class="score-delete" type="button" data-delete-score="${escapeAttr(item.id)}" aria-label="删除 ${escapeAttr(item.username)} 的成绩">删除</button>` : ""}
+          ${canDelete ? `<button class="score-delete" type="button" data-delete-score="${escapeAttr(item.id)}" data-delete-player="${escapeAttr(item.playerId)}" data-delete-scope="player" aria-label="删除 ${escapeAttr(item.username)} 的全部成绩">删除</button>` : ""}
         </li>
       `).join("")}
     </ol>
@@ -399,46 +391,25 @@ function renderScoreRecent(items, canDelete = false) {
   `;
 }
 
-function renderScoreDeleteDialog(item) {
-  return `
-    <div class="score-delete-dialog" role="dialog" aria-modal="true" aria-labelledby="deleteScoreTitle">
-      <form id="deleteScoreForm" class="score-delete-card">
-        <strong id="deleteScoreTitle">删除成绩</strong>
-        <span>${escapeHtml(item.username)} · ${Number(item.score) || 0}</span>
-        <input id="deleteScorePassword" name="password" type="password" autocomplete="current-password" placeholder="输入主持密码" required />
-        <div>
-          <button id="cancelDeleteScore" type="button">取消</button>
-          <button class="danger" type="submit">确认删除</button>
-        </div>
-      </form>
-    </div>
-  `;
-}
-
-function openNoteShooterScoreDelete(id) {
-  const item = [...(queueScores?.leaderboard || []), ...(queueScores?.recent || [])].find((entry) => entry.id === id);
-  if (!id) return;
-  scoreDeleteTarget = item || { id, username: "这条成绩", score: 0 };
-  queueScoreError = "";
-  renderScores();
-}
-
-async function deleteNoteShooterScore(id, password) {
-  if (!id) return;
+async function deleteNoteShooterScore({ id, playerId = "", scope = "" }) {
+  if (!id && !playerId) return;
   try {
     const response = await fetch("/api/note-shooter-scores/delete", {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8" },
-      body: new URLSearchParams({ id, password }),
+      body: new URLSearchParams({ id, playerId, scope }),
     });
     const result = await response.json().catch(() => ({}));
     if (!response.ok || result.ok === false) {
+      if (response.status === 401) {
+        location.href = `/login?next=${encodeURIComponent("/scores")}`;
+        return;
+      }
       throw new Error(result.message || "删除失败");
     }
     queueScores = result;
     queueScoresUpdatedAt = Date.now();
     queueScoreError = "";
-    scoreDeleteTarget = null;
   } catch (error) {
     queueScoreError = error instanceof Error ? error.message : "删除失败";
   } finally {
@@ -545,6 +516,7 @@ function renderSolo() {
 }
 
 function renderLogin() {
+  const nextPath = safeNextPath(new URLSearchParams(location.search).get("next"));
   app.innerHTML = `
     <main class="login-shell">
       <section class="login-panel">
@@ -575,13 +547,18 @@ function renderLogin() {
     });
 
     if (response.ok) {
-      location.href = "/host";
+      location.href = nextPath;
       return;
     }
 
     loginError = "密码错误";
     renderLogin();
   });
+}
+
+function safeNextPath(value) {
+  const next = String(value || "/host");
+  return next.startsWith("/") && !next.startsWith("//") ? next : "/host";
 }
 
 function renderPlayer() {

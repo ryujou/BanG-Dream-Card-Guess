@@ -1554,48 +1554,6 @@ select:focus {
   background: #ffffff;
 }
 
-.score-delete-dialog {
-  position: fixed;
-  inset: 0;
-  z-index: 40;
-  display: grid;
-  place-items: center;
-  padding: 18px;
-  background: rgba(23, 23, 31, 0.42);
-}
-
-.score-delete-card {
-  display: grid;
-  gap: 12px;
-  width: min(420px, 100%);
-  border-radius: 8px;
-  padding: 18px;
-  background: #ffffff;
-  box-shadow: 0 24px 70px rgba(23, 23, 31, 0.2);
-}
-
-.score-delete-card strong {
-  color: #17171f;
-  font-size: 1.25rem;
-  font-weight: 950;
-}
-
-.score-delete-card span {
-  color: #5e6472;
-  font-weight: 850;
-}
-
-.score-delete-card div {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-}
-
-.score-delete-card .danger {
-  background: #ff3d6e;
-  color: #ffffff;
-}
-
 @media (max-width: 920px) {
   body::before {
     background-image:
