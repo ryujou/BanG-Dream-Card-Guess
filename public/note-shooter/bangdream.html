@@ -855,7 +855,7 @@
       <div class="leaderboard-content leaderboard-modal">
         <span class="close" id="leaderboard-close">&times;</span>
         <span style="font-size: 20px; font-weight: bold" data-text="leaderboard">排行榜</span>
-        <span class="leaderboard-desc" data-text="leaderboard-desc">2分钟更新一次，时间15秒以下不收录</span>
+        <span class="leaderboard-desc" data-text="leaderboard-desc">实时更新，时间15秒以下不收录</span>
         <div class="leaderboard-filters">
           <select id="lb-level">
             <option value="1" data-text="level1">第1关</option>
@@ -974,7 +974,7 @@
         scoreOrder: '积分顺序',
         rankOrder: '级别顺序',
         leaderboard: '排行榜',
-        'leaderboard-desc': '2分钟更新一次，游戏时长15秒以下不收录',
+        'leaderboard-desc': '实时更新，游戏时长15秒以下不收录',
         noData: '暂无排行数据',
         loadError: '加载失败，请稍后重试',
         show_top: '前30名',
@@ -1023,7 +1023,7 @@
         scoreOrder: 'By Score',
         rankOrder: 'By Level',
         leaderboard: 'Score Ranking',
-        'leaderboard-desc': 'Updated every 2 minutes, games under 15 seconds not recorded',
+        'leaderboard-desc': 'Updates in real time, games under 15 seconds not recorded',
         noData: 'No leaderboard data',
         loadError: 'Failed to load, please try again later',
         show_top: 'Top 30',
@@ -1072,7 +1072,7 @@
         scoreOrder: 'スコア順',
         rankOrder: 'レベル順',
         leaderboard: 'ランキング',
-        'leaderboard-desc': '2分毎に更新 (15秒未満の記録は除外)',
+        'leaderboard-desc': 'リアルタイム更新 (15秒未満の記録は除外)',
         noData: 'ランキングデータがありません',
         loadError: '読み込みに失敗しました。しばらくしてからもう一度お試しください',
         show_top: 'トップ 30',
@@ -1399,10 +1399,13 @@
     }
     // 排行榜数据缓存
     let leaderboardData = null;
+    let leaderboardEvents = null;
     // 排行榜功能
-    async function loadLeaderboard(levels, difficulty, type, playerId) {
+    async function loadLeaderboard(levels, difficulty, type, playerId, options = {}) {
       const listEl = document.getElementById('leaderboard-list');
-      listEl.innerHTML = '<div class="loading-spinner"></div>';
+      if (!options.silent) {
+        listEl.innerHTML = '<div class="loading-spinner"></div>';
+      }
       try {
         let prefix = API_PATH + 'getRanking';
         if(type === 'myRank') {
@@ -1417,6 +1420,28 @@
         const texts = languages[currentLang];
         listEl.innerHTML = `<div class="empty-leaderboard">${texts.loadError}</div>`;
       }
+    }
+
+    function refreshOpenLeaderboard(silent = true) {
+      const leaderboard = document.getElementById('leaderboard');
+      if (!leaderboard || leaderboard.style.display !== 'flex') return;
+      const levelSelect = document.getElementById('lb-level');
+      const difficultySelect = document.getElementById('lb-difficulty');
+      const showSelect = document.getElementById('lb-show');
+      loadLeaderboard(levelSelect.value, difficultySelect.value, showSelect.value, getPlayerId(), {silent});
+    }
+
+    function startLeaderboardRealtime() {
+      if (leaderboardEvents || !('EventSource' in window)) return;
+      leaderboardEvents = new EventSource('/api/note-shooter-scores/events');
+      leaderboardEvents.addEventListener('scores', () => refreshOpenLeaderboard(true));
+      leaderboardEvents.onerror = () => {
+        if (leaderboardEvents) {
+          leaderboardEvents.close();
+          leaderboardEvents = null;
+        }
+        setTimeout(startLeaderboardRealtime, 3000);
+      };
     }
 
     // 渲染排行榜
@@ -1461,7 +1486,7 @@
       listEl.innerHTML = sortedData.map((item, index) => {
         const rank = item.user_rank;
         const rankClass = rank === 1 ? 'rank-1' : rank === 2 ? 'rank-2' : rank === 3 ? 'rank-3' : 'rank-other';
-        const displayName = `${item.player_id || 'Unknown'}`;
+        const displayName = `${item.player_name || item.player_id || 'Unknown'}`;
         const createTime = `${item.create_time || ''}`;
         const timeStr = Math.floor(item.duration / 60) + ':' + (item.duration % 60).toString().padStart(2, '0');
         const rankIcon = item.ranks ? `<img src="${IMG_PATH}rank_${item.ranks.toLowerCase()}.png" style="height: 40px; margin-right: 8px;">` : '';
@@ -1509,6 +1534,7 @@
         difficultySelect.value = currentDifficulty;
         showSelect.value = 'top';
         leaderboard.style.display = 'flex';
+        startLeaderboardRealtime();
         await loadLeaderboard(levelSelect.value, difficultySelect.value, showSelect.value, getPlayerId());
       };
 
