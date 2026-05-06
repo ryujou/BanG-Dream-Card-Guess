@@ -12,6 +12,13 @@ let settingsSaving = false;
 let qrInfo = null;
 let qrLoading = false;
 let qrError = "";
+let queueScores = null;
+let queueScoresLoading = false;
+let queueScoreError = "";
+let queuePlayerName = localStorage.getItem("bangdreamQueueName") || "";
+let queueLastResult = null;
+let queueGame = null;
+let queueAnimationFrame = 0;
 let wifiQr = loadWifiQr();
 let previousStateKey = "";
 let lastStageCropKey = "";
@@ -42,14 +49,14 @@ const FACE_CROP_MODES = [
 ];
 
 render();
-if (!["login", "qr"].includes(route)) connect();
+if (!["login", "qr", "queue"].includes(route)) connect();
 registerServiceWorker();
 document.addEventListener("pointerdown", unlockAudio, { once: true });
 document.addEventListener("keydown", handleGlobalShortcut);
 
 function normalizeRoute(pathname) {
   const routeName = pathname.replace(/^\/+/, "").split("/")[0];
-  if (["player", "solo", "host", "settings", "login", "qr"].includes(routeName)) return routeName;
+  if (["player", "solo", "host", "settings", "login", "qr", "queue"].includes(routeName)) return routeName;
   return "player";
 }
 
@@ -91,6 +98,7 @@ function command(command, payload = {}) {
 function render() {
   if (route === "login") renderLogin();
   else if (route === "qr") renderQr();
+  else if (route === "queue") renderQueue();
   else if (route === "solo") renderSolo();
   else if (route === "host") renderHost();
   else if (route === "settings") renderSettings();
@@ -116,10 +124,12 @@ function renderQr() {
   const qrCards = info.appMode === "solo"
     ? [
         { title: "自己玩模式", tag: "Solo", url: pages.solo, note: "扫码直接进入单人答题页" },
+        { title: "排队小游戏", tag: "Queue", url: pages.queue, note: "等待时扫码玩音符接力并记录分数" },
         { title: "入口总览", tag: "QR", url: pages.qr, note: "重新打开这张二维码页" },
       ]
     : [
         { title: "玩家页", tag: "Player", url: pages.player, note: "给玩家或展示屏扫码打开" },
+        { title: "排队小游戏", tag: "Queue", url: pages.queue, note: "排队猜角色时给玩家扫码游玩" },
         { title: "主持登录", tag: "Host", url: pages.login, note: "主持扫码后输入密码进入后台" },
         { title: "设置页", tag: "Setup", url: pages.settings, note: "开场前调整规则和显示选项" },
       ];
@@ -135,6 +145,7 @@ function renderQr() {
           </div>
           <div class="qr-actions">
             <button class="primary" id="printQr" type="button">打印</button>
+            <a href="/queue">排队小游戏</a>
             ${info.appMode === "solo" ? `<a href="/solo">自玩页</a>` : `<a href="/player">玩家页</a><a href="/login">主持登录</a>`}
           </div>
         </div>
@@ -211,12 +222,316 @@ function renderQrCard(item) {
 function pageUrlsFromOrigin(origin) {
   return {
     player: `${origin}/player`,
+    queue: `${origin}/queue`,
     login: `${origin}/login`,
     host: `${origin}/host`,
     settings: `${origin}/settings`,
     solo: `${origin}/solo`,
     qr: `${origin}/qr`,
   };
+}
+
+function renderQueue() {
+  if (queueGame?.running) return;
+  if (!queueScores && !queueScoresLoading && !queueScoreError) loadQueueScores();
+  cancelQueueLoop();
+
+  const leaderboard = queueScores?.leaderboard || [];
+  const recent = queueScores?.recent || [];
+
+  app.innerHTML = `
+    <main class="queue-shell">
+      <section class="queue-panel">
+        <div class="queue-head">
+          <div>
+            <p class="eyebrow">Queue Mini Game</p>
+            <h1>排队小游戏</h1>
+            <span>输入用户名开始，游戏结束后自动记录分数。</span>
+          </div>
+          <div class="qr-actions">
+            <a href="/player">玩家页</a>
+            <a href="/qr">二维码</a>
+          </div>
+        </div>
+
+        <div class="queue-layout">
+          <section class="queue-game-card">
+            <div class="queue-hud">
+              <strong>分数 <span id="queueLiveScore">0</span></strong>
+              <span>生命 <b id="queueLives">3</b></span>
+              <span>时间 <b id="queueTime">45</b></span>
+            </div>
+            <canvas id="queueCanvas" width="720" height="720" aria-label="排队小游戏画布"></canvas>
+            <form id="queueStartForm" class="queue-start-form">
+              <input name="username" type="text" maxlength="20" placeholder="输入用户名" value="${escapeAttr(queuePlayerName)}" autocomplete="nickname" />
+              <button class="primary" type="submit">开始游戏</button>
+            </form>
+            <div class="queue-tips">移动鼠标、手指，或使用 A/D/方向键接住音符，漏掉音符会扣生命。</div>
+            ${queueLastResult ? `
+              <div class="queue-result">
+                <span>本次成绩</span>
+                <strong>${escapeHtml(queueLastResult.username)} · ${queueLastResult.score}</strong>
+              </div>
+            ` : ""}
+            ${queueScoreError ? `<div class="login-error">${escapeHtml(queueScoreError)}</div>` : ""}
+          </section>
+
+          <aside class="queue-board">
+            <div class="queue-board-head">
+              <strong>排行榜</strong>
+              <button id="refreshQueueScores" type="button">刷新</button>
+            </div>
+            ${queueScoresLoading ? `<div class="muted">读取中...</div>` : renderQueueLeaderboard(leaderboard)}
+            <div class="queue-recent">
+              <strong>最近成绩</strong>
+              ${renderQueueRecent(recent)}
+            </div>
+          </aside>
+        </div>
+      </section>
+    </main>
+  `;
+
+  drawQueueIdle();
+  app.querySelector("#queueStartForm")?.addEventListener("submit", startQueueGame);
+  app.querySelector("#refreshQueueScores")?.addEventListener("click", () => loadQueueScores(true));
+}
+
+function renderQueueLeaderboard(items) {
+  if (!items.length) return `<div class="muted">暂无成绩</div>`;
+  return `
+    <ol class="queue-rank-list">
+      ${items.map((item, index) => `
+        <li>
+          <span>${index + 1}</span>
+          <strong>${escapeHtml(item.username)}</strong>
+          <b>${Number(item.score) || 0}</b>
+        </li>
+      `).join("")}
+    </ol>
+  `;
+}
+
+function renderQueueRecent(items) {
+  if (!items.length) return `<div class="muted">暂无记录</div>`;
+  return `
+    <div class="queue-recent-list">
+      ${items.slice(0, 8).map((item) => `
+        <div>
+          <span>${escapeHtml(item.username)}</span>
+          <strong>${Number(item.score) || 0}</strong>
+        </div>
+      `).join("")}
+    </div>
+  `;
+}
+
+async function loadQueueScores(force = false) {
+  if (queueScoresLoading && !force) return;
+  queueScoresLoading = true;
+  queueScoreError = "";
+  try {
+    const response = await fetch("/api/queue-scores");
+    if (!response.ok) throw new Error("读取排行榜失败");
+    queueScores = await response.json();
+  } catch (error) {
+    queueScoreError = error instanceof Error ? error.message : "读取排行榜失败";
+  } finally {
+    queueScoresLoading = false;
+    if (route === "queue" && !queueGame?.running) renderQueue();
+  }
+}
+
+function startQueueGame(event) {
+  event.preventDefault();
+  const form = new FormData(event.currentTarget);
+  const username = String(form.get("username") || "").trim().slice(0, 20);
+  if (!username) {
+    queueScoreError = "请先输入用户名";
+    renderQueue();
+    return;
+  }
+
+  queuePlayerName = username;
+  localStorage.setItem("bangdreamQueueName", username);
+  queueScoreError = "";
+  queueLastResult = null;
+
+  const canvas = app.querySelector("#queueCanvas");
+  queueGame = {
+    username,
+    canvas,
+    context: canvas.getContext("2d"),
+    running: true,
+    startedAt: performance.now(),
+    lastAt: performance.now(),
+    duration: 45,
+    score: 0,
+    lives: 3,
+    playerX: canvas.width / 2,
+    notes: [],
+    spawnIn: 0,
+    submitted: false,
+  };
+
+  canvas.onpointermove = (pointerEvent) => {
+    const rect = canvas.getBoundingClientRect();
+    queueGame.playerX = ((pointerEvent.clientX - rect.left) / rect.width) * canvas.width;
+  };
+  queueAnimationFrame = requestAnimationFrame(tickQueueGame);
+}
+
+function tickQueueGame(now) {
+  if (!queueGame?.running) return;
+
+  const game = queueGame;
+  const delta = Math.min(0.04, (now - game.lastAt) / 1000 || 0);
+  game.lastAt = now;
+  const elapsed = (now - game.startedAt) / 1000;
+  const remaining = Math.max(0, game.duration - elapsed);
+  game.spawnIn -= delta;
+
+  if (game.spawnIn <= 0) {
+    game.notes.push({
+      x: 48 + Math.random() * (game.canvas.width - 96),
+      y: -24,
+      radius: 14 + Math.random() * 8,
+      speed: 145 + Math.random() * 115 + elapsed * 3,
+      value: Math.random() > 0.82 ? 30 : 10,
+      color: Math.random() > 0.5 ? "#ff3d6e" : "#26d6c4",
+    });
+    game.spawnIn = Math.max(0.24, 0.62 - elapsed * 0.008);
+  }
+
+  const catcherY = game.canvas.height - 58;
+  const catcherWidth = 110;
+  for (const note of game.notes) {
+    note.y += note.speed * delta;
+    const hit = Math.abs(note.x - game.playerX) < catcherWidth / 2 && Math.abs(note.y - catcherY) < 34;
+    if (hit && !note.done) {
+      game.score += note.value;
+      note.done = true;
+    } else if (note.y > game.canvas.height + 30 && !note.done) {
+      game.lives -= 1;
+      note.done = true;
+    }
+  }
+  game.notes = game.notes.filter((note) => !note.done);
+
+  updateQueueHud(game, remaining);
+  drawQueueGame(game, remaining);
+
+  if (remaining <= 0 || game.lives <= 0) {
+    finishQueueGame();
+    return;
+  }
+
+  queueAnimationFrame = requestAnimationFrame(tickQueueGame);
+}
+
+function updateQueueHud(game, remaining) {
+  app.querySelector("#queueLiveScore").textContent = String(game.score);
+  app.querySelector("#queueLives").textContent = String(Math.max(0, game.lives));
+  app.querySelector("#queueTime").textContent = String(Math.ceil(remaining));
+}
+
+function drawQueueIdle() {
+  const canvas = app.querySelector("#queueCanvas");
+  if (!canvas) return;
+  const context = canvas.getContext("2d");
+  drawQueueBackground(context, canvas);
+  context.fillStyle = "#17171f";
+  context.font = "800 38px sans-serif";
+  context.textAlign = "center";
+  context.fillText("输入用户名开始", canvas.width / 2, canvas.height / 2 - 12);
+  context.fillStyle = "#5e6472";
+  context.font = "600 18px sans-serif";
+  context.fillText("接住下落音符，挑战排队排行榜", canvas.width / 2, canvas.height / 2 + 30);
+}
+
+function drawQueueGame(game) {
+  const { canvas, context } = game;
+  drawQueueBackground(context, canvas);
+
+  for (const note of game.notes) {
+    context.beginPath();
+    context.arc(note.x, note.y, note.radius, 0, Math.PI * 2);
+    context.fillStyle = note.color;
+    context.fill();
+    context.fillStyle = "#ffffff";
+    context.font = "900 18px sans-serif";
+    context.textAlign = "center";
+    context.textBaseline = "middle";
+    context.fillText("♪", note.x, note.y + 1);
+  }
+
+  const y = canvas.height - 58;
+  context.fillStyle = "#17171f";
+  roundRect(context, game.playerX - 58, y - 15, 116, 30, 15);
+  context.fill();
+  context.fillStyle = "#ffffff";
+  context.font = "900 18px sans-serif";
+  context.textAlign = "center";
+  context.textBaseline = "middle";
+  context.fillText("Catch", game.playerX, y);
+}
+
+function drawQueueBackground(context, canvas) {
+  const gradient = context.createLinearGradient(0, 0, canvas.width, canvas.height);
+  gradient.addColorStop(0, "#fff4f7");
+  gradient.addColorStop(0.45, "#ecfbff");
+  gradient.addColorStop(1, "#f4fff4");
+  context.fillStyle = gradient;
+  context.fillRect(0, 0, canvas.width, canvas.height);
+  context.fillStyle = "rgba(255, 61, 110, 0.12)";
+  for (let x = 24; x < canvas.width; x += 58) {
+    for (let y = 26; y < canvas.height; y += 58) {
+      context.fillRect(x, y, 4, 4);
+    }
+  }
+}
+
+function roundRect(context, x, y, width, height, radius) {
+  context.beginPath();
+  context.moveTo(x + radius, y);
+  context.arcTo(x + width, y, x + width, y + height, radius);
+  context.arcTo(x + width, y + height, x, y + height, radius);
+  context.arcTo(x, y + height, x, y, radius);
+  context.arcTo(x, y, x + width, y, radius);
+  context.closePath();
+}
+
+async function finishQueueGame() {
+  const game = queueGame;
+  if (!game || game.submitted) return;
+  game.running = false;
+  game.submitted = true;
+  cancelQueueLoop();
+
+  queueLastResult = { username: game.username, score: game.score };
+  try {
+    const response = await fetch("/api/queue-scores", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        username: game.username,
+        score: game.score,
+        duration: game.duration,
+      }),
+    });
+    if (!response.ok) throw new Error("提交成绩失败");
+    queueScores = await response.json();
+  } catch (error) {
+    queueScoreError = error instanceof Error ? error.message : "提交成绩失败";
+  } finally {
+    queueGame = null;
+    renderQueue();
+  }
+}
+
+function cancelQueueLoop() {
+  if (queueAnimationFrame) cancelAnimationFrame(queueAnimationFrame);
+  queueAnimationFrame = 0;
 }
 
 function renderSolo() {
@@ -551,6 +866,10 @@ function renderTopbar(game, settings, showCommunityLink = false) {
             <span>湘潭同好会</span>
             <strong>加入群聊</strong>
           </a>
+          <a class="community-link queue-link" href="/queue">
+            <span>排队时玩</span>
+            <strong>小游戏</strong>
+          </a>
           <button class="fullscreen-button" id="fullscreenButton" type="button" aria-label="进入全屏">
             <span>全屏</span>
           </button>
@@ -796,6 +1115,18 @@ function bindFullscreenButton() {
 }
 
 function handleGlobalShortcut(event) {
+  if (route === "queue" && queueGame?.running) {
+    const key = event.key.toLowerCase();
+    if (key === "arrowleft" || key === "a") {
+      queueGame.playerX = Math.max(50, queueGame.playerX - 42);
+      event.preventDefault();
+    } else if (key === "arrowright" || key === "d") {
+      queueGame.playerX = Math.min(queueGame.canvas.width - 50, queueGame.playerX + 42);
+      event.preventDefault();
+    }
+    return;
+  }
+
   if (route !== "host") return;
   if (["INPUT", "TEXTAREA", "SELECT"].includes(document.activeElement?.tagName)) return;
 

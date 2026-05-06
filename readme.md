@@ -60,6 +60,7 @@ BanG Dream! Card Guess 是从 Koishi 机器人猜卡插件改造成的本地 Web
 - 支持本轮去重、下一题预加载、误判撤销、主持快捷键
 - 玩家页支持全屏按钮，主持页和玩家页支持答题音效
 - 二维码页支持玩家入口、主持入口和 Wi-Fi 二维码打印
+- 新增排队小游戏 `/queue`，玩家可扫码输入用户名游玩，分数会记录到本地排行榜
 - PWA 离线缓存基础页面和静态素材，提前缓存卡面后可降低现场网络依赖
 - 设置支持本地持久化、导入/导出和运行状态检查
 - 支持提前缓存 Bestdori 卡面，减少现场网络依赖
@@ -109,8 +110,19 @@ BanG Dream! Card Guess 是从 Koishi 机器人猜卡插件改造成的本地 Web
 - 自动检测本机局域网 IP，优先生成局域网入口二维码。
 - 摊位模式会生成玩家页、主持登录页、设置页二维码。
 - 自己玩模式会生成自玩页二维码。
+- 会生成排队小游戏二维码，适合玩家等待猜角色时游玩。
 - 支持填写 Wi-Fi 名称、密码和加密方式，点击“生成 Wi-Fi 码”后生成 Wi-Fi 二维码。
 - Wi-Fi 二维码不会边输入边刷新，避免输入时卡顿。
+
+### 排队小游戏
+
+排队小游戏位于 `/queue`，适合玩家等待猜角色时扫码游玩。页面和分数统计都运行在本地服务上，玩家设备只需要和主机在同一个局域网。
+
+- 玩家输入用户名后开始游戏。
+- 移动鼠标、手指，或使用 A/D/方向键接住下落音符，漏掉音符会扣生命。
+- 游戏结束后自动把用户名和分数提交到本地排行榜。
+- 同一用户名会按最高分参与排行榜排序，最近成绩也会保留。
+- 玩法参考 [badmintonranks.com/bangdream.html](https://badmintonranks.com/bangdream.html)，实现为本项目内置的本地小游戏。
 
 ### 离线与现场稳定性
 
@@ -166,6 +178,7 @@ BanG Dream! Card Guess 是从 Koishi 机器人猜卡插件改造成的本地 Web
 | 页面 | 地址 | 说明 |
 | --- | --- | --- |
 | 玩家页 | `http://127.0.0.1:5173/player` | 给玩家或展示屏幕使用 |
+| 排队小游戏 | `http://127.0.0.1:5173/queue` | 玩家排队等待时扫码游玩并记录分数 |
 | 登录页 | `http://127.0.0.1:5173/login` | 主持登录 |
 | 主持页 | `http://127.0.0.1:5173/host` | 控制题目与判定 |
 | 设置页 | `http://127.0.0.1:5173/settings` | 调整规则与模式 |
@@ -184,6 +197,7 @@ BangBang@2026
 | 页面 | 地址 | 说明 |
 | --- | --- | --- |
 | 自玩页 | `http://127.0.0.1:5173/solo` | 输入答案并自动判定 |
+| 排队小游戏 | `http://127.0.0.1:5173/queue` | 玩家排队等待时扫码游玩并记录分数 |
 | 二维码页 | `http://127.0.0.1:5173/qr` | 打印自玩入口二维码 |
 
 ## 环境与依赖
@@ -233,6 +247,7 @@ npm run booth
 打开：
 
 - 玩家页：`http://127.0.0.1:5173/player`
+- 排队小游戏：`http://127.0.0.1:5173/queue`
 - 登录页：`http://127.0.0.1:5173/login`
 - 主持页：`http://127.0.0.1:5173/host`
 - 设置页：`http://127.0.0.1:5173/settings`
@@ -253,6 +268,7 @@ npm run solo
 打开：
 
 - 自玩页：`http://127.0.0.1:5173/solo`
+- 排队小游戏：`http://127.0.0.1:5173/queue`
 - 二维码页：`http://127.0.0.1:5173/qr`
 
 ### 5. 生产构建
@@ -392,7 +408,8 @@ PORT=5180 ./scripts/start-booth.sh
 3. 启动日志会打印 `127.0.0.1` 和检测到的局域网入口。
 4. 打开 `http://127.0.0.1:5173/qr`，页面会优先使用检测到的局域网地址生成二维码。
 5. 玩家设备扫码打开笔记本局域网 IP，例如 `http://192.168.1.23:5173/player`。
-6. 主持设备打开 `http://192.168.1.23:5173/login`，登录后进入主持页。
+6. 排队等待的玩家也可以扫码打开 `http://192.168.1.23:5173/queue` 游玩排队小游戏。
+7. 主持设备打开 `http://192.168.1.23:5173/login`，登录后进入主持页。
 
 如果现场 Wi-Fi 不稳定，可以使用手机热点或 USB 共享网络。游戏控制和图片读取仍优先走本地服务，提前缓存卡面后对公网依赖会更低。
 
@@ -609,6 +626,7 @@ HOST_PASSWORD="你的强密码" ./scripts/start-booth.sh
 | 背景 pattern | `public/bg/bg_pattern_*` | 参考 BanG Dream! 官网浅色 pattern 风格 |
 | 猴子图案 | `public/bg/monkey.png` | 项目自备/用户提供素材 |
 | 人脸检测权重 | `weight/best.pt` | YOLO 动漫人脸权重，项目自带 |
+| 排队小游戏参考 | - | 参考 [badmintonranks.com/bangdream.html](https://badmintonranks.com/bangdream.html) 的排队小游戏形式 |
 
 Bestdori 卡面资源路径示例：
 
@@ -630,6 +648,8 @@ https://bestdori.com/assets/jp/characters/resourceset/...
 | --- | --- |
 | `GET /api/network` | 返回本机端口、当前访问地址、检测到的局域网入口 |
 | `GET /api/health` | 返回卡池数量、缓存数量、连接数、预加载状态、人脸框数据数量 |
+| `GET /api/queue-scores` | 返回排队小游戏排行榜和最近成绩 |
+| `POST /api/queue-scores` | 提交排队小游戏用户名、分数和游玩时长 |
 | `GET /api/qr?text=...` | 生成 SVG 二维码 |
 | `POST /api/login` | 主持登录 |
 | `POST /api/logout` | 主持退出 |
@@ -648,7 +668,8 @@ BanG-Dream-Card-Guess/
 ├── vite.config.mjs             # Vite 配置
 ├── data/
 │   ├── settings.json           # 设置页保存结果，本地运行生成
-│   └── face-boxes.json         # 人脸检测框数据库
+│   ├── face-boxes.json         # 人脸检测框数据库
+│   └── queue-scores.json       # 排队小游戏成绩，本地运行生成
 ├── public/                     # 静态资源
 │   ├── manifest.webmanifest    # PWA 配置
 │   ├── sw.js                   # 离线缓存 Service Worker

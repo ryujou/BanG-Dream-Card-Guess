@@ -17,6 +17,7 @@ const resourceDir = path.join(__dirname, "resource");
 const dataDir = process.env.DATA_DIR ? path.resolve(process.env.DATA_DIR) : path.join(__dirname, "data");
 const settingsStorePath = path.join(dataDir, "settings.json");
 const faceBoxesStorePath = path.join(dataDir, "face-boxes.json");
+const queueScoresStorePath = path.join(dataDir, "queue-scores.json");
 const BESTDORI_ORIGIN = "https://bestdori.com";
 const BESTDORI_BASE = `${BESTDORI_ORIGIN}/assets/jp/characters/resourceset`;
 const APP_MODE = process.env.APP_MODE === "solo" || process.argv.includes("--solo") ? "solo" : "booth";
@@ -142,6 +143,16 @@ const server = createServer(async (req, res) => {
 
     if (url.pathname === "/api/qr" && req.method === "GET") {
       await sendQrCode(url, res);
+      return;
+    }
+
+    if (url.pathname === "/api/queue-scores" && req.method === "GET") {
+      sendJson(res, queueScoreState());
+      return;
+    }
+
+    if (url.pathname === "/api/queue-scores" && req.method === "POST") {
+      await handleQueueScore(req, res);
       return;
     }
 
@@ -300,6 +311,43 @@ async function handleLogin(req, res) {
   res.end(JSON.stringify({ ok: true }));
 }
 
+async function handleQueueScore(req, res) {
+  const body = await readRequestBody(req);
+  const payload = parseRequestPayload(req, body);
+  const username = normalizeQueueUsername(payload.username);
+  const score = Math.max(0, Math.min(999999, Math.floor(Number(payload.score))));
+  const duration = Math.max(0, Math.min(3600, Math.floor(Number(payload.duration || 0))));
+
+  if (!username || !Number.isFinite(score)) {
+    sendJson(res, { ok: false, message: "用户名或分数无效" }, 400);
+    return;
+  }
+
+  const scores = readQueueScores();
+  scores.unshift({
+    id: randomBytes(8).toString("hex"),
+    username,
+    score,
+    duration,
+    at: Date.now(),
+  });
+
+  await writeQueueScores(scores.slice(0, 1000));
+  sendJson(res, { ok: true, ...queueScoreState(scores) });
+}
+
+function parseRequestPayload(req, body) {
+  const contentType = String(req.headers["content-type"] || "");
+  if (contentType.includes("application/json")) {
+    try {
+      return JSON.parse(body || "{}");
+    } catch {
+      return {};
+    }
+  }
+  return Object.fromEntries(new URLSearchParams(body));
+}
+
 function readRequestBody(req) {
   return new Promise((resolve, reject) => {
     let body = "";
@@ -350,6 +398,64 @@ function readFaceBoxStore() {
     console.warn(`Failed to read face box store: ${error instanceof Error ? error.message : error}`);
     return { images: {} };
   }
+}
+
+function readQueueScores() {
+  try {
+    if (!existsSync(queueScoresStorePath)) return [];
+    const value = JSON.parse(readFileSync(queueScoresStorePath, "utf-8"));
+    return Array.isArray(value) ? value.map(normalizeQueueScore).filter(Boolean) : [];
+  } catch (error) {
+    console.warn(`Failed to read queue scores: ${error instanceof Error ? error.message : error}`);
+    return [];
+  }
+}
+
+async function writeQueueScores(scores) {
+  await mkdir(dataDir, { recursive: true });
+  await writeFile(queueScoresStorePath, `${JSON.stringify(scores.map(normalizeQueueScore).filter(Boolean), null, 2)}\n`);
+}
+
+function queueScoreState(scores = readQueueScores()) {
+  const bestByUser = new Map();
+  for (const entry of scores.map(normalizeQueueScore).filter(Boolean)) {
+    const old = bestByUser.get(entry.username);
+    if (!old || entry.score > old.score || (entry.score === old.score && entry.at < old.at)) {
+      bestByUser.set(entry.username, entry);
+    }
+  }
+
+  return {
+    total: scores.length,
+    leaderboard: [...bestByUser.values()]
+      .sort((a, b) => b.score - a.score || a.at - b.at)
+      .slice(0, 20),
+    recent: scores
+      .map(normalizeQueueScore)
+      .filter(Boolean)
+      .sort((a, b) => b.at - a.at)
+      .slice(0, 20),
+  };
+}
+
+function normalizeQueueScore(entry) {
+  const username = normalizeQueueUsername(entry?.username);
+  const score = Math.max(0, Math.min(999999, Math.floor(Number(entry?.score))));
+  if (!username || !Number.isFinite(score)) return null;
+  return {
+    id: String(entry.id || randomBytes(8).toString("hex")),
+    username,
+    score,
+    duration: Math.max(0, Math.min(3600, Math.floor(Number(entry.duration || 0)))),
+    at: Number.isFinite(Number(entry.at)) ? Number(entry.at) : Date.now(),
+  };
+}
+
+function normalizeQueueUsername(value) {
+  return String(value || "")
+    .trim()
+    .replace(/\s+/g, " ")
+    .slice(0, 20);
 }
 
 function persistedTeamName(team, fallback) {
@@ -457,6 +563,7 @@ function lanHosts() {
 function pageUrls(origin) {
   return {
     player: `${origin}/player`,
+    queue: `${origin}/queue`,
     login: `${origin}/login`,
     host: `${origin}/host`,
     settings: `${origin}/settings`,
@@ -1301,8 +1408,8 @@ function pick(list) {
 const port = Number(process.env.PORT || 5173);
 server.listen(port, "0.0.0.0", () => {
   const labels = APP_MODE === "solo"
-    ? [["Solo", "solo"], ["QR", "qr"]]
-    : [["Player", "player"], ["Host login", "login"], ["Host", "host"], ["Settings", "settings"], ["QR", "qr"]];
+    ? [["Solo", "solo"], ["Queue", "queue"], ["QR", "qr"]]
+    : [["Player", "player"], ["Queue", "queue"], ["Host login", "login"], ["Host", "host"], ["Settings", "settings"], ["QR", "qr"]];
   const lines = originList(port).flatMap((origin) => {
     const pages = pageUrls(origin);
     return labels.map(([label, key]) => `${label.padEnd(10)} ${pages[key]}`);
