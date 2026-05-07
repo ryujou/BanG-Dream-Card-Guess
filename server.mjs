@@ -126,6 +126,7 @@ const clients = new Map();
 const queueScoreStreams = new Set();
 const noteShooterScoreStreams = new Set();
 let timer = null;
+let autoNextTimer = null;
 let roundToken = 0;
 let preparedRoundPromise = null;
 let preparedRoundKey = "";
@@ -267,7 +268,7 @@ wss.on("connection", (ws, req) => {
 
 async function handleCommand(ws, command, payload) {
   const client = clients.get(ws);
-  const soloCommandAllowed = APP_MODE === "solo" && client?.role === "self" && ["start", "next", "recrop", "reveal", "reset", "selfGuess"].includes(command);
+  const soloCommandAllowed = APP_MODE === "solo" && client?.role === "self" && ["start", "next", "recrop", "reveal", "stop", "reset", "selfGuess"].includes(command);
   const boothPlayerCommandAllowed = APP_MODE === "booth" && client?.role === "player" && command === "recrop";
 
   if (!client?.authenticated && !soloCommandAllowed && !boothPlayerCommandAllowed) {
@@ -294,7 +295,11 @@ async function handleCommand(ws, command, payload) {
     case "undo":
       undoLastJudgement();
       break;
+    case "stop":
+      stopGame();
+      break;
     case "reveal":
+      clearAutoNext();
       game.status = "revealed";
       game.message = "答案揭晓";
       stopTimer();
@@ -1098,6 +1103,7 @@ function healthSnapshot() {
 async function startRound() {
   const token = roundToken + 1;
   roundToken = token;
+  clearAutoNext();
   stopTimer();
 
   game.status = "loading";
@@ -1155,6 +1161,7 @@ async function recrop() {
 function finishRound(result) {
   if (!game.current || game.status !== "playing") return;
 
+  clearAutoNext();
   game.undoStack.unshift(captureUndoState());
   game.undoStack = game.undoStack.slice(0, 8);
   stopTimer();
@@ -1184,8 +1191,10 @@ function finishRound(result) {
   broadcast();
 
   if (settings.autoNext) {
-    setTimeout(() => {
-      if (game.status === "revealed" || game.status === "finished") startRound();
+    const token = roundToken;
+    autoNextTimer = setTimeout(() => {
+      autoNextTimer = null;
+      if (token === roundToken && (game.status === "revealed" || game.status === "finished")) startRound();
     }, settings.autoNextDelay);
   }
 }
@@ -1220,6 +1229,7 @@ function undoLastJudgement() {
     return;
   }
 
+  clearAutoNext();
   stopTimer();
   Object.assign(game, {
     status: previous.status,
@@ -1242,6 +1252,21 @@ function undoLastJudgement() {
   broadcast();
 }
 
+function stopGame() {
+  clearAutoNext();
+  stopTimer();
+  roundToken += 1;
+  game.status = "idle";
+  game.leftSeconds = settings.roundSeconds;
+  game.loading = false;
+  game.recrops = 0;
+  game.cropHistory = [];
+  game.current = null;
+  game.message = "游戏已停止";
+  clearPreparedRound();
+  broadcast();
+}
+
 function judgeSelfGuess(guess) {
   if (!game.current || game.status !== "playing") return;
 
@@ -1258,6 +1283,7 @@ function normalizeAnswer(value) {
 }
 
 function resetGame() {
+  clearAutoNext();
   stopTimer();
   roundToken += 1;
   game.status = "idle";
@@ -1637,6 +1663,11 @@ function startTimer() {
       broadcast();
     }
   }, 1000);
+}
+
+function clearAutoNext() {
+  if (autoNextTimer) clearTimeout(autoNextTimer);
+  autoNextTimer = null;
 }
 
 function stopTimer() {

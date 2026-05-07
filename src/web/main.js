@@ -528,6 +528,7 @@ function renderSolo() {
           <button class="primary" data-command="start">${current ? "下一题" : "开始"}</button>
           <button data-command="recrop" ${!canPlay || !settings?.allowRecrop || game.recrops >= settings.maxRecrops ? "disabled" : ""}>重切 ${Math.max(0, (settings?.maxRecrops || 0) - (game?.recrops || 0))}</button>
           <button data-command="reveal" ${!current || game?.status === "idle" ? "disabled" : ""}>揭晓</button>
+          <button class="danger" data-command="stop" ${game?.status === "idle" ? "disabled" : ""}>停止游戏</button>
           <button data-command="reset">重置</button>
         </div>
         <div class="player-result"><strong>${game?.message || "点击开始"}</strong></div>
@@ -651,6 +652,7 @@ function renderHost() {
           <button class="danger" data-command="wrong" ${!canPlay ? "disabled" : ""}>答错</button>
           <button data-command="skip" ${!canPlay ? "disabled" : ""}>跳过</button>
           <button data-command="undo" ${!game?.canUndo ? "disabled" : ""}>撤销判定</button>
+          <button class="danger" data-command="stop" ${game?.status === "idle" ? "disabled" : ""}>停止游戏</button>
         </div>
         <div class="shortcut-strip">
           <span>空格 下一题</span>
@@ -660,6 +662,7 @@ function renderHost() {
           <span>Backspace 答错</span>
           <span>S 跳过</span>
           <span>U 撤销</span>
+          <span>Esc 停止</span>
         </div>
         ${settings?.mode === "versus" ? renderTeamSwitch(settings, game) : ""}
       </section>
@@ -1125,6 +1128,7 @@ function handleGlobalShortcut(event) {
     backspace: "wrong",
     s: "skip",
     u: "undo",
+    escape: "stop",
   };
 
   if (key === "1" || key === "2") {
