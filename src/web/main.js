@@ -1,5 +1,12 @@
 import "./styles.css";
 
+const COMMUNITY_URL = "https://qm.qq.com/q/6ytGE7qIWQ";
+const HOME_ANNOUNCEMENTS = [
+  "官方公告：湘潭 BanG Dream! 同好会现场互动入口已开放",
+  "玩家可进入玩家页参与猜卡互动",
+  "主持请从主持页登录后开始本轮游戏",
+  "点击右侧按钮加入湘潭 BanG Dream! 同好会群聊",
+];
 const route = normalizeRoute(location.pathname);
 const app = document.querySelector("#app");
 let snapshot = null;
@@ -49,16 +56,18 @@ const FACE_CROP_MODES = [
 ];
 
 render();
-if (!["login", "qr", "note-shooter", "scores"].includes(route)) connect();
+if (!["home", "login", "qr", "note-shooter", "scores"].includes(route)) connect();
 registerServiceWorker();
 document.addEventListener("pointerdown", unlockAudio, { once: true });
 document.addEventListener("keydown", handleGlobalShortcut);
 
 function normalizeRoute(pathname) {
   const routeName = pathname.replace(/^\/+/, "").split("/")[0];
+  if (!routeName) return "home";
+  if (routeName === "play") return "player";
   if (routeName === "queue") return "note-shooter";
-  if (["player", "solo", "host", "settings", "login", "qr", "note-shooter", "scores"].includes(routeName)) return routeName;
-  return "player";
+  if (["home", "player", "solo", "host", "settings", "login", "qr", "note-shooter", "scores"].includes(routeName)) return routeName;
+  return "home";
 }
 
 function connect() {
@@ -107,7 +116,8 @@ function command(command, payload = {}) {
 }
 
 function render() {
-  if (route === "login") renderLogin();
+  if (route === "home") renderHome();
+  else if (route === "login") renderLogin();
   else if (route === "qr") renderQr();
   else if (route === "note-shooter") renderNoteShooter();
   else if (route === "scores") renderScores();
@@ -115,6 +125,38 @@ function render() {
   else if (route === "host") renderHost();
   else if (route === "settings") renderSettings();
   else renderPlayer();
+}
+
+function renderHome() {
+  const announcementText = HOME_ANNOUNCEMENTS.join("    /    ");
+  app.innerHTML = `
+    <main class="home-shell">
+      <section class="home-hero" aria-labelledby="homeTitle">
+        <div class="home-copy">
+          <p class="eyebrow">Xiangtan BanG Dream! Community</p>
+          <h1 id="homeTitle">湘潭 BanG Dream! 同好会</h1>
+          <div class="home-actions">
+            <a class="primary home-button" href="/player">玩家页</a>
+            <a class="home-button" href="/host">主持页</a>
+            <a class="home-button" href="/note-shooter">音符射手</a>
+          </div>
+        </div>
+        <div class="home-community" aria-label="湘潭 BanG Dream 同好会群聊">
+          <img class="home-icon" src="/icon.png" alt="湘潭 BanG Dream! 同好会" />
+          <div>
+            <a class="primary home-join" href="${COMMUNITY_URL}" target="_blank" rel="noreferrer">点击加入群聊</a>
+          </div>
+        </div>
+      </section>
+      <aside class="home-announcement" aria-label="官方公告">
+        <strong>官方公告</strong>
+        <div class="home-marquee">
+          <span>${escapeHtml(announcementText)}</span>
+          <span aria-hidden="true">${escapeHtml(announcementText)}</span>
+        </div>
+      </aside>
+    </main>
+  `;
 }
 
 function renderQr() {
@@ -815,7 +857,7 @@ function renderTopbar(game, settings, showCommunityLink = false) {
       </div>
       ${showCommunityLink ? `
         <div class="player-top-actions">
-          <a class="community-link" href="https://qm.qq.com/q/6ytGE7qIWQ" target="_blank" rel="noreferrer">
+          <a class="community-link" href="${COMMUNITY_URL}" target="_blank" rel="noreferrer">
             <span>湘潭同好会</span>
             <strong>加入群聊</strong>
           </a>

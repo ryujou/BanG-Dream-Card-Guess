@@ -125,6 +125,168 @@ button svg {
   align-items: stretch;
 }
 
+.home-shell {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  min-height: 100vh;
+  padding: 32px 32px 88px;
+  place-items: center;
+}
+
+.home-hero {
+  display: grid;
+  width: min(1520px, 100%);
+  grid-template-columns: minmax(0, 1fr) minmax(320px, 420px);
+  gap: 40px;
+  align-items: center;
+}
+
+.home-copy {
+  display: grid;
+  gap: 18px;
+}
+
+.home-copy h1 {
+  max-width: none;
+  font-size: clamp(3rem, 3.4vw, 4.25rem);
+  white-space: nowrap;
+}
+
+.home-intro {
+  max-width: 560px;
+  margin: 0;
+  color: #4f5565;
+  font-size: 1.12rem;
+  font-weight: 750;
+  line-height: 1.7;
+}
+
+.home-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.home-button {
+  display: inline-flex;
+  min-height: 48px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(23, 23, 31, 0.08);
+  border-radius: 8px;
+  padding: 0 18px;
+  color: #17171f;
+  background: rgba(255, 255, 255, 0.82);
+  box-shadow: 0 12px 30px rgba(48, 57, 82, 0.08);
+  font-weight: 900;
+  text-decoration: none;
+}
+
+.home-button:hover,
+.home-button:focus-visible {
+  text-decoration: none;
+  transform: translateY(-1px);
+}
+
+.home-community {
+  display: grid;
+  gap: 16px;
+  justify-items: center;
+  border: 0;
+  border-radius: 0;
+  padding: 22px;
+  background: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
+  text-align: center;
+}
+
+.home-icon {
+  width: min(100%, 300px);
+  aspect-ratio: 1;
+  object-fit: cover;
+  filter: drop-shadow(0 18px 28px rgba(48, 57, 82, 0.18));
+}
+
+.home-community span {
+  display: block;
+  margin-bottom: 6px;
+  color: #ff3d6e;
+  font-size: 0.78rem;
+  font-weight: 900;
+}
+
+.home-join {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  padding: 0 18px;
+  color: #ffffff;
+  font-weight: 900;
+  text-decoration: none;
+}
+
+.home-join:hover,
+.home-join:focus-visible {
+  text-decoration: none;
+  transform: translateY(-1px);
+}
+
+.home-announcement {
+  position: fixed;
+  right: 24px;
+  bottom: 18px;
+  left: 24px;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 16px;
+  align-items: center;
+  overflow: hidden;
+  border: 1px solid rgba(23, 23, 31, 0.08);
+  border-radius: 8px;
+  padding: 12px 16px;
+  background: rgba(255, 255, 255, 0.88);
+  box-shadow: 0 18px 48px rgba(49, 57, 84, 0.14);
+  backdrop-filter: blur(18px);
+}
+
+.home-announcement strong {
+  color: #ff3d6e;
+  font-size: 0.86rem;
+  font-weight: 950;
+  white-space: nowrap;
+}
+
+.home-marquee {
+  display: flex;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.home-marquee span {
+  flex: 0 0 auto;
+  min-width: 100%;
+  padding-right: 48px;
+  color: #323746;
+  font-weight: 850;
+  animation: homeMarquee 24s linear infinite;
+}
+
+@keyframes homeMarquee {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-100%);
+  }
+}
+
 .game-panel,
 .side-panel {
   min-width: 0;
@@ -1579,6 +1741,26 @@ select:focus {
     grid-template-columns: 1fr;
   }
 
+  .home-hero {
+    grid-template-columns: 1fr;
+  }
+
+  .home-copy h1 {
+    font-size: clamp(2.6rem, 8.5vw, 4.6rem);
+    white-space: normal;
+  }
+
+  .home-community {
+    align-items: center;
+    justify-items: start;
+    grid-template-columns: 96px minmax(0, 1fr);
+    text-align: left;
+  }
+
+  .home-icon {
+    width: 96px;
+  }
+
   .settings-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -1646,6 +1828,48 @@ select:focus {
 }
 
 @media (max-width: 700px) {
+  .home-shell {
+    padding: 20px 20px 96px;
+    place-items: start center;
+  }
+
+  .home-hero {
+    gap: 20px;
+  }
+
+  .home-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .home-community {
+    grid-template-columns: 72px auto;
+    justify-content: center;
+    align-items: center;
+    padding: 14px;
+  }
+
+  .home-icon {
+    width: 72px;
+  }
+
+  .home-join {
+    min-height: 48px;
+  }
+
+  .home-announcement {
+    right: 10px;
+    bottom: 10px;
+    left: 10px;
+    grid-template-columns: 1fr;
+    gap: 6px;
+    padding: 10px 12px;
+  }
+
+  .home-marquee span {
+    animation-duration: 18s;
+  }
+
   .shell {
     width: min(100% - 20px, 1480px);
     padding: 10px 0;

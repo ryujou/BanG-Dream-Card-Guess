@@ -1,15 +1,15 @@
 {
   "name": "BanG Dream! Card Guess",
-  "short_name": "邦邦猜",
+  "short_name": "湘潭 BanG Dream! 同好会",
   "description": "BanG Dream! 本地摊位猜卡互动游戏",
-  "start_url": "/player",
+  "start_url": "/",
   "display": "standalone",
   "background_color": "#fff7fb",
   "theme_color": "#ff3d6e",
   "icons": [
     {
-      "src": "/bg/monkey.png",
-      "sizes": "192x192",
+      "src": "/icon.png",
+      "sizes": "any",
       "type": "image/png"
     }
   ]
