@@ -1,0 +1,186 @@
+// 卡面裁剪、智能评分、人脸感知
+import { Jimp } from "jimp";
+import { effectiveFaceCropMode, FACE_LABELS_BY_CLASS } from "./config.mjs";
+
+export function faceBoxesFor(faceBoxStore, relativePath) {
+  const entry = faceBoxStore.images?.[relativePath.replaceAll("\\", "/")];
+  if (!entry?.faces?.length) return [];
+  const imageArea = Math.max(1, Number(entry.width || 0) * Number(entry.height || 0));
+  return entry.faces
+    .map((face) => ({
+      x: Number(face.x),
+      y: Number(face.y),
+      w: Number(face.w),
+      h: Number(face.h),
+      conf: Number(face.conf),
+      cls: Number(face.cls),
+      label: faceLabel(Number(face.cls)),
+      areaRatio: (Number(face.w) * Number(face.h)) / imageArea,
+    }))
+    .filter((face) => face.areaRatio > 0.002 && face.areaRatio < 0.85);
+}
+
+function faceLabel(cls) {
+  return FACE_LABELS_BY_CLASS[cls] || "unknown";
+}
+
+export async function smartCrop(image, size, settings, history = [], faceBoxes = []) {
+  const cropSize = Math.max(60, Math.min(260, Math.floor(size)));
+  const faceMode = effectiveFaceCropMode(settings);
+  const randomPoints = Array.from({ length: Math.max(30, settings.candidateCount) }, () => randomCropPoint(image, cropSize));
+  const facePoints = faceMode === "prefer" || faceMode === "only" ? faceCropPoints(image, cropSize, faceBoxes) : [];
+  const scoredCandidates = [...randomPoints, ...facePoints]
+    .map((point) => ({ ...point, score: scoreCrop(image, point.x, point.y, cropSize, faceBoxes, faceMode) }))
+    .sort((a, b) => b.score - a.score);
+  const candidates = scoredCandidates.filter((crop) => crop.score > 0);
+
+  const crop = pickCrop(candidates.length ? candidates : scoredCandidates, cropSize, history) || randomCropPoint(image, cropSize);
+  const dataUrl = await cropToDataUrl(image, crop.x, crop.y, cropSize);
+  return { x: crop.x, y: crop.y, size: cropSize, image: dataUrl };
+}
+
+export function randomCropPoint(image, size) {
+  const maxX = Math.max(0, image.bitmap.width - size);
+  const maxY = Math.max(0, image.bitmap.height - size);
+  const marginX = Math.min(maxX, Math.floor(image.bitmap.width * 0.08));
+  const marginY = Math.min(maxY, Math.floor(image.bitmap.height * 0.08));
+  const xRange = Math.max(1, maxX - marginX * 2);
+  const yRange = Math.max(1, maxY - marginY * 2);
+  return {
+    x: Math.min(maxX, marginX + Math.floor(Math.random() * xRange)),
+    y: Math.min(maxY, marginY + Math.floor(Math.random() * yRange)),
+  };
+}
+
+export function faceCropPoints(image, size, faceBoxes) {
+  if (!faceBoxes.length) return [];
+  const maxX = Math.max(0, image.bitmap.width - size);
+  const maxY = Math.max(0, image.bitmap.height - size);
+  const offsets = [
+    [0, 0], [-0.28, 0], [0.28, 0], [0, -0.28], [0, 0.28],
+    [-0.28, -0.28], [0.28, -0.28], [0.28, 0.28], [-0.28, 0.28],
+  ];
+  const points = [];
+  for (const face of faceBoxes.slice(0, 8)) {
+    for (const [ox, oy] of offsets) {
+      const cx = Math.round(face.x + face.w * 0.5 - size * 0.5 + ox * size);
+      const cy = Math.round(face.y + face.h * 0.5 - size * 0.5 + oy * size);
+      points.push({ x: Math.max(0, Math.min(maxX, cx)), y: Math.max(0, Math.min(maxY, cy)) });
+    }
+  }
+  return points;
+}
+
+export function pickCrop(candidates, size, history = []) {
+  const recent = history.slice(-3).map((item) => ({ x: item.x, y: item.y }));
+  for (const minDist of [size * 0.5, size * 0.25, size * 0.1, 0]) {
+    const filtered = candidates.filter((crop) =>
+      recent.every((old) => Math.hypot(crop.x - old.x, crop.y - old.y) >= minDist),
+    );
+    if (filtered.length) {
+      const top = filtered.slice(0, 3);
+      return top[Math.floor(Math.random() * top.length)];
+    }
+  }
+  return candidates.length ? candidates[0] : null;
+}
+
+export function scoreCrop(image, x, y, size, faceBoxes = [], faceMode = "none") {
+  const { width, height } = image.bitmap;
+  if (x < 0 || y < 0 || x + size > width || y + size > height) return 0;
+
+  let score = 0;
+  const step = Math.max(2, Math.floor(size / 25));
+  let colorVariance = 0;
+  let edgeCount = 0;
+  let sampleCount = 0;
+  let saturationSum = 0;
+
+  try {
+    const data = image.bitmap.data;
+    for (let row = y; row < y + size; row += step) {
+      for (let col = x; col < x + size; col += step) {
+        const p = pixel(data, width, col, row);
+        const next = col + step < x + size ? pixel(data, width, col + step, row) : p;
+        colorVariance += Math.abs(p.r - next.r) + Math.abs(p.g - next.g) + Math.abs(p.b - next.b);
+        const maxC = Math.max(p.r, p.g, p.b);
+        const minC = Math.min(p.r, p.g, p.b);
+        saturationSum += maxC === 0 ? 0 : (maxC - minC) / maxC;
+        sampleCount++;
+      }
+    }
+    for (let row = y; row < y + size; row += step) {
+      for (let col = x; col < x + size; col += step) {
+        if (col + step < x + size) {
+          const a = pixel(data, width, col, row);
+          const b = pixel(data, width, col + step, row);
+          if (Math.abs(a.luma - b.luma) > 30) edgeCount++;
+        }
+        if (row + step < y + size) {
+          const a = pixel(data, width, col, row);
+          const b = pixel(data, width, col, row + step);
+          if (Math.abs(a.luma - b.luma) > 30) edgeCount++;
+        }
+      }
+    }
+
+    const avgVariance = colorVariance / Math.max(1, sampleCount);
+    const avgSaturation = saturationSum / Math.max(1, sampleCount);
+    score = avgVariance * 0.5 + avgSaturation * 300 + (edgeCount / Math.max(1, sampleCount)) * 400;
+
+    if (avgVariance < 12 || edgeCount < 3) score = 0;
+    if (faceMode !== "none" && faceBoxes.length) {
+      score += scoreFacePolicy({ x, y, w: size, h: size }, faceBoxes, faceMode);
+    }
+  } catch {
+    return 0;
+  }
+  return score;
+}
+
+export function scoreFacePolicy(crop, faceBoxes, mode) {
+  let score = 0;
+  for (const face of faceBoxes) {
+    const zone = expandedFaceZone(face);
+    const overlap = overlapArea(crop, zone);
+    const zoneArea = zone.w * zone.h;
+    const cropArea = crop.w * crop.h;
+    const ratio = overlap / Math.min(zoneArea, cropArea);
+    if (mode === "avoid" && ratio > 0) score -= ratio * 800;
+    if (mode === "prefer" && ratio > 0.1) score += ratio * 600;
+    if (mode === "only") score = ratio > 0.3 ? score + ratio * 500 : score - 200;
+  }
+  return score;
+}
+
+export function expandedFaceZone(face) {
+  const label = faceLabel(face.cls);
+  const expand = label === "eyes" ? 4 : label === "mouth" ? 3 : 1.5;
+  const cx = face.x + face.w * 0.5;
+  const cy = face.y + face.h * 0.5;
+  const ew = face.w * expand;
+  const eh = face.h * expand * (label === "mouth" ? 1.8 : 1.5);
+  return { x: cx - ew * 0.5, y: cy - eh * 0.5, w: ew, h: eh };
+}
+
+export function overlapArea(a, b) {
+  const left = Math.max(a.x, b.x);
+  const right = Math.min(a.x + a.w, b.x + b.w);
+  const top = Math.max(a.y, b.y);
+  const bottom = Math.min(a.y + a.h, b.y + b.h);
+  return Math.max(0, right - left) * Math.max(0, bottom - top);
+}
+
+function pixel(data, width, x, y) {
+  const index = (y * width + x) * 4;
+  const r = data[index];
+  const g = data[index + 1];
+  const b = data[index + 2];
+  return { r, g, b, luma: 0.299 * r + 0.587 * g + 0.114 * b };
+}
+
+export async function cropToDataUrl(image, x, y, size) {
+  const cropped = image.clone().crop({ x, y, w: size, h: size });
+  const buffer = await cropped.getBuffer("image/jpeg");
+  return `data:image/jpeg;base64,${buffer.toString("base64")}`;
+}
