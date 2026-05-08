@@ -4,7 +4,7 @@ external
 public/cards/
 data/*
 !data/face-boxes.json
-Server/
+/Server/
 deploy.sh
 deploy.tar.gz
 deploy_tmp/
