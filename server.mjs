@@ -450,7 +450,7 @@ async function pickRoundCard() {
       game.recentCharacters = game.recentCharacters.slice(0, settings.avoidRecentCharacters);
 
       const charNames = nicknames[String(candidate.characterId)] || [];
-      const answerKey = pick(charNames) || candidate.name || "";
+      const answerKey = charNames[0] || candidate.name || "";
       return {
         id: candidate.id,
         displayName: answerKey,
