@@ -5,6 +5,10 @@ public/cards/
 data/*
 !data/face-boxes.json
 Server/
+deploy.sh
+deploy.tar.gz
+deploy_tmp/
+publish.cmd
 image.png
 weight/*
 !weight/best.pt
