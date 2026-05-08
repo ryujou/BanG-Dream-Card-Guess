@@ -1,4 +1,4 @@
-const CACHE_NAME = "bangbangcai-v18";
+const CACHE_NAME = "bangbangcai-v21";
 const PRECACHE_URLS = [
   "/",
   "/player",
@@ -11,7 +11,9 @@ const PRECACHE_URLS = [
   "/settings",
   "/qr",
   "/manifest.webmanifest",
-  "/icon.png",
+  "/icon5.png",
+  "/icon4.png",
+  "/icon3.png",
   "/bg/bg_pattern_logo_pc.webp",
   "/bg/bg_pattern_logo_sp.webp",
   "/bg/bg_pattern_texture_pc.webp",
