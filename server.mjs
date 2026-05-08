@@ -214,16 +214,16 @@ async function startRound() {
   game.cropHistory = [];
 
   let material;
-  if (preparedRound && preparedRound.key === roundConfigKey(settings) && preparedRound.data.crop) {
+  if (preparedRound && preparedRound.key === roundConfigKey(settings)) {
     material = preparedRound.data;
     preparedRound = null;
   } else {
     preparedRound = null;
+  }
+
+  if (!material) {
     try {
       material = await pickRoundCard();
-      const image = await Jimp.read(material.sourceBuffer);
-      material.crop = (await smartCrop(image, settings.cropSize, settings, [], material.faceBoxes || [])).crop || material.crop;
-      if (material.crop) material.crop = { ...material.crop, ...(await smartCrop(image, settings.cropSize, settings, [], material.faceBoxes || [])) };
     } catch (error) {
       game.status = "idle";
       game.loading = false;
@@ -233,17 +233,25 @@ async function startRound() {
     }
   }
 
-  if (token !== roundToken) return;
-
-  game.current = { ...material };
-  game.cropHistory = [game.current.crop].filter(Boolean);
-  game.status = "playing";
-  game.loading = false;
-  game.leftSeconds = settings.roundSeconds;
-  game.message = "答题中";
-  broadcast();
-  startTimer();
-  prepareNextRound();
+  try {
+    const image = await Jimp.read(material.sourceBuffer);
+    material.crop = await smartCrop(image, settings.cropSize, settings, [], material.faceBoxes || []);
+    if (token !== roundToken) return;
+    game.current = { ...material };
+    game.cropHistory = [game.current.crop].filter(Boolean);
+    game.status = "playing";
+    game.loading = false;
+    game.leftSeconds = settings.roundSeconds;
+    game.message = "答题中";
+    broadcast();
+    startTimer();
+    prepareNextRound();
+  } catch (error) {
+    game.status = "idle";
+    game.loading = false;
+    game.message = error.message || "加载失败";
+    broadcast();
+  }
 }
 
 async function recrop() {
