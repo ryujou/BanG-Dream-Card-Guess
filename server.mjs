@@ -639,7 +639,9 @@ async function serveStatic(requestPath, res) {
 function streamFile(filePath, res) {
   const ext = path.extname(filePath).toLowerCase();
   res.writeHead(200, { "Content-Type": MIME[ext] || "application/octet-stream", "Cache-Control": ext === ".html" ? "no-cache" : "public, max-age=3600" });
-  createReadStream(filePath).pipe(res);
+  createReadStream(filePath).on("error", () => {
+    if (!res.headersSent) { res.writeHead(404); res.end("Not found"); }
+  }).pipe(res);
 }
 
 // --- Helpers ---
