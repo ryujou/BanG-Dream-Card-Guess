@@ -14,23 +14,22 @@ import {
   BESTDORI_ORIGIN, BESTDORI_BASE,
   BAND_OPTIONS, BAND_BY_CHARACTER, RARITY_OPTIONS, ATTRIBUTE_OPTIONS,
   DIFFICULTY_PRESETS, FACE_CROP_MODES, MIME,
-  defaultSettings, readPersistedConfig, savePersistentConfigSoon, readFaceBoxStore,
-  unique, arraySetting, numberArraySetting,
+  defaultSettings, readPersistedConfig, readFaceBoxStore,
+  arraySetting, numberArraySetting,
   persistedTeamName, roundConfigKey, effectiveFaceCropMode,
 } from "./src/server/config.mjs";
 import { AUTH_TOKEN, AUTH_COOKIE, HOST_PASSWORD, authenticatedSessions, isAuthenticated, verifyPassword } from "./src/server/auth.mjs";
 import { smartCrop, faceBoxesFor } from "./src/server/crop.mjs";
 import { originList, pageUrls, networkState, lanHosts } from "./src/server/network.mjs";
 import {
-  queueScoresStorePath, noteShooterScoresStorePath,
-  queueScoreStreams, noteShooterScoreStreams,
+  queueScoresStorePath,
   readQueueScores, readNoteShooterScores, writeNoteShooterScores,
   handleQueueScoreEvents, broadcastQueueScores,
   handleNoteShooterScoreEvents, broadcastNoteShooterScores,
   handleNoteShooterApi,
   queueScoreState, noteShooterScoreState,
   parseRequestPayload, readRequestBody,
-  normalizeNoteShooterPlayerId, formatLocalDateTime,
+  normalizeNoteShooterPlayerId,
 } from "./src/server/scores.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -59,7 +58,7 @@ const game = {
   score: 0, streak: 0, total: 0, recrops: 0,
   cropHistory: [], recentCards: [], recentCharacters: [], undoStack: [],
   current: null, history: [],
-  teams: { A: { name: "A 队", score: 0 }, B: { name: "B 队", score: 0 } },
+  teams: { A: { name: persistedTeamName?.("A", "A 队") || "A 队", score: 0 }, B: { name: persistedTeamName?.("B", "B 队") || "B 队", score: 0 } },
   roundKey: "",
 };
 let timer = null;
@@ -361,7 +360,7 @@ function resetGame() {
   game.cropHistory = [];
   game.recentCards = [];
   game.recentCharacters = [];
-  game.teams = { A: { name: settings.teams?.A?.name || "A 队", score: 0 }, B: { name: settings.teams?.B?.name || "B 队", score: 0 } };
+  game.teams = { A: { name: persistedTeamName?.("A", "A 队") || "A 队", score: 0 }, B: { name: persistedTeamName?.("B", "B 队") || "B 队", score: 0 } };
   game.message = "已重置";
   broadcast();
 }

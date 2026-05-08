@@ -129,7 +129,7 @@ export function persistedTeamName(team, fallback) {
   try {
     const config = readPersistedConfig();
     const teams = config?.teams || {};
-    return String(teams[team] || fallback);
+    return String(teams[team]?.name || fallback);
   } catch {
     return fallback;
   }
