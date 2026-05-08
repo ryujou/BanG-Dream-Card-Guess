@@ -22,7 +22,7 @@ const noteShooterScoresStorePath = path.join(dataDir, "note-shooter-scores.json"
 const BESTDORI_ORIGIN = "https://bestdori.com";
 const BESTDORI_BASE = `${BESTDORI_ORIGIN}/assets/jp/characters/resourceset`;
 const APP_MODE = process.env.APP_MODE === "solo" || process.argv.includes("--solo") ? "solo" : "booth";
-const HOST_PASSWORD = process.env.HOST_PASSWORD || "BangBang@2026";
+const HOST_PASSWORD = process.env.HOST_PASSWORD || randomBytes(16).toString("hex");
 const AUTH_COOKIE = "bbc_host_auth";
 const AUTH_TOKEN = randomBytes(32).toString("hex");
 
@@ -1780,4 +1780,7 @@ server.listen(port, "0.0.0.0", () => {
     return labels.map(([label, key]) => `${label.padEnd(10)} ${pages[key]}`);
   });
   console.log(`BangBangCai ${APP_MODE} server running:\n${lines.join("\n")}`);
+  if (!process.env.HOST_PASSWORD) {
+    console.log(`\n[!] No HOST_PASSWORD set. Generated: ${HOST_PASSWORD}\n    Set via: HOST_PASSWORD="your-password" npm run start`);
+  }
 });
