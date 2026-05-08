@@ -378,15 +378,23 @@ async function saveSettings() {
 
 // --- Card picking ---
 function filteredCardPool() {
-  return cardPool.filter((card) => {
-    if (settings.cardBands.length && !settings.cardBands.includes(BAND_BY_CHARACTER.get(card.characterId))) return false;
-    if (settings.cardRarities.length && !settings.cardRarities.includes(card.rarity)) return false;
-    if (settings.cardAttributes.length && !settings.cardAttributes.includes(card.attribute)) return false;
-    if (settings.cardImageVariant === "normal" && card.imageVariant === "trained") return false;
-    if (settings.cardImageVariant === "trained" && card.imageVariant === "normal") return false;
+  const bandSet = new Set(settings.cardBands || []);
+  const raritySet = new Set((settings.cardRarities || []).map(Number));
+  const attributeSet = new Set(settings.cardAttributes || []);
+
+  const filtered = cardPool.filter((card) => {
+    const band = BAND_BY_CHARACTER.get(Number(card.characterId));
+    if (bandSet.size && !bandSet.has(band)) return false;
+    if (raritySet.size && !raritySet.has(Number(card.rarity))) return false;
+    if (attributeSet.size && !attributeSet.has(card.attribute)) return false;
+    if (settings.cardImageVariant === "trained" && !card.stat?.training) return false;
     return true;
   });
+
+  return filtered.length ? filtered : cardPool;
 }
+
+function pick(list) { return list[Math.floor(Math.random() * list.length)]; }
 
 function pickRoundCard() {
   const pool = filteredCardPool();
