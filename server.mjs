@@ -18,7 +18,7 @@ import {
   unique, arraySetting, numberArraySetting,
   persistedTeamName, roundConfigKey, effectiveFaceCropMode,
 } from "./src/server/config.mjs";
-import { AUTH_TOKEN, AUTH_COOKIE, authenticatedSessions, isAuthenticated, verifyPassword } from "./src/server/auth.mjs";
+import { AUTH_TOKEN, AUTH_COOKIE, HOST_PASSWORD, authenticatedSessions, isAuthenticated, verifyPassword } from "./src/server/auth.mjs";
 import { smartCrop, faceBoxesFor } from "./src/server/crop.mjs";
 import { originList, pageUrls, networkState, lanHosts } from "./src/server/network.mjs";
 import {
@@ -90,7 +90,7 @@ const server = createServer(async (req, res) => {
       return sendJson(res, { ok: false }, 500);
     }
   }
-  if (url.pathname.startsWith("/api/note-shooter")) return handleNoteShooterApi(url, req, res); // delegate sub-routes
+  if (url.pathname.startsWith("/note-shooter-api/")) return handleNoteShooterApi(url, req, res);
   if (url.pathname === "/api/note-shooter-scores" && req.method === "GET") return sendJson(res, noteShooterScoreState());
   if (url.pathname === "/api/note-shooter-scores/events") return handleNoteShooterScoreEvents(req, res);
   if (url.pathname === "/api/note-shooter-scores" && req.method === "DELETE") {
@@ -613,6 +613,6 @@ server.listen(port, "0.0.0.0", () => {
   });
   console.log(`BangBangCai ${APP_MODE} server running:\n${lines.join("\n")}`);
   if (!process.env.HOST_PASSWORD) {
-    console.log(`\n[!] No HOST_PASSWORD set. A random password was generated.\n    Set via: HOST_PASSWORD="your-password" npm run start`);
+    console.log(`\n[!] No HOST_PASSWORD set. Generated: ${HOST_PASSWORD}\n    Set via: HOST_PASSWORD="your-password" npm run start`);
   }
 });

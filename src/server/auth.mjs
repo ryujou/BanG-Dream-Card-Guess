@@ -1,13 +1,16 @@
 // 主持登录认证
 import { randomBytes, timingSafeEqual } from "node:crypto";
 
-const HOST_PASSWORD = process.env.HOST_PASSWORD || randomBytes(16).toString("hex");
+export const HOST_PASSWORD = process.env.HOST_PASSWORD || randomBytes(16).toString("hex");
 export const AUTH_COOKIE = "bbc_host_auth";
 export const AUTH_TOKEN = randomBytes(32).toString("hex");
 export const authenticatedSessions = new Set();
 
 export function sameSecret(a, b) {
-  return timingSafeEqual(Buffer.from(String(a)), Buffer.from(String(b)));
+  const sa = String(a);
+  const sb = String(b);
+  if (sa.length !== sb.length) return false;
+  return timingSafeEqual(Buffer.from(sa), Buffer.from(sb));
 }
 
 export function isAuthenticated(req) {
