@@ -142,7 +142,11 @@ function renderHome() {
           </div>
         </div>
         <div class="home-community" aria-label="湘潭 BanG Dream 同好会群聊">
-          <img class="home-icon" src="/icon.png" alt="湘潭 BanG Dream! 同好会" />
+          <div class="home-icon-grid">
+            <img class="home-icon" src="/icon5.png" alt="湘潭 BanG Dream! 同好会" />
+            <img class="home-icon" src="/icon4.png" alt="湘潭 BanG Dream! 同好会图标 4" />
+            <img class="home-icon" src="/icon3.png" alt="湘潭 BanG Dream! 同好会图标 3" />
+          </div>
           <div>
             <a class="primary home-join" href="${COMMUNITY_URL}" target="_blank" rel="noreferrer">点击加入群聊</a>
           </div>
