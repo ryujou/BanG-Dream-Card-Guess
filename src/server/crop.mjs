@@ -12,16 +12,23 @@ export function faceBoxesFor(faceBoxStore, relativePath) {
       y: Number(face.y),
       w: Number(face.w),
       h: Number(face.h),
-      conf: Number(face.conf),
-      cls: Number(face.cls),
-      label: faceLabel(Number(face.cls)),
-      areaRatio: (Number(face.w) * Number(face.h)) / imageArea,
+      conf: Number(face.conf || 0),
+      cls: Number.isFinite(Number(face.cls)) ? Number(face.cls) : null,
+      label: faceLabel(face),
     }))
-    .filter((face) => face.areaRatio > 0.002 && face.areaRatio < 0.85);
+    .filter((face) => {
+      if (!Number.isFinite(face.x) || !Number.isFinite(face.y) || face.w <= 0 || face.h <= 0) return false;
+      const areaRatio = (face.w * face.h) / imageArea;
+      return !(face.label === "face" && areaRatio > 0.22 && face.conf < 0.9);
+    });
 }
 
-function faceLabel(cls) {
-  return FACE_LABELS_BY_CLASS[cls] || "unknown";
+function faceLabel(face) {
+  const value = String(face.label || FACE_LABELS_BY_CLASS[Number(face.cls)] || "").toLowerCase();
+  if (value.includes("eye")) return "eyes";
+  if (value.includes("mouth")) return "mouth";
+  if (value.includes("face")) return "face";
+  return "face";
 }
 
 export async function smartCrop(image, size, settings, history = [], faceBoxes = []) {
@@ -72,17 +79,14 @@ export function faceCropPoints(image, size, faceBoxes) {
 }
 
 export function pickCrop(candidates, size, history = []) {
-  const recent = history.slice(-3).map((item) => ({ x: item.x, y: item.y }));
-  for (const minDist of [size * 0.5, size * 0.25, size * 0.1, 0]) {
-    const filtered = candidates.filter((crop) =>
-      recent.every((old) => Math.hypot(crop.x - old.x, crop.y - old.y) >= minDist),
-    );
-    if (filtered.length) {
-      const top = filtered.slice(0, 3);
-      return top[Math.floor(Math.random() * top.length)];
-    }
+  const passes = [size * 1.85, size * 1.2, 0];
+  for (const minDistance of passes) {
+    const crop = candidates.find((candidate) => {
+      return history.every((old) => Math.hypot(old.x - candidate.x, old.y - candidate.y) >= minDistance);
+    });
+    if (crop) return crop;
   }
-  return candidates.length ? candidates[0] : null;
+  return candidates[0];
 }
 
 export function scoreCrop(image, x, y, size, faceBoxes = [], faceMode = "none") {
@@ -154,13 +158,19 @@ export function scoreFacePolicy(crop, faceBoxes, mode) {
 }
 
 export function expandedFaceZone(face) {
-  const label = faceLabel(face.cls);
-  const expand = label === "eyes" ? 4 : label === "mouth" ? 3 : 1.5;
-  const cx = face.x + face.w * 0.5;
-  const cy = face.y + face.h * 0.5;
-  const ew = face.w * expand;
-  const eh = face.h * expand * (label === "mouth" ? 1.8 : 1.5);
-  return { x: cx - ew * 0.5, y: cy - eh * 0.5, w: ew, h: eh };
+  const label = face.label || faceLabel(face);
+  const config =
+    label === "eyes"
+      ? { scaleX: 4.6, scaleY: 5.4, offsetY: 1.25 }
+      : label === "mouth"
+        ? { scaleX: 4.0, scaleY: 4.8, offsetY: -1.15 }
+        : { scaleX: 1.85, scaleY: 1.95, offsetY: 0.08 };
+
+  const cx = face.x + face.w / 2;
+  const cy = face.y + face.h / 2 + face.h * config.offsetY;
+  const w = face.w * config.scaleX;
+  const h = face.h * config.scaleY;
+  return { x: cx - w / 2, y: cy - h / 2, w, h };
 }
 
 export function overlapArea(a, b) {

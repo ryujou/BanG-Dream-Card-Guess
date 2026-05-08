@@ -143,7 +143,7 @@ const server = createServer(async (req, res) => {
 });
 
 // --- WebSocket ---
-const wss = new WebSocketServer({ server });
+const wss = new WebSocketServer({ server, path: "/ws" });
 wss.on("connection", (ws, req) => {
   let authenticated = isAuthenticated(req);
 
@@ -216,7 +216,7 @@ async function recrop() {
   broadcast();
   const image = await Jimp.read(game.current.sourceBuffer);
   const crop = await smartCrop(image, settings.cropSize, settings, game.cropHistory, game.current.faceBoxes || []);
-  game.cropHistory.push(crop);
+  rememberCrop(crop);
   game.current.crop = crop;
   game.recrops += 1;
   game.loading = false;
@@ -419,6 +419,11 @@ function rememberRound(round) {
   game.recentCharacters = unique(game.recentCharacters).slice(0, Math.max(4, settings.avoidRecentCharacters + 4));
 }
 
+function rememberCrop(crop) {
+  game.cropHistory.push({ x: crop.x, y: crop.y });
+  game.cropHistory = game.cropHistory.slice(-8);
+}
+
 async function fetchCardResource(card) {
   const variants = settings.cardImageVariant === "trained"
     ? ["card_after_training.png", "card_normal.png"]
@@ -531,12 +536,12 @@ async function startRound() {
       game.message = error instanceof Error ? error.message : "题目加载失败";
       broadcast();
     }
-    return;
+    throw error;
   }
-  if (token !== roundToken || !round) return;
+  if (token !== roundToken) return;
 
   rememberRound(round);
-  game.cropHistory = [round.crop].filter(Boolean);
+  rememberCrop(round.crop);
   game.current = round;
   game.status = "playing";
   game.loading = false;
