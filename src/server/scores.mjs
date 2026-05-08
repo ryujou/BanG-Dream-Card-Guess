@@ -1,6 +1,6 @@
 // 本地成绩管理：队列游戏、音符射手排行榜
 import { readFileSync } from "node:fs";
-import { writeFile } from "node:fs/promises";
+import { writeFile, mkdir } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { randomBytes } from "node:crypto";
@@ -20,6 +20,11 @@ export function readQueueScores() {
   } catch {
     return [];
   }
+}
+
+export async function writeQueueScores(scores) {
+  await mkdir(dataDir, { recursive: true });
+  await writeFile(queueScoresStorePath, `${JSON.stringify(scores.slice(0, 1000))}\n`);
 }
 
 export function readNoteShooterScores() {
