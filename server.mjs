@@ -107,6 +107,7 @@ const server = createServer(async (req, res) => {
     const body = parseRequestPayload(req, await readRequestBody(req));
     if (verifyPassword(body.password)) {
       authenticatedSessions.add(AUTH_TOKEN);
+      res.setHeader("Set-Cookie", `${AUTH_COOKIE}=${AUTH_TOKEN}; Path=/; HttpOnly; SameSite=Lax; Max-Age=86400`);
       return sendJson(res, { ok: true });
     }
     return sendJson(res, { ok: false }, 403);
@@ -134,8 +135,8 @@ const server = createServer(async (req, res) => {
 
 // --- WebSocket ---
 const wss = new WebSocketServer({ server });
-wss.on("connection", (ws) => {
-  let authenticated = false;
+wss.on("connection", (ws, req) => {
+  let authenticated = isAuthenticated(req);
 
   ws.on("message", async (raw) => {
     try {
