@@ -342,7 +342,8 @@ async function updateSettings(next) {
   if (next.cardBands !== undefined) settings.cardBands = arraySetting(next.cardBands, defaultSettings.cardBands, BAND_OPTIONS.map((b) => b.id));
   if (next.cardRarities !== undefined) settings.cardRarities = numberArraySetting(next.cardRarities, defaultSettings.cardRarities, RARITY_OPTIONS);
   if (next.cardAttributes !== undefined) settings.cardAttributes = arraySetting(next.cardAttributes, defaultSettings.cardAttributes, ATTRIBUTE_OPTIONS);
-  if (next.cardImageVariant !== undefined) settings.cardImageVariant = ["normal", "trained", "mixed"].includes(next.cardImageVariant) ? next.cardImageVariant : settings.cardImageVariant;
+  if (next.cardCharacterLimits !== undefined) settings.cardCharacterLimits = arraySetting(next.cardCharacterLimits, defaultSettings.cardCharacterLimits, CARD_CHARACTER_LIMITS);
+  if (next.cardVariants !== undefined) settings.cardVariants = arraySetting(next.cardVariants, defaultSettings.cardVariants, CARD_VARIANTS);
   if (next.avoidRecentCards !== undefined) settings.avoidRecentCards = Math.max(0, Math.min(200, Number(next.avoidRecentCards) || 0));
   if (next.avoidRecentCharacters !== undefined) settings.avoidRecentCharacters = Math.max(0, Math.min(100, Number(next.avoidRecentCharacters) || 0));
 
@@ -387,20 +388,25 @@ function filteredCardPool() {
     if (bandSet.size && !bandSet.has(band)) return false;
     if (raritySet.size && !raritySet.has(Number(card.rarity))) return false;
     if (attributeSet.size && !attributeSet.has(card.attribute)) return false;
-    if (settings.cardImageVariant === "trained" && !card.stat?.training) return false;
+    const allowedVariants = settings.cardVariants || ["normal", "trained"];
+    if (allowedVariants.length === 1 && allowedVariants[0] === "trained" && !card.stat?.training) return false;
+    
+    // Check if the card can provide AT LEAST ONE valid variant that satisfies both the variant requirement AND character limit requirement
+    const variants = [];
+    if (allowedVariants.includes("normal")) variants.push("card_normal.png");
+    if (allowedVariants.includes("trained") && card.stat?.training) variants.push("card_after_training.png");
 
-    if (settings.cardCharacterLimit && settings.cardCharacterLimit !== "any") {
-      const variants = ["card_normal.png"];
-      if (card.stat?.training) variants.push("card_after_training.png");
+    if (variants.length === 0) return false;
+
+    const allowedLimits = settings.cardCharacterLimits || ["single", "multiple"];
+    if (allowedLimits.length < 2) {
       let match = false;
       for (const file of variants) {
-        if (settings.cardImageVariant === "trained" && file === "card_normal.png") continue;
-        if (settings.cardImageVariant === "normal" && file === "card_after_training.png") continue;
         const cacheRelativePath = `${card.resourceSetName}_rip/${file}`;
         const faces = faceBoxesFor(faceBoxStore, cacheRelativePath);
         const personCount = faces.filter(f => f.label === "face").length;
-        if (settings.cardCharacterLimit === "single" && personCount === 1) match = true;
-        if (settings.cardCharacterLimit === "multiple" && personCount > 1) match = true;
+        if (allowedLimits.includes("single") && personCount === 1) match = true;
+        if (allowedLimits.includes("multiple") && personCount > 1) match = true;
       }
       if (!match) return false;
     }
@@ -442,32 +448,33 @@ function rememberCrop(crop) {
 }
 
 async function fetchCardResource(card) {
-  let variants = ["card_normal.png"];
-  if (card.stat?.training) variants.push("card_after_training.png");
+  const allowedVariants = settings.cardVariants || ["normal", "trained"];
+  let variants = [];
+  if (allowedVariants.includes("normal")) variants.push("card_normal.png");
+  if (allowedVariants.includes("trained") && card.stat?.training) variants.push("card_after_training.png");
 
-  if (settings.cardCharacterLimit && settings.cardCharacterLimit !== "any") {
+  // Filter based on character limit (if not all checked)
+  const allowedLimits = settings.cardCharacterLimits || ["single", "multiple"];
+  if (allowedLimits.length < 2) {
     variants = variants.filter(file => {
       const cacheRelativePath = `${card.resourceSetName}_rip/${file}`;
       const faces = faceBoxesFor(faceBoxStore, cacheRelativePath);
       const personCount = faces.filter(f => f.label === "face").length;
-      if (settings.cardCharacterLimit === "single") return personCount === 1;
-      if (settings.cardCharacterLimit === "multiple") return personCount > 1;
-      return true;
+      if (allowedLimits.includes("single") && personCount === 1) return true;
+      if (allowedLimits.includes("multiple") && personCount > 1) return true;
+      return false;
     });
-    if (variants.length === 0) {
-      // Fallback if no variants match (should not happen due to filteredCardPool)
-      variants = ["card_normal.png", "card_after_training.png"];
-    }
   }
 
-  if (settings.cardImageVariant === "trained") {
-    variants = variants.sort((a, b) => a === "card_after_training.png" ? -1 : 1);
-  } else if (settings.cardImageVariant === "normal") {
-    variants = variants.sort((a, b) => a === "card_normal.png" ? -1 : 1);
-  } else {
-    if (variants.length > 1 && Math.random() > 0.5) {
-      variants = [variants[1], variants[0]];
-    }
+  // Fallback if empty (should be prevented by filteredCardPool)
+  if (variants.length === 0) {
+    variants = ["card_normal.png"];
+    if (card.stat?.training) variants.push("card_after_training.png");
+  }
+
+  // Randomize if there are multiple valid variants
+  if (variants.length > 1 && Math.random() > 0.5) {
+    variants = [variants[1], variants[0]];
   }
 
   for (const file of variants) {

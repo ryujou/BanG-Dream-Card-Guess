@@ -32,7 +32,8 @@ export const DIFFICULTY_PRESETS = {
   hard: { cropSize: 130, candidateCount: 170 },
 };
 export const FACE_CROP_MODES = ["auto", "none", "avoid", "prefer", "only"];
-export const CARD_CHARACTER_LIMITS = ["any", "single", "multiple"];
+export const CARD_CHARACTER_LIMITS = ["single", "multiple"];
+export const CARD_VARIANTS = ["normal", "trained"];
 export const FACE_LABELS_BY_CLASS = { 0: "eyes", 1: "face", 2: "mouth" };
 
 export const MIME = {
@@ -73,7 +74,8 @@ export const defaultSettings = {
   mode: "single",
   difficulty: "normal",
   faceCropMode: "auto",
-  cardCharacterLimit: "any",
+  cardCharacterLimits: CARD_CHARACTER_LIMITS,
+  cardVariants: CARD_VARIANTS,
   roundSeconds: 60,
   questionsPerPlayer: 3,
   allowRecrop: true,
@@ -87,7 +89,6 @@ export const defaultSettings = {
   cardBands: BAND_OPTIONS.map((band) => band.id),
   cardRarities: RARITY_OPTIONS,
   cardAttributes: ATTRIBUTE_OPTIONS,
-  cardImageVariant: "mixed",
   correctPoints: 1,
   wrongPenalty: 0,
   streakBonus: false,

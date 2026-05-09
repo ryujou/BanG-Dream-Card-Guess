@@ -42,11 +42,6 @@ const ATTRIBUTE_LABELS = {
   powerful: "Powerful",
   pure: "Pure",
 };
-const IMAGE_VARIANTS = [
-  ["mixed", "随机"],
-  ["normal", "训练前"],
-  ["trained", "训练后"],
-];
 const FACE_CROP_MODES = [
   ["auto", "跟随难度"],
   ["none", "不限制"],
@@ -726,12 +721,6 @@ function renderSettings() {
   const rarities = meta.rarities || [1, 2, 3, 4, 5];
   const attributes = meta.attributes || ["cool", "happy", "powerful", "pure"];
 
-  const CHARACTER_LIMITS = [
-    ["any", "不限制"],
-    ["single", "只限单人"],
-    ["multiple", "只限多人"],
-  ];
-
   app.innerHTML = `
     <main class="settings-shell">
       <section class="settings-panel">
@@ -755,8 +744,6 @@ function renderSettings() {
           ])}
           ${selectField("difficulty", "难度预设", settings.difficulty, Object.entries(DIFFICULTY_PRESETS).map(([id, preset]) => [id, preset.label]))}
           ${selectField("faceCropMode", "人脸策略", settings.faceCropMode, FACE_CROP_MODES)}
-          ${selectField("cardCharacterLimit", "卡面人数", settings.cardCharacterLimit || "any", CHARACTER_LIMITS)}
-          ${selectField("cardImageVariant", "卡面版本", settings.cardImageVariant, IMAGE_VARIANTS)}
           ${numberField("roundSeconds", "每题秒数", settings.roundSeconds, 10, 300)}
           ${numberField("questionsPerPlayer", "每人题数", settings.questionsPerPlayer, 1, 30)}
           ${numberField("cropSize", "裁剪尺寸", settings.cropSize, 60, 260)}
@@ -769,6 +756,8 @@ function renderSettings() {
           ${numberField("autoNextDelay", "自动下一题延迟(ms)", settings.autoNextDelay, 300, 10000)}
           ${textField("teamAName", "A 队名称", game.teams?.A?.name || "A 队")}
           ${textField("teamBName", "B 队名称", game.teams?.B?.name || "B 队")}
+          ${checkGroup("cardVariants", "特训状态 (都选或都不选等于混合)", settings.cardVariants, [["normal", "特训前"], ["trained", "特训后"]])}
+          ${checkGroup("cardCharacterLimits", "卡面人数 (都选或都不选等于不限)", settings.cardCharacterLimits, [["single", "单人"], ["multiple", "多人"]])}
           ${checkGroup("cardBands", "乐队筛选", settings.cardBands, bands.map((band) => [band.id, band.name]))}
           ${checkGroup("cardRarities", "稀有度筛选", settings.cardRarities?.map(String), rarities.map((rarity) => [String(rarity), `${rarity} 星`]))}
           ${checkGroup("cardAttributes", "属性筛选", settings.cardAttributes, attributes.map((attribute) => [attribute, ATTRIBUTE_LABELS[attribute] || attribute]))}
@@ -816,9 +805,7 @@ function renderSettings() {
         mode: form.get("mode"),
         difficulty: form.get("difficulty"),
         faceCropMode: form.get("faceCropMode"),
-        cardCharacterLimit: form.get("cardCharacterLimit"),
-        cardImageVariant: form.get("cardImageVariant"),
-      roundSeconds: form.get("roundSeconds"),
+        roundSeconds: form.get("roundSeconds"),
       questionsPerPlayer: form.get("questionsPerPlayer"),
       cropSize: form.get("cropSize"),
       candidateCount: form.get("candidateCount"),
@@ -830,6 +817,8 @@ function renderSettings() {
       autoNextDelay: form.get("autoNextDelay"),
       teamAName: form.get("teamAName"),
       teamBName: form.get("teamBName"),
+      cardVariants: form.getAll("cardVariants"),
+      cardCharacterLimits: form.getAll("cardCharacterLimits"),
       cardBands: form.getAll("cardBands"),
       cardRarities: form.getAll("cardRarities"),
       cardAttributes: form.getAll("cardAttributes"),
