@@ -13,7 +13,7 @@ import {
   dataDir, settingsStorePath, faceBoxesStorePath,
   BESTDORI_ORIGIN, BESTDORI_BASE,
   BAND_OPTIONS, BAND_BY_CHARACTER, RARITY_OPTIONS, ATTRIBUTE_OPTIONS,
-  DIFFICULTY_PRESETS, FACE_CROP_MODES, CARD_CHARACTER_LIMITS, MIME, unique,
+  DIFFICULTY_PRESETS, FACE_CROP_MODES, CARD_CHARACTER_LIMITS, CARD_VARIANTS, MIME, unique,
   defaultSettings, readPersistedConfig, readFaceBoxStore,
   arraySetting, numberArraySetting,
   persistedTeamName, roundConfigKey, effectiveFaceCropMode,
