@@ -13,7 +13,7 @@ import {
   dataDir, settingsStorePath, faceBoxesStorePath,
   BESTDORI_ORIGIN, BESTDORI_BASE,
   BAND_OPTIONS, BAND_BY_CHARACTER, RARITY_OPTIONS, ATTRIBUTE_OPTIONS,
-  DIFFICULTY_PRESETS, FACE_CROP_MODES, MIME, unique,
+  DIFFICULTY_PRESETS, FACE_CROP_MODES, CARD_CHARACTER_LIMITS, MIME, unique,
   defaultSettings, readPersistedConfig, readFaceBoxStore,
   arraySetting, numberArraySetting,
   persistedTeamName, roundConfigKey, effectiveFaceCropMode,
@@ -388,6 +388,23 @@ function filteredCardPool() {
     if (raritySet.size && !raritySet.has(Number(card.rarity))) return false;
     if (attributeSet.size && !attributeSet.has(card.attribute)) return false;
     if (settings.cardImageVariant === "trained" && !card.stat?.training) return false;
+
+    if (settings.cardCharacterLimit && settings.cardCharacterLimit !== "any") {
+      const variants = ["card_normal.png"];
+      if (card.stat?.training) variants.push("card_after_training.png");
+      let match = false;
+      for (const file of variants) {
+        if (settings.cardImageVariant === "trained" && file === "card_normal.png") continue;
+        if (settings.cardImageVariant === "normal" && file === "card_after_training.png") continue;
+        const cacheRelativePath = `${card.resourceSetName}_rip/${file}`;
+        const faces = faceBoxesFor(faceBoxStore, cacheRelativePath);
+        const personCount = faces.filter(f => f.label === "face").length;
+        if (settings.cardCharacterLimit === "single" && personCount === 1) match = true;
+        if (settings.cardCharacterLimit === "multiple" && personCount > 1) match = true;
+      }
+      if (!match) return false;
+    }
+
     return true;
   });
 
@@ -425,13 +442,33 @@ function rememberCrop(crop) {
 }
 
 async function fetchCardResource(card) {
-  const variants = settings.cardImageVariant === "trained"
-    ? ["card_after_training.png", "card_normal.png"]
-    : settings.cardImageVariant === "normal"
-      ? ["card_normal.png", "card_after_training.png"]
-      : Math.random() > 0.5
-        ? ["card_after_training.png", "card_normal.png"]
-        : ["card_normal.png", "card_after_training.png"];
+  let variants = ["card_normal.png"];
+  if (card.stat?.training) variants.push("card_after_training.png");
+
+  if (settings.cardCharacterLimit && settings.cardCharacterLimit !== "any") {
+    variants = variants.filter(file => {
+      const cacheRelativePath = `${card.resourceSetName}_rip/${file}`;
+      const faces = faceBoxesFor(faceBoxStore, cacheRelativePath);
+      const personCount = faces.filter(f => f.label === "face").length;
+      if (settings.cardCharacterLimit === "single") return personCount === 1;
+      if (settings.cardCharacterLimit === "multiple") return personCount > 1;
+      return true;
+    });
+    if (variants.length === 0) {
+      // Fallback if no variants match (should not happen due to filteredCardPool)
+      variants = ["card_normal.png", "card_after_training.png"];
+    }
+  }
+
+  if (settings.cardImageVariant === "trained") {
+    variants = variants.sort((a, b) => a === "card_after_training.png" ? -1 : 1);
+  } else if (settings.cardImageVariant === "normal") {
+    variants = variants.sort((a, b) => a === "card_normal.png" ? -1 : 1);
+  } else {
+    if (variants.length > 1 && Math.random() > 0.5) {
+      variants = [variants[1], variants[0]];
+    }
+  }
 
   for (const file of variants) {
     const cacheRelativePath = `${card.resourceSetName}_rip/${file}`;

@@ -32,6 +32,7 @@ export const DIFFICULTY_PRESETS = {
   hard: { cropSize: 130, candidateCount: 170 },
 };
 export const FACE_CROP_MODES = ["auto", "none", "avoid", "prefer", "only"];
+export const CARD_CHARACTER_LIMITS = ["any", "single", "multiple"];
 export const FACE_LABELS_BY_CLASS = { 0: "eyes", 1: "face", 2: "mouth" };
 
 export const MIME = {
@@ -72,6 +73,7 @@ export const defaultSettings = {
   mode: "single",
   difficulty: "normal",
   faceCropMode: "auto",
+  cardCharacterLimit: "any",
   roundSeconds: 60,
   questionsPerPlayer: 3,
   allowRecrop: true,

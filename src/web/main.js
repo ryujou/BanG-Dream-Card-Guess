@@ -726,6 +726,12 @@ function renderSettings() {
   const rarities = meta.rarities || [1, 2, 3, 4, 5];
   const attributes = meta.attributes || ["cool", "happy", "powerful", "pure"];
 
+  const CHARACTER_LIMITS = [
+    ["any", "不限制"],
+    ["single", "只限单人"],
+    ["multiple", "只限多人"],
+  ];
+
   app.innerHTML = `
     <main class="settings-shell">
       <section class="settings-panel">
@@ -749,6 +755,7 @@ function renderSettings() {
           ])}
           ${selectField("difficulty", "难度预设", settings.difficulty, Object.entries(DIFFICULTY_PRESETS).map(([id, preset]) => [id, preset.label]))}
           ${selectField("faceCropMode", "人脸策略", settings.faceCropMode, FACE_CROP_MODES)}
+          ${selectField("cardCharacterLimit", "卡面人数", settings.cardCharacterLimit || "any", CHARACTER_LIMITS)}
           ${selectField("cardImageVariant", "卡面版本", settings.cardImageVariant, IMAGE_VARIANTS)}
           ${numberField("roundSeconds", "每题秒数", settings.roundSeconds, 10, 300)}
           ${numberField("questionsPerPlayer", "每人题数", settings.questionsPerPlayer, 1, 30)}
@@ -805,11 +812,12 @@ function renderSettings() {
     const form = new FormData(event.currentTarget);
     settingsDirty = false;
     settingsSaving = true;
-    command("settings", {
-      mode: form.get("mode"),
-      difficulty: form.get("difficulty"),
-      faceCropMode: form.get("faceCropMode"),
-      cardImageVariant: form.get("cardImageVariant"),
+      command("settings", {
+        mode: form.get("mode"),
+        difficulty: form.get("difficulty"),
+        faceCropMode: form.get("faceCropMode"),
+        cardCharacterLimit: form.get("cardCharacterLimit"),
+        cardImageVariant: form.get("cardImageVariant"),
       roundSeconds: form.get("roundSeconds"),
       questionsPerPlayer: form.get("questionsPerPlayer"),
       cropSize: form.get("cropSize"),
