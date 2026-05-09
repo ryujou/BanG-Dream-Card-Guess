@@ -13,7 +13,7 @@ import {
   dataDir, settingsStorePath, faceBoxesStorePath,
   BESTDORI_ORIGIN, BESTDORI_BASE,
   BAND_OPTIONS, BAND_BY_CHARACTER, RARITY_OPTIONS, ATTRIBUTE_OPTIONS,
-  DIFFICULTY_PRESETS, FACE_CROP_MODES, MIME,
+  DIFFICULTY_PRESETS, FACE_CROP_MODES, MIME, unique,
   defaultSettings, readPersistedConfig, readFaceBoxStore,
   arraySetting, numberArraySetting,
   persistedTeamName, roundConfigKey, effectiveFaceCropMode,
@@ -448,10 +448,17 @@ async function fetchCardResource(card) {
       };
     }
     try {
-      const response = await fetch(url);
-      const contentType = response.headers.get("content-type") || "";
-      if (!response.ok || !contentType.includes("image")) continue;
-      const buffer = Buffer.from(await response.arrayBuffer());
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 20000);
+      let buffer;
+      try {
+        const response = await fetch(url, { signal: controller.signal });
+        const contentType = response.headers.get("content-type") || "";
+        if (!response.ok || !contentType.includes("image")) continue;
+        buffer = Buffer.from(await response.arrayBuffer());
+      } finally {
+        clearTimeout(timeoutId);
+      }
       await mkdir(path.dirname(cachePath), { recursive: true });
       await writeFile(cachePath, buffer);
       return { buffer, imageUrl, cacheRelativePath: cacheRelativePath.replaceAll("\\", "/"), variant: file === "card_after_training.png" ? "trained" : "normal" };

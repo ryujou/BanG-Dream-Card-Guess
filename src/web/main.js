@@ -98,6 +98,13 @@ function connect() {
       render();
     } else if (message.type === "authRequired" && ["host", "settings"].includes(route)) {
       location.href = "/login";
+    } else if (message.type === "error") {
+      alert(message.message || "操作失败");
+      if (snapshot?.game) {
+        snapshot.game.loading = false;
+        if (snapshot.game.status === "loading") snapshot.game.status = "idle";
+        render();
+      }
     }
   });
 }
