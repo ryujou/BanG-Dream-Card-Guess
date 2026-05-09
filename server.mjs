@@ -20,6 +20,7 @@ import {
 } from "./src/server/config.mjs";
 import { AUTH_TOKEN, AUTH_COOKIE, HOST_PASSWORD, authenticatedSessions, isAuthenticated, verifyPassword } from "./src/server/auth.mjs";
 import { smartCrop, faceBoxesFor } from "./src/server/crop.mjs";
+import { readCommunityData, writeCommunityData } from "./src/server/community.mjs";
 import { originList, pageUrls, networkState, lanHosts } from "./src/server/network.mjs";
 import {
   readQueueScores, writeQueueScores, readNoteShooterScores, writeNoteShooterScores,
@@ -74,6 +75,42 @@ const server = createServer(async (req, res) => {
   // API routes
   if (url.pathname === "/api/health") return sendJson(res, healthSnapshot());
   if (url.pathname === "/api/network") return sendJson(res, networkState(req));
+  
+  if (url.pathname === "/api/community" && req.method === "GET") return sendJson(res, readCommunityData());
+  if (url.pathname === "/api/community" && req.method === "POST") {
+    if (!isAuthenticated(req)) return sendJson(res, { error: "Unauthorized" }, 401);
+    try {
+      const body = await readRequestBody(req);
+      const data = parseRequestPayload(req, body);
+      await writeCommunityData(data);
+      return sendJson(res, { ok: true });
+    } catch (err) {
+      return sendJson(res, { error: err.message }, 500);
+    }
+  }
+  if (url.pathname === "/api/upload" && req.method === "POST") {
+    if (!isAuthenticated(req)) return sendJson(res, { error: "Unauthorized" }, 401);
+    try {
+      const body = await readRequestBody(req);
+      const data = parseRequestPayload(req, body);
+      if (data.image) {
+        const match = data.image.match(/^data:image\/([a-zA-Z0-9]+);base64,(.+)$/);
+        if (match) {
+          const ext = match[1] === "jpeg" ? "jpg" : match[1];
+          const buffer = Buffer.from(match[2], "base64");
+          const filename = `upload_${Date.now()}_${randomBytes(4).toString("hex")}.${ext}`;
+          const communityDir = path.join(publicDir, "community");
+          await mkdir(communityDir, { recursive: true });
+          await writeFile(path.join(communityDir, filename), buffer);
+          return sendJson(res, { url: `/community/${filename}` });
+        }
+      }
+      return sendJson(res, { error: "Invalid image format" }, 400);
+    } catch (err) {
+      return sendJson(res, { error: err.message }, 500);
+    }
+  }
+
   if (url.pathname === "/api/queue-scores" && req.method === "GET") return sendJson(res, queueScoreState());
   if (url.pathname === "/api/queue-scores/events") return handleQueueScoreEvents(req, res);
   if (url.pathname === "/api/queue-scores" && req.method === "POST") {

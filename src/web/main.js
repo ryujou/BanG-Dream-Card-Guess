@@ -30,6 +30,7 @@ let previousStateKey = "";
 let lastStageCropKey = "";
 let settingsInteractionUntil = 0;
 let audioContext = null;
+let communityData = null;
 
 const DIFFICULTY_PRESETS = {
   easy: { label: "简单", cropSize: 230, candidateCount: 90 },
@@ -61,7 +62,7 @@ function normalizeRoute(pathname) {
   if (!routeName) return "home";
   if (routeName === "play") return "player";
   if (routeName === "queue") return "note-shooter";
-  if (["home", "player", "solo", "host", "settings", "login", "qr", "note-shooter", "scores"].includes(routeName)) return routeName;
+  if (["home", "player", "solo", "host", "settings", "login", "qr", "note-shooter", "scores", "community-admin"].includes(routeName)) return routeName;
   return "home";
 }
 
@@ -126,41 +127,121 @@ function render() {
   else if (route === "solo") renderSolo();
   else if (route === "host") renderHost();
   else if (route === "settings") renderSettings();
+  else if (route === "community-admin") renderCommunityAdmin();
   else renderPlayer();
 }
 
-function renderHome() {
-  const announcementText = HOME_ANNOUNCEMENTS.join("    /    ");
+async function renderHome() {
+  if (!communityData) {
+    try {
+      const response = await fetch("/api/community");
+      if (response.ok) communityData = await response.json();
+    } catch (e) {
+      console.error("Failed to load community data", e);
+    }
+  }
+
+  const data = communityData || { aboutUs: "", members: [], events: [], socialLinks: [], photos: [] };
+  
   app.innerHTML = `
-    <main class="home-shell">
-      <section class="home-hero" aria-labelledby="homeTitle">
-        <div class="home-copy">
-          <p class="eyebrow">Xiangtan BanG Dream! Community</p>
-          <h1 id="homeTitle">湘潭 BanG Dream! 同好会</h1>
-          <div class="home-actions">
-            <a class="primary home-button" href="/player">玩家页</a>
-            <a class="home-button" href="/host">主持页</a>
-            <a class="home-button" href="/note-shooter">音符射手</a>
+    <main class="linktree-shell">
+      <div class="linktree-container">
+        <!-- Profile Header -->
+        <header class="linktree-header">
+          <div class="linktree-icon-grid">
+            <img class="linktree-avatar" src="/icon5.png" alt="湘潭 BanG Dream! 同好会" />
+            <img class="linktree-avatar" src="/icon4.png" alt="湘潭 BanG Dream! 同好会图标4" />
+            <img class="linktree-avatar" src="/icon3.png" alt="湘潭 BanG Dream! 同好会图标3" />
           </div>
-        </div>
-        <div class="home-community" aria-label="湘潭 BanG Dream 同好会群聊">
-          <div class="home-icon-grid">
-            <img class="home-icon" src="/icon5.png" alt="湘潭 BanG Dream! 同好会" />
-            <img class="home-icon" src="/icon4.png" alt="湘潭 BanG Dream! 同好会图标 4" />
-            <img class="home-icon" src="/icon3.png" alt="湘潭 BanG Dream! 同好会图标 3" />
+          <h1 class="linktree-title">湘潭 BanG Dream! 同好会</h1>
+          ${data.aboutUs ? `<p class="linktree-bio">${escapeHtml(data.aboutUs)}</p>` : ''}
+        </header>
+
+        <!-- Primary Actions (Game Links) -->
+        <section class="linktree-links">
+          <a class="linktree-pill primary-pill" href="/player">
+            <span class="pill-icon">🎮</span>
+            <span class="pill-text">进入猜卡游戏 (玩家页)</span>
+          </a>
+          <a class="linktree-pill" href="/host">
+            <span class="pill-icon">👑</span>
+            <span class="pill-text">游戏控制台 (主持页)</span>
+          </a>
+          <a class="linktree-pill" href="/note-shooter">
+            <span class="pill-icon">🎵</span>
+            <span class="pill-text">打发时间: 音符射手</span>
+          </a>
+          <a class="linktree-pill" href="https://enldm.cyou/bangmap" target="_blank" rel="noreferrer">
+            <span class="pill-icon">🗺️</span>
+            <span class="pill-text">BanG Map 同好会地图</span>
+          </a>
+          <a class="linktree-pill highlight-pill" href="${COMMUNITY_URL}" target="_blank" rel="noreferrer">
+            <span class="pill-icon">💬</span>
+            <span class="pill-text">点击加入官方交流群</span>
+          </a>
+        </section>
+
+        <!-- Custom Social Links -->
+        ${data.socialLinks && data.socialLinks.length ? `
+        <section class="linktree-section">
+          <h2>更多平台</h2>
+          <div class="linktree-links">
+            ${data.socialLinks.map(link => `
+              <a class="linktree-pill" href="${escapeHtml(link.url)}" target="_blank" rel="noreferrer">
+                <span class="pill-text">${escapeHtml(link.title)}</span>
+              </a>
+            `).join('')}
           </div>
-          <div>
-            <a class="primary home-join" href="${COMMUNITY_URL}" target="_blank" rel="noreferrer">点击加入群聊</a>
+        </section>` : ''}
+
+        <!-- Members -->
+        ${data.members && data.members.length ? `
+        <section class="linktree-section">
+          <h2>成员名单</h2>
+          <div class="linktree-members">
+            ${data.members.map(m => `
+              <a class="member-pill" href="${escapeHtml(m.url)}" target="_blank" rel="noreferrer">
+                <strong>${escapeHtml(m.name)}</strong>
+                <span>${escapeHtml(m.desc)}</span>
+              </a>
+            `).join('')}
           </div>
-        </div>
-      </section>
-      <aside class="home-announcement" aria-label="官方公告">
-        <strong>官方公告</strong>
-        <div class="home-marquee">
-          <span>${escapeHtml(announcementText)}</span>
-          <span aria-hidden="true">${escapeHtml(announcementText)}</span>
-        </div>
-      </aside>
+        </section>` : ''}
+
+        <!-- Events -->
+        ${data.events && data.events.length ? `
+        <section class="linktree-section">
+          <h2>近期活动</h2>
+          <div class="linktree-events">
+            ${data.events.map(e => `
+              <div class="event-box">
+                <div class="event-box-header">
+                  <span class="event-date">${escapeHtml(e.date)}</span>
+                  <span class="event-location">${escapeHtml(e.location)}</span>
+                </div>
+                <strong>${escapeHtml(e.title)}</strong>
+                <p>${escapeHtml(e.desc)}</p>
+              </div>
+            `).join('')}
+          </div>
+        </section>` : ''}
+
+        <!-- Photos -->
+        ${data.photos && data.photos.length ? `
+        <section class="linktree-section">
+          <h2>活动回顾</h2>
+          <div class="linktree-gallery">
+            ${data.photos.map(p => `
+              <img src="${escapeHtml(p)}" alt="活动照片" loading="lazy" />
+            `).join('')}
+          </div>
+        </section>` : ''}
+
+        <footer class="linktree-footer">
+          <img src="/icon.png" alt="logo" class="footer-logo" />
+          <p>Powered by <a href="https://github.com/ryujou/BanG-Dream-Card-Guess" target="_blank" rel="noreferrer" style="color: inherit; font-weight: bold; text-decoration: none; border-bottom: 1px dashed currentColor; padding-bottom: 2px;">BanG Dream! Card Guess</a></p>
+        </footer>
+      </div>
     </main>
   `;
 }
@@ -733,6 +814,7 @@ function renderSettings() {
             <a href="/player">玩家页</a>
             <a href="/host">主持页</a>
             <a href="/qr">二维码</a>
+            <a href="/community-admin">同好会主页编辑</a>
             <button type="button" id="logoutButton">退出</button>
           </div>
         </div>
@@ -1244,3 +1326,191 @@ function escapeHtml(value) {
     "'": "&#39;",
   }[char]));
 }
+
+
+async function renderCommunityAdmin() {
+  const game = snapshot?.game;
+  const settings = snapshot?.settings;
+  
+  if (!communityData) {
+    try {
+      const response = await fetch("/api/community");
+      if (response.ok) communityData = await response.json();
+    } catch (e) {
+      console.error(e);
+    }
+  }
+  
+  const data = communityData || { aboutUs: "", members: [], events: [], socialLinks: [], photos: [] };
+
+  app.innerHTML = `
+    <main class="settings-shell">
+      <section class="settings-panel linktree-admin-panel">
+        ${renderTopbar(game, settings, false)}
+        
+        <div class="community-admin-header">
+          <h2>主页可视化编辑</h2>
+          <p>在这里修改主页的所有信息，修改完成后记得点击底部的保存按钮。</p>
+        </div>
+
+        <div id="jsonEditorContainer" class="json-editor-container"></div>
+        
+        <div class="admin-actions">
+          <div class="upload-group">
+            <label class="btn secondary">
+              <span class="icon">📷</span> 上传照片墙图片...
+              <input type="file" id="uploadImage" accept="image/*" style="display: none;" />
+            </label>
+            <span id="uploadStatus"></span>
+          </div>
+          
+          <div class="save-group">
+            <button id="saveCommunityBtn" class="btn primary">
+              <span class="icon">💾</span> 立即保存发布
+            </button>
+            <span id="saveStatus"></span>
+          </div>
+        </div>
+      </section>
+    </main>
+  `;
+
+  // Dynamically load JSON Editor from CDN
+  if (!window.JSONEditor) {
+    const script = document.createElement("script");
+    script.src = "https://cdn.jsdelivr.net/npm/@json-editor/json-editor@latest/dist/jsoneditor.min.js";
+    document.head.appendChild(script);
+    await new Promise(resolve => script.onload = resolve);
+  }
+
+  const container = document.getElementById("jsonEditorContainer");
+  const editor = new window.JSONEditor(container, {
+    theme: "html",
+    iconlib: "spectre",
+    disable_edit_json: true,
+    disable_properties: true,
+    disable_collapse: true,
+    schema: {
+      type: "object",
+      title: "主页内容",
+      properties: {
+        aboutUs: {
+          type: "string",
+          title: "关于我们 (简介)",
+          format: "textarea"
+        },
+        socialLinks: {
+          type: "array",
+          title: "更多社交平台链接",
+          format: "table",
+          items: {
+            type: "object",
+            properties: {
+              title: { type: "string", title: "平台名称" },
+              url: { type: "string", title: "链接地址" }
+            }
+          }
+        },
+        members: {
+          type: "array",
+          title: "成员名单",
+          format: "table",
+          items: {
+            type: "object",
+            properties: {
+              name: { type: "string", title: "成员名字" },
+              desc: { type: "string", title: "头衔/简介" },
+              url: { type: "string", title: "个人主页链接" }
+            }
+          }
+        },
+        events: {
+          type: "array",
+          title: "近期活动预告",
+          items: {
+            type: "object",
+            properties: {
+              title: { type: "string", title: "活动标题" },
+              date: { type: "string", title: "日期" },
+              location: { type: "string", title: "地点" },
+              desc: { type: "string", title: "详细描述", format: "textarea" }
+            }
+          }
+        },
+        photos: {
+          type: "array",
+          title: "照片墙 (图片直链)",
+          items: {
+            type: "string",
+            title: "图片 URL",
+            format: "url"
+          }
+        }
+      }
+    },
+    startval: data
+  });
+
+  document.getElementById("uploadImage").addEventListener("change", async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    
+    const status = document.getElementById("uploadStatus");
+    status.textContent = "上传中...";
+    
+    try {
+      const reader = new FileReader();
+      reader.onload = async (ev) => {
+        const base64 = ev.target.result;
+        const res = await fetch("/api/upload", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ image: base64 })
+        });
+        const json = await res.json();
+        if (json.url) {
+          status.textContent = "上传成功！请将下方的链接填入上面的【照片墙】中: " + json.url;
+        } else {
+          status.textContent = "上传失败: " + json.error;
+        }
+      };
+      reader.readAsDataURL(file);
+    } catch (err) {
+      status.textContent = "错误: " + err.message;
+    }
+  });
+
+  document.getElementById("saveCommunityBtn").addEventListener("click", async () => {
+    const status = document.getElementById("saveStatus");
+    status.textContent = "保存中...";
+    
+    const errors = editor.validate();
+    if (errors.length) {
+      status.textContent = "请修正表单中的错误";
+      status.style.color = "var(--color-error)";
+      return;
+    }
+
+    try {
+      const parsed = editor.getValue();
+      const res = await fetch("/api/community", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(parsed)
+      });
+      if (res.ok) {
+        communityData = parsed;
+        status.textContent = "保存成功！";
+        status.style.color = "var(--color-primary)";
+      } else {
+        const err = await res.json();
+        status.textContent = "保存失败: " + err.error;
+        status.style.color = "var(--color-error)";
+      }
+    } catch (e) {
+      status.textContent = "保存出错。";
+      status.style.color = "var(--color-error)";
+    }
+  });
+}
+
