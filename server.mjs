@@ -18,7 +18,7 @@ import {
   arraySetting, numberArraySetting,
   persistedTeamName, roundConfigKey, effectiveFaceCropMode,
 } from "./src/server/config.mjs";
-import { AUTH_TOKEN, AUTH_COOKIE, HOST_PASSWORD, authenticatedSessions, isAuthenticated, verifyPassword } from "./src/server/auth.mjs";
+import { AUTH_COOKIE, HOST_PASSWORD, isAuthenticated, verifyPassword, buildAuthCookie, createAuthSession, getAuthToken, revokeAuthSession } from "./src/server/auth.mjs";
 import { smartCrop, faceBoxesFor } from "./src/server/crop.mjs";
 import { readCommunityData, writeCommunityData } from "./src/server/community.mjs";
 import { originList, pageUrls, networkState, lanHosts } from "./src/server/network.mjs";
@@ -149,14 +149,14 @@ const server = createServer(async (req, res) => {
   if (url.pathname === "/api/login" && req.method === "POST") {
     const body = parseRequestPayload(req, await readRequestBody(req));
     if (verifyPassword(body.password)) {
-      authenticatedSessions.add(AUTH_TOKEN);
-      res.setHeader("Set-Cookie", `${AUTH_COOKIE}=${AUTH_TOKEN}; Path=/; HttpOnly; SameSite=Lax; Max-Age=86400`);
+      const token = createAuthSession();
+      res.setHeader("Set-Cookie", buildAuthCookie(token, req));
       return sendJson(res, { ok: true });
     }
     return sendJson(res, { ok: false }, 403);
   }
   if (url.pathname === "/api/logout" && req.method === "POST") {
-    authenticatedSessions.clear();
+    revokeAuthSession(getAuthToken(req));
     return sendJson(res, { ok: true });
   }
   if (url.pathname === "/api/qr" && req.method === "GET") {
@@ -174,6 +174,14 @@ const server = createServer(async (req, res) => {
 
   // Bestdori proxy
   if (url.pathname.startsWith("/bestdori/")) return proxyBestdori(url, res);
+  // Compatibility for legacy/cached note-shooter pages that request /img/*
+  if (url.pathname.startsWith("/img/")) {
+    const legacyPath = url.pathname.replace(/^\/img\//, "");
+    const legacyBase = path.join(publicDir, "note-shooter", "img");
+    const legacyFile = path.join(legacyBase, legacyPath);
+    const legacyStat = await stat(legacyFile).catch(() => null);
+    if (legacyFile.startsWith(legacyBase) && legacyStat?.isFile()) return streamFile(legacyFile, res);
+  }
 
   // Static files (public/ or dist/)
   return serveStatic(req.url, res);
