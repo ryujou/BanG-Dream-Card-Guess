@@ -520,8 +520,8 @@ function renderScoreRecent(items, canDelete = false) {
 async function deleteNoteShooterScore({ id, playerId = "", scope = "" }) {
   if (!id && !playerId) return;
   try {
-    const response = await fetch("/api/note-shooter-scores/delete", {
-      method: "POST",
+    const response = await fetch("/api/note-shooter-scores", {
+      method: "DELETE",
       headers: { "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8" },
       body: new URLSearchParams({ id, playerId, scope }),
     });
@@ -1327,6 +1327,62 @@ function escapeHtml(value) {
   }[char]));
 }
 
+function translateZh(key) {
+  const map = {
+    "Add row": "添加行",
+    "Delete Last row": "删除最后一行",
+    "Delete All": "全部删除",
+    "Delete": "删除",
+    "Move up": "上移",
+    "Move down": "下移",
+    // Array item labels
+    "item": "项", "items": "项",
+    // Button text labels
+    "delete": "删除", "add": "添加",
+    // Icon names used as button text when iconlib=null
+    "moveup": "上移", "movedown": "下移",
+    "remove": "删除", "copy": "复制",
+    "edit": "编辑", "collapse": "收起", "expand": "展开",
+    "up": "上移", "down": "下移",
+    // Button titles (tooltips) — _title_short variants used as fallback when iconlib=null
+    "button_add_row_title": "添加 {{0}}", "button_add_row_title_short": "添加",
+    "button_delete_last_title": "删除最后一个 {{0}}",
+    "button_delete_row_title": "删除 {{0}}", "button_delete_row_title_short": "删除",
+    "button_move_up_title": "上移", "button_move_down_title": "下移",
+    "button_move_up_title_short": "上移", "button_move_down_title_short": "下移",
+    // Variant / legacy keys
+    "button_delete": "删除", "button_delete_row": "删除",
+    "button_move_down": "下移", "button_move_up": "上移",
+    "button_add": "添加", "button_add_row": "添加 {{0}}",
+    "button_delete_all": "全部删除",
+    // Editor labels
+    "not_set": "未设置", "choose": "选择...",
+    // Collapse / expand
+    "collapsed": "已收起", "button_collapse": "收起", "button_expand": "展开", "expand": "展开",
+    // All validation errors
+    "error_notset": "此属性必须设置", "error_notempty": "此项不能为空",
+    "error_enum": "值必须在可选项中", "error_const": "值必须为固定常量",
+    "error_anyOf": "值必须符合至少一条规则",
+    "error_oneOf": "值必须恰好符合一条规则，当前符合 {{0}} 条",
+    "error_not": "值不能符合此规则",
+    "error_type_union": "值必须为允许的类型之一", "error_type": "值必须是 {{0}} 类型",
+    "error_disallow_union": "值不能为禁止的类型之一", "error_disallow": "值不能是 {{0}} 类型",
+    "error_multipleOf": "值必须是 {{0}} 的倍数",
+    "error_maximum_excl": "值必须小于 {{0}}", "error_maximum_incl": "值最大为 {{0}}",
+    "error_minimum_excl": "值必须大于 {{0}}", "error_minimum_incl": "值最小为 {{0}}",
+    "error_maximum": "值最大为 {{0}}", "error_minimum": "值最小为 {{0}}",
+    "error_maxLength": "最多 {{0}} 个字符", "error_minLength": "最少 {{0}} 个字符",
+    "error_maxItems": "最多 {{0}} 项", "error_minItems": "最少 {{0}} 项",
+    "error_maxProperties": "最多 {{0}} 个属性", "error_minProperties": "最少 {{0}} 个属性",
+    "error_pattern": "值格式不匹配", "error_additionalItems": "不允许额外项目",
+    "error_additionalProperties": "不允许额外属性",
+    "error_dependency": "依赖条件不满足", "error_uniqueItems": "存在重复项",
+    "error_format": "格式不正确", "error_required": "此项为必填",
+    // Confirmation
+    "are_you_sure_delete": "确定要删除吗？",
+  };
+  return map[key] || key;
+}
 
 async function renderCommunityAdmin() {
   const game = snapshot?.game;
@@ -1377,16 +1433,51 @@ async function renderCommunityAdmin() {
 
   // Dynamically load JSON Editor from CDN
   if (!window.JSONEditor) {
+    // Load CSS first
+    const link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.href = "https://cdn.jsdelivr.net/npm/@json-editor/json-editor@latest/dist/jsoneditor.min.css";
+    document.head.appendChild(link);
+
     const script = document.createElement("script");
     script.src = "https://cdn.jsdelivr.net/npm/@json-editor/json-editor@latest/dist/jsoneditor.min.js";
     document.head.appendChild(script);
     await new Promise(resolve => script.onload = resolve);
+
+    // Monkey-patch translate method to force Chinese for ALL keys
+    const origTranslate = window.JSONEditor.prototype.translate;
+    window.JSONEditor.prototype.translate = function (key, variables) {
+      const zh = translateZh(key);
+      if (zh !== key) {
+        return variables ? zh.replace(/\{\{(\d+)\}\}/g, (_, i) => variables[i] || "") : zh;
+      }
+      return origTranslate.call(this, key, variables);
+    };
+
+    // Monkey-patch getButton — when iconlib=null, icon names become visible text
+    // but they're not passed through translate(), so we pre-translate them
+    const origGetButton = window.JSONEditor.prototype.getButton;
+    window.JSONEditor.prototype.getButton = function (text, icon, title, variables) {
+      if (text) {
+        const zhText = translateZh(text);
+        if (zhText !== text) text = zhText;
+      }
+      if (!this.options.iconlib && !text && icon) {
+        var zhIcon = translateZh(icon);
+        if (zhIcon !== icon) text = zhIcon;
+      }
+      if (title) {
+        const zhTitle = translateZh(title);
+        if (zhTitle !== title) title = zhTitle;
+      }
+      return origGetButton.call(this, text, icon, title, variables);
+    };
   }
 
   const container = document.getElementById("jsonEditorContainer");
   const editor = new window.JSONEditor(container, {
     theme: "html",
-    iconlib: "spectre",
+    iconlib: null,
     disable_edit_json: true,
     disable_properties: true,
     disable_collapse: true,
@@ -1513,4 +1604,3 @@ async function renderCommunityAdmin() {
     }
   });
 }
-
