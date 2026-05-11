@@ -2283,6 +2283,7 @@ select:focus {
 }
 
 .highlight-pill:hover {
+  background: linear-gradient(135deg, var(--color-primary-hover) 0%, #e06478 100%);
   color: white;
 }
 
@@ -2430,6 +2431,83 @@ select:focus {
   border: 1px solid var(--color-border);
   border-radius: 6px;
   font-family: inherit;
+}
+
+/* JSON Editor row action buttons — make them visible and nice */
+.json-editor-container .json-editor-btn-edit,
+.json-editor-container [class*="json-editor-btntype"] {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  min-height: 32px;
+  border: 1px solid rgba(0,0,0,0.1);
+  border-radius: 6px;
+  padding: 6px 12px;
+  margin: 0 2px;
+  background: #f4f6fa;
+  color: #333;
+  font-size: 0.85rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+}
+.json-editor-container .json-editor-btn-edit:hover,
+.json-editor-container [class*="json-editor-btntype"]:hover {
+  background: #e8ecf1;
+  border-color: rgba(0,0,0,0.18);
+}
+/* Delete button in red */
+.json-editor-container [class*="json-editor-btntype-delete"] {
+  color: #dc3545;
+  border-color: rgba(220,53,69,0.2);
+}
+.json-editor-container [class*="json-editor-btntype-delete"]:hover {
+  background: #fff0f0;
+  border-color: rgba(220,53,69,0.4);
+}
+/* Add button in green */
+.json-editor-container [class*="json-editor-btntype-add"] {
+  color: #28a745;
+  border-color: rgba(40,167,69,0.2);
+}
+.json-editor-container [class*="json-editor-btntype-add"]:hover {
+  background: #f0fff4;
+  border-color: rgba(40,167,69,0.4);
+}
+/* Move buttons */
+.json-editor-container [class*="json-editor-btntype-move"] {
+  color: #6c757d;
+}
+/* Table header buttons */
+.json-editor-container .json-editor-btntype-toggle {
+  min-width: auto;
+  min-height: 28px;
+  padding: 4px 8px;
+  font-size: 0.78rem;
+}
+/* Compact the table layout slightly */
+.json-editor-container table {
+  border-collapse: separate;
+  border-spacing: 0 4px;
+}
+.json-editor-container th {
+  padding: 8px 12px;
+  background: #f8f9fa;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+.json-editor-container td {
+  padding: 4px 6px;
+  vertical-align: middle;
+}
+.json-editor-container td input,
+.json-editor-container td textarea,
+.json-editor-container td select {
+  min-height: 36px;
+  margin: 0;
 }
 .admin-actions {
   display: flex;

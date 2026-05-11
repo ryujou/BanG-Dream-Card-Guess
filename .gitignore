@@ -30,3 +30,10 @@ tsconfig.tsbuildinfo
 *.ntvs*
 *.njsproj
 *.sln
+
+.playwright-mcp/
+.sisyphus/
+fix_ui.js
+patch_admin.js
+patch_css.js
+patch_home.js
