@@ -54,7 +54,9 @@ export function hasValidAuthSession(token, now = Date.now()) {
 
 export function buildAuthCookie(token, req) {
   const secure = String(req?.headers["x-forwarded-proto"] || "").toLowerCase() === "https";
-  return `${AUTH_COOKIE}=${token}; Path=/; HttpOnly; SameSite=Lax; Max-Age=${Math.floor(AUTH_SESSION_TTL_MS / 1000)}${secure ? "; Secure" : ""}`;
+  const host = String(req?.headers?.host || "").split(":")[0].toLowerCase();
+  const domain = host.endsWith("xtbang.top") ? "; Domain=.xtbang.top" : "";
+  return `${AUTH_COOKIE}=${token}; Path=/; HttpOnly; SameSite=Lax; Max-Age=${Math.floor(AUTH_SESSION_TTL_MS / 1000)}${domain}${secure ? "; Secure" : ""}`;
 }
 
 function parseCookies(header) {
