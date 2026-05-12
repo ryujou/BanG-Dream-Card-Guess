@@ -781,6 +781,34 @@ select:focus {
   }
 }
 
+@media (max-width: 1179px) and (min-width: 921px) {
+  .player-shell .topbar {
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .player-shell .topbar > :first-child {
+    min-width: 0;
+    flex: 1 1 100%;
+  }
+
+  .player-shell h1 {
+    font-size: clamp(2.4rem, 6vw, 3.4rem);
+    white-space: normal;
+  }
+
+  .player-shell .player-top-actions {
+    flex: 1 1 auto;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .player-shell .scoreboard {
+    flex: 1 1 320px;
+    min-width: 0;
+  }
+}
+
 .host-answer-card {
   min-height: min(72vh, 760px);
 }
@@ -1800,6 +1828,21 @@ select:focus {
 
   .scores-layout {
     grid-template-columns: 1fr;
+  }
+
+  .player-shell .topbar {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .player-shell .player-top-actions {
+    justify-content: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .player-shell .scoreboard {
+    width: 100%;
+    min-width: 0;
   }
 
   .score-rank-list li,
