@@ -1,4 +1,5 @@
-import "./styles.css";
+﻿import "./styles.css";
+import { mountStopwatchChallenge } from "./stopwatch-challenge";
 
 const COMMUNITY_URL = "https://qm.qq.com/q/6ytGE7qIWQ";
 const HOME_ANNOUNCEMENTS = [
@@ -50,19 +51,22 @@ const FACE_CROP_MODES = [
   ["prefer", "优先人脸"],
   ["only", "只切人脸"],
 ];
+const STOPWATCH_DEFAULT_SETTINGS = { targetSeconds: 10, toleranceSeconds: 0.02 };
 
 render();
-if (!["home", "login", "qr", "note-shooter", "scores"].includes(route)) connect();
+if (!["home", "login", "qr", "note-shooter", "scores", "stopwatch-challenge"].includes(route)) connect();
 registerServiceWorker();
 document.addEventListener("pointerdown", unlockAudio, { once: true });
 document.addEventListener("keydown", handleGlobalShortcut);
 
 function normalizeRoute(pathname) {
-  const routeName = pathname.replace(/^\/+/, "").split("/")[0];
+  const segments = pathname.replace(/^\/+/, "").split("/").filter(Boolean);
+  const routeName = segments[0];
   if (!routeName) return "home";
   if (routeName === "play") return "player";
   if (routeName === "queue") return "note-shooter";
-  if (["home", "player", "solo", "host", "settings", "login", "qr", "note-shooter", "scores", "community-admin"].includes(routeName)) return routeName;
+  if (routeName === "games" && segments[1] === "stopwatch-challenge") return "stopwatch-challenge";
+  if (["home", "player", "solo", "host", "settings", "login", "qr", "note-shooter", "scores", "community-admin", "stopwatch-challenge"].includes(routeName)) return routeName;
   return "home";
 }
 
@@ -128,6 +132,7 @@ function render() {
   else if (route === "host") renderHost();
   else if (route === "settings") renderSettings();
   else if (route === "community-admin") renderCommunityAdmin();
+  else if (route === "stopwatch-challenge") renderStopwatchChallenge();
   else renderPlayer();
 }
 
@@ -168,8 +173,12 @@ async function renderHome() {
             <span class="pill-text">游戏控制台 (主持页)</span>
           </a>
           <a class="linktree-pill" href="/note-shooter">
-            <span class="pill-icon">🎵</span>
+            <span class="pill-icon">🎍</span>
             <span class="pill-text">打发时间: 音符射手</span>
+          </a>
+          <a class="linktree-pill" href="/stopwatch-challenge">
+            <span class="pill-icon">⏱</span>
+            <span class="pill-text">掐秒表挑战</span>
           </a>
           <a class="linktree-pill" href="https://enldm.cyou/bangmap" target="_blank" rel="noreferrer">
             <span class="pill-icon">🗺️</span>
@@ -388,6 +397,10 @@ function renderNoteShooter() {
 
 function renderQueue() {
   renderNoteShooter();
+}
+
+function renderStopwatchChallenge() {
+  mountStopwatchChallenge(app);
 }
 
 function renderQueueLeaderboard(items) {
@@ -725,6 +738,10 @@ function renderHost() {
   const current = game?.current;
   const canPlay = game?.status === "playing";
   const canReveal = current && game?.status !== "idle";
+  const stopwatchSettings = {
+    targetSeconds: Number(settings?.stopwatchTargetSeconds) || STOPWATCH_DEFAULT_SETTINGS.targetSeconds,
+    toleranceSeconds: Number(settings?.stopwatchToleranceSeconds) || STOPWATCH_DEFAULT_SETTINGS.toleranceSeconds,
+  };
 
   app.innerHTML = `
     <main class="shell host-shell">
@@ -772,6 +789,22 @@ function renderHost() {
             <strong>${current?.displayName || "未开始"}</strong>
             <small>${current?.acceptedAnswers?.slice(0, 10).join(" / ") || ""}</small>
           </div>
+          <form id="hostStopwatchSettingsForm" class="host-mini-settings">
+            <strong>掐秒表挑战设置</strong>
+            <label class="setting-field">
+              <span>目标时间（秒）</span>
+              <input name="targetSeconds" type="number" min="1" max="99.99" step="0.01" value="${stopwatchSettings.targetSeconds.toFixed(2)}" />
+            </label>
+            <label class="setting-field">
+              <span>允许误差（秒）</span>
+              <input name="toleranceSeconds" type="number" min="0.01" max="99.99" step="0.01" value="${stopwatchSettings.toleranceSeconds.toFixed(2)}" />
+            </label>
+            <div class="host-mini-settings-actions">
+              <button class="primary" type="submit">保存设置</button>
+              <button id="hostStopwatchResetButton" type="button">重置默认</button>
+            </div>
+            <p id="hostStopwatchSettingsError" class="host-mini-settings-error"></p>
+          </form>
           ${renderHistory(game)}
           <button class="reset-button" data-command="reset">重置本轮</button>
         </section>
@@ -791,6 +824,43 @@ function renderHost() {
     await fetch("/api/logout", { method: "POST" });
     location.href = "/login";
   });
+
+  app.querySelector("#hostStopwatchSettingsForm")?.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const form = new FormData(event.currentTarget);
+    const errorElement = app.querySelector("#hostStopwatchSettingsError");
+    const targetRaw = String(form.get("targetSeconds") || "").trim();
+    const toleranceRaw = String(form.get("toleranceSeconds") || "").trim();
+    const target = Number(targetRaw);
+    const tolerance = Number(toleranceRaw);
+
+    if (!isStopwatchDecimal(targetRaw) || !Number.isFinite(target) || target < 1 || target > 99.99) {
+      errorElement.textContent = "目标时间必须是 1.00 到 99.99 的正数，最多两位小数。";
+      return;
+    }
+    if (!isStopwatchDecimal(toleranceRaw) || !Number.isFinite(tolerance) || tolerance <= 0) {
+      errorElement.textContent = "允许误差必须是大于 0 的数字，最多两位小数。";
+      return;
+    }
+    if (tolerance > target) {
+      errorElement.textContent = "允许误差不能大于目标时间。";
+      return;
+    }
+
+    command("settings", { stopwatchTargetSeconds: target, stopwatchToleranceSeconds: tolerance });
+    errorElement.textContent = "已保存（服务端同步）";
+  });
+
+  app.querySelector("#hostStopwatchResetButton")?.addEventListener("click", () => {
+    command("settings", {
+      stopwatchTargetSeconds: STOPWATCH_DEFAULT_SETTINGS.targetSeconds,
+      stopwatchToleranceSeconds: STOPWATCH_DEFAULT_SETTINGS.toleranceSeconds,
+    });
+  });
+}
+
+function isStopwatchDecimal(value) {
+  return /^\d+(\.\d{1,2})?$/.test(value);
 }
 
 function renderSettings() {
@@ -1604,3 +1674,6 @@ async function renderCommunityAdmin() {
     }
   });
 }
+
+
+

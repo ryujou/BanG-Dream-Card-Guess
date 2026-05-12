@@ -97,6 +97,8 @@ export const defaultSettings = {
   autoNext: false,
   autoNextDelay: 1800,
   currentTeam: "A",
+  stopwatchTargetSeconds: 10,
+  stopwatchToleranceSeconds: 0.02,
 };
 
 export function readPersistedConfig() {

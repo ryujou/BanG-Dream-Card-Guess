@@ -75,6 +75,12 @@ const server = createServer(async (req, res) => {
   // API routes
   if (url.pathname === "/api/health") return sendJson(res, healthSnapshot());
   if (url.pathname === "/api/network") return sendJson(res, networkState(req));
+  if (url.pathname === "/api/stopwatch-settings" && req.method === "GET") {
+    return sendJson(res, {
+      targetSeconds: Number(settings.stopwatchTargetSeconds) || 10,
+      toleranceSeconds: Number(settings.stopwatchToleranceSeconds) || 0.02,
+    });
+  }
   
   if (url.pathname === "/api/community" && req.method === "GET") return sendJson(res, readCommunityData());
   if (url.pathname === "/api/community" && req.method === "POST") {
@@ -247,7 +253,7 @@ async function handleCommand(ws, command, payload) {
     case "selfGuess": judgeSelfGuess(payload.guess); break;
     case "hideAnswer": if (game.status === "revealed") game.status = "playing"; game.message = "答案已隐藏"; broadcast(); break;
     case "reset": resetGame(); break;
-    case "settings": updateSettings(payload); break;
+    case "settings": updateSettings(payload); await saveSettings(); break;
     case "importSettings": updateSettings(payload); await saveSettings(); break;
     default: throw new Error(`未知命令: ${command}`);
   }
@@ -381,6 +387,17 @@ async function updateSettings(next) {
   if (next.correctPoints !== undefined) settings.correctPoints = Math.max(0, Number(next.correctPoints) || 0);
   if (next.wrongPenalty !== undefined) settings.wrongPenalty = Math.max(0, Number(next.wrongPenalty) || 0);
   if (next.autoNextDelay !== undefined) settings.autoNextDelay = Math.max(500, Math.min(30000, Number(next.autoNextDelay) || 1800));
+  if (next.stopwatchTargetSeconds !== undefined) {
+    const target = Number(next.stopwatchTargetSeconds);
+    if (Number.isFinite(target)) settings.stopwatchTargetSeconds = Math.max(1, Math.min(99.99, target));
+  }
+  if (next.stopwatchToleranceSeconds !== undefined) {
+    const tolerance = Number(next.stopwatchToleranceSeconds);
+    if (Number.isFinite(tolerance)) settings.stopwatchToleranceSeconds = Math.max(0.01, Math.min(99.99, tolerance));
+  }
+  if (settings.stopwatchToleranceSeconds > settings.stopwatchTargetSeconds) {
+    settings.stopwatchToleranceSeconds = settings.stopwatchTargetSeconds;
+  }
   for (const key of ["allowRecrop", "showPlayerRecrop", "soundEnabled", "streakBonus", "showTimer", "revealAfterJudge", "autoNext"]) {
     if (next[key] !== undefined) settings[key] = !!next[key];
   }
