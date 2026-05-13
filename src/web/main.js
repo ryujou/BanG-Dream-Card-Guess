@@ -32,6 +32,7 @@ let lastStageCropKey = "";
 let settingsInteractionUntil = 0;
 let audioContext = null;
 let communityData = null;
+let communityAdminRendering = false;
 
 const DIFFICULTY_PRESETS = {
   easy: { label: "简单", cropSize: 230, candidateCount: 90 },
@@ -54,7 +55,7 @@ const FACE_CROP_MODES = [
 const STOPWATCH_DEFAULT_SETTINGS = { targetSeconds: 10, toleranceSeconds: 0.02 };
 
 render();
-if (!["home", "login", "qr", "note-shooter", "scores", "stopwatch-challenge"].includes(route)) connect();
+if (!["home", "login", "qr", "note-shooter", "scores", "community-admin", "stopwatch-challenge", "bang-klotski"].includes(route)) connect();
 registerServiceWorker();
 document.addEventListener("pointerdown", unlockAudio, { once: true });
 document.addEventListener("keydown", handleGlobalShortcut);
@@ -66,7 +67,8 @@ function normalizeRoute(pathname) {
   if (routeName === "play") return "player";
   if (routeName === "queue") return "note-shooter";
   if (routeName === "games" && segments[1] === "stopwatch-challenge") return "stopwatch-challenge";
-  if (["home", "player", "solo", "host", "settings", "login", "qr", "note-shooter", "scores", "community-admin", "stopwatch-challenge"].includes(routeName)) return routeName;
+  if (routeName === "games" && segments[1] === "bang-klotski") return "bang-klotski";
+  if (["home", "player", "solo", "host", "settings", "login", "qr", "note-shooter", "scores", "community-admin", "stopwatch-challenge", "bang-klotski"].includes(routeName)) return routeName;
   return "home";
 }
 
@@ -133,6 +135,7 @@ function render() {
   else if (route === "settings") renderSettings();
   else if (route === "community-admin") renderCommunityAdmin();
   else if (route === "stopwatch-challenge") renderStopwatchChallenge();
+  else if (route === "bang-klotski") renderBangKlotski();
   else renderPlayer();
 }
 
@@ -179,6 +182,10 @@ async function renderHome() {
           <a class="linktree-pill" href="/stopwatch-challenge">
             <span class="pill-icon">⏱</span>
             <span class="pill-text">掐秒表挑战</span>
+          </a>
+          <a class="linktree-pill" href="/games/bang-klotski">
+            <span class="pill-icon">🧩</span>
+            <span class="pill-text">华容道小游戏</span>
           </a>
           <a class="linktree-pill" href="https://enldm.cyou/bangmap" target="_blank" rel="noreferrer">
             <span class="pill-icon">🗺️</span>
@@ -391,6 +398,37 @@ function renderNoteShooter() {
         title="音符射手"
         allow="autoplay; fullscreen"
       ></iframe>
+    </main>
+  `;
+}
+
+function renderBangKlotski() {
+  cancelQueueLoop();
+  app.innerHTML = `
+    <main class="bang-klotski-shell">
+      <section class="bang-klotski-panel">
+        <div class="bang-klotski-head">
+          <div>
+            <p class="eyebrow">Mini Game</p>
+            <h1>BanG 华容道</h1>
+          </div>
+          <div class="qr-actions">
+            <a href="/">返回首页</a>
+          </div>
+        </div>
+        <div class="bang-klotski-frame-wrap">
+          <iframe
+            class="bang-klotski-frame"
+            src="/games/bang-klotski/index.html"
+            title="BanG Klotski Enhanced"
+            allow="autoplay; fullscreen"
+            loading="eager"
+          ></iframe>
+        </div>
+        <p class="bang-klotski-credit">
+          原仓库：<a href="https://github.com/KasumiAmi/BanGKlotski_Enhanced" target="_blank" rel="noreferrer">https://github.com/KasumiAmi/BanGKlotski_Enhanced</a>；本项目仅作为网页内嵌小游戏页面使用。
+        </p>
+      </section>
     </main>
   `;
 }
@@ -1455,6 +1493,8 @@ function translateZh(key) {
 }
 
 async function renderCommunityAdmin() {
+  if (communityAdminRendering) return;
+  communityAdminRendering = true;
   const game = snapshot?.game;
   const settings = snapshot?.settings;
   
@@ -1673,6 +1713,7 @@ async function renderCommunityAdmin() {
       status.style.color = "var(--color-error)";
     }
   });
+  communityAdminRendering = false;
 }
 
 
