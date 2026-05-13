@@ -3013,18 +3013,52 @@ select:focus {
 
 @media (max-width: 920px) {
   .bang-klotski-shell {
-    width: min(100% - 20px, 1380px);
-    padding: 10px 0;
+    width: 100%;
+    min-height: 100dvh;
+    padding: 0;
+  }
+
+  .bang-klotski-panel {
+    min-height: 100dvh;
+    gap: 0;
+    border: 0;
+    border-radius: 0;
+    padding: 0;
+    background: rgba(255, 255, 255, 0.94);
+    box-shadow: none;
   }
 
   .bang-klotski-head {
     flex-direction: column;
     align-items: stretch;
+    gap: 8px;
+    padding: 14px 16px 10px;
+  }
+
+  .bang-klotski-head .eyebrow {
+    font-size: 0.72rem;
+  }
+
+  .bang-klotski-head h1 {
+    font-size: clamp(1.9rem, 11vw, 2.8rem);
+  }
+
+  .bang-klotski-head .qr-actions a {
+    width: fit-content;
+    padding: 10px 14px;
+    font-size: 0.95rem;
   }
 
   .bang-klotski-frame-wrap {
     aspect-ratio: auto;
-    min-height: min(78dvh, 680px);
+    height: calc(100dvh - 154px);
+    min-height: 520px;
     max-height: none;
+    border-inline: 0;
+    border-radius: 0;
+  }
+
+  .bang-klotski-credit {
+    display: none;
   }
 }

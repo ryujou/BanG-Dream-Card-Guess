@@ -280,81 +280,25 @@
         to { transform: scale(1); opacity: 1; }
       }
 
-      /* ===== 新增链接容器 ===== */
-      .repo-links {
-        position: absolute;
-        top: 8px;
-        right: 2%;
-        z-index: 200;
-        display: flex;
-        flex-direction: column;
-        gap: 6px;
-      }
-
-      .repo-link {
-        display: flex;
-        align-items: center;
-        gap: 4px;
-        padding: 6px 14px;
-        background: rgba(0, 0, 0, 0.6);
-        border: 1.5px solid rgba(255, 255, 255, 0.2);
-        border-radius: 20px;
-        color: #fff;
-        font-size: 13px;
-        font-weight: 600;
-        text-decoration: none;
-        font-family: "Segoe UI", "Microsoft YaHei", sans-serif;
-        transition: all 0.25s ease;
-        backdrop-filter: blur(6px);
-        white-space: nowrap;
-      }
-
-      .repo-link:hover {
-        background: rgba(255, 255, 255, 0.15);
-        border-color: #e8b74a;
-        color: #e8b74a;
-        transform: scale(1.05);
-      }
-
-      .repo-link svg {
-        width: 18px;
-        height: 18px;
-        fill: currentColor;
-      }
-
-      .repo-link .star-icon {
-        width: 14px;
-        height: 14px;
-      }
-
-      /* B站链接粉色辉光 */
-      .bili-link {
-        border-color: #fb7299;
-      }
-
-      .bili-link:hover {
-        border-color: #ffa0c0;
-        color: #ffa0c0;
-        box-shadow: 0 0 15px #fb7299, 0 0 30px #fb7299;
-      }
-
-      .bili-link svg.play-icon {
-        width: 16px;
-        height: 16px;
-      }
-
-      /* 响应式适配 — 完美支持横竖屏 */
       @media (max-width: 780px) {
+        body {
+          align-items: flex-start;
+          min-height: auto;
+          height: 100vh;
+          overflow: hidden;
+        }
+
         #game-wrapper {
           display: flex;
           flex-direction: column;
           align-items: center;
+          width: 100vw;
+          height: 100vh;
         }
 
         #board-inner {
           width: 100vw;
-          height: auto;
-          aspect-ratio: 16 / 9;
+          height: 56.25vw;
           flex-shrink: 0;
         }
 
@@ -372,8 +316,8 @@
           z-index: 20;
           width: 100%;
           justify-content: center;
-          margin-top: 10px;
-          padding-bottom: 20px;
+          margin-top: 8px;
+          padding: 0 8px 10px;
         }
 
         #step-label {
@@ -401,32 +345,6 @@
           font-size: 14px;
         }
 
-        /* 移动端链接容器 */
-        .repo-links {
-          gap: 4px;
-          right: 10px;
-          top: 10px;
-        }
-
-        .repo-link {
-          padding: 8px;
-          width: 36px;
-          height: 36px;
-          justify-content: center;
-          border-radius: 50%;
-          gap: 0;
-        }
-
-        .repo-link svg:first-child {
-          width: 20px;
-          height: 20px;
-          margin: 0;
-        }
-
-        .repo-link .star-icon,
-        .repo-link .star-text {
-          display: none;
-        }
       }
 
       /* 更新日志弹窗样式 */
@@ -511,46 +429,6 @@
         <img class="board-bg" src="images/board1.png" alt="棋盘背景" />
         <div id="elevator-floor">1</div> <!-- 默认显示1楼 -->
 
-        <!-- 链接容器：原仓库 + fork仓库 + B站番剧 -->
-        <div class="repo-links">
-          <!-- 原仓库链接 -->
-          <a class="repo-link" href="https://github.com/fflow2023/BanGKlotski" target="_blank" rel="noopener">
-            <svg viewBox="0 0 16 16">
-              <path
-                d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"
-              />
-            </svg>
-            <svg class="star-icon" viewBox="0 0 16 16">
-              <path
-                d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.75.75 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25z"
-              />
-            </svg>
-            <span class="star-text">原项目:B站@心之流_</span>
-          </a>
-
-          <!-- 你的 fork 仓库链接（请将 href 替换为你的实际地址） -->
-          <a class="repo-link fork-link" href="https://github.com/KasumiAmi/BanGKlotski_Enhanced" target="_blank" rel="noopener">
-            <svg viewBox="0 0 16 16">
-              <path
-                d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"
-              />
-            </svg>
-            <svg class="star-icon" viewBox="0 0 16 16">
-              <path
-                d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.75.75 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25z"
-              />
-            </svg>
-            <span class="star-text">Fork:B站@千石Yuno酱</span>
-          </a>
-
-          <!-- B站番剧链接（带粉色辉光） -->
-          <a class="repo-link bili-link" href="https://www.bilibili.com/bangumi/play/ss29308" target="_blank" rel="noopener">
-            <svg class="play-icon" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M8 5v14l11-7z"/>
-            </svg>
-            <span class="star-text">第19集:箱中米歇尔</span>
-          </a>
-        </div>
 
         <div id="board"></div>
       </div>
@@ -1075,108 +953,6 @@
       // 提示系统 (Web Worker BFS)
       // ============================================================
 
-      const workerCode = `
-        const COLS = 4, ROWS = 5;
-        const TYPES = { '2x2': [2,2], '1x2': [1,2], '2x1': [2,1], '1x1': [1,1] };
-        // 类型编码: 0=空, 1=1x1, 2=1x2(占上半), 3=1x2(占下半), 4=2x1(占左半), 5=2x1(占右半),
-        //           6=michelle左上, 7=michelle右上, 8=michelle左下, 9=michelle右下
-
-        function encodeState(bs) {
-          const g = new Uint8Array(20);
-          for (const b of bs) {
-            const [w, h] = TYPES[b.type];
-            if (b.id === 'michelle') {
-              g[b.y * COLS + b.x] = 6;
-              g[b.y * COLS + b.x + 1] = 7;
-              g[(b.y + 1) * COLS + b.x] = 8;
-              g[(b.y + 1) * COLS + b.x + 1] = 9;
-            } else if (b.type === '1x1') {
-              g[b.y * COLS + b.x] = 1;
-            } else if (b.type === '1x2') {
-              g[b.y * COLS + b.x] = 2;
-              g[(b.y + 1) * COLS + b.x] = 3;
-            } else if (b.type === '2x1') {
-              g[b.y * COLS + b.x] = 4;
-              g[b.y * COLS + b.x + 1] = 5;
-            }
-          }
-          return String.fromCharCode.apply(null, g);
-        }
-
-        function buildGrid(bs) {
-          const grid = [];
-          for (let r = 0; r < ROWS; r++) grid[r] = new Array(COLS).fill(-1);
-          for (let i = 0; i < bs.length; i++) {
-            const b = bs[i];
-            const [w, h] = TYPES[b.type];
-            for (let dy = 0; dy < h; dy++)
-              for (let dx = 0; dx < w; dx++)
-                grid[b.y + dy][b.x + dx] = i;
-          }
-          return grid;
-        }
-
-        function canMove(b, dx, dy, grid, idx) {
-          const [w, h] = TYPES[b.type];
-          const nx = b.x + dx, ny = b.y + dy;
-          if (nx < 0 || ny < 0 || nx + w > COLS || ny + h > ROWS) return false;
-          for (let r = 0; r < h; r++)
-            for (let c = 0; c < w; c++) {
-              const occ = grid[ny + r][nx + c];
-              if (occ !== -1 && occ !== idx) return false;
-            }
-          return true;
-        }
-
-        self.onmessage = function(e) {
-          const startBlocks = e.data;
-          const visited = new Set();
-          const startKey = encodeState(startBlocks);
-          visited.add(startKey);
-
-          const queue = [startBlocks.map(b => ({...b}))];
-          const parent = [null];
-          let head = 0;
-
-          const dirs = [[0,-1],[0,1],[-1,0],[1,0]];
-
-          while (head < queue.length) {
-            const state = queue[head];
-            const michIdx = state.findIndex(b => b.id === 'michelle');
-
-            if (state[michIdx].x === 1 && state[michIdx].y === 3) {
-              const path = [];
-              let cur = head;
-              while (parent[cur] !== null) {
-                const p = parent[cur];
-                path.unshift({ id: queue[p.stateIdx][p.blockIdx].id, dx: p.dx, dy: p.dy });
-                cur = p.stateIdx;
-              }
-              self.postMessage({ success: true, moves: path });
-              return;
-            }
-
-            const grid = buildGrid(state);
-
-            for (let bi = 0; bi < state.length; bi++) {
-              const b = state[bi];
-              for (const [dx, dy] of dirs) {
-                if (!canMove(b, dx, dy, grid, bi)) continue;
-                const ns = state.map(x => ({...x}));
-                ns[bi] = {...ns[bi], x: ns[bi].x + dx, y: ns[bi].y + dy};
-                const key = encodeState(ns);
-                if (visited.has(key)) continue;
-                visited.add(key);
-                queue.push(ns);
-                parent.push({ stateIdx: head, blockIdx: bi, dx, dy });
-              }
-            }
-            head++;
-          }
-
-          self.postMessage({ success: false });
-        };
-      `;
 
       function getHint() {
         if (solving || hintComputing) return;
@@ -1202,12 +978,9 @@
         btnHint.disabled = true;
         btnHint.textContent = "思考中…";
 
-        const blob = new Blob([workerCode], { type: "application/javascript" });
-        const url = URL.createObjectURL(blob);
-        hintWorker = new Worker(url);
+        hintWorker = new Worker("/games/bang-klotski/solver-worker.js");
 
         hintWorker.onmessage = function (e) {
-          URL.revokeObjectURL(url);
           hintWorker = null;
           hintComputing = false;
           btnHint.disabled = false;
@@ -1231,7 +1004,6 @@
         };
 
         hintWorker.onerror = function () {
-          URL.revokeObjectURL(url);
           hintWorker = null;
           hintComputing = false;
           btnHint.disabled = false;
