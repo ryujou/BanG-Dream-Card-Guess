@@ -1,0 +1,457 @@
+:root {
+  --color-primary: #ff3d6e;
+  --color-primary-hover: #e02f5a;
+  --color-primary-alpha: rgba(255, 61, 110, 0.2);
+  --color-bg: #ffffff;
+  --color-bg-dim: #f8f9fa;
+  --color-border: #e9ecef;
+  --color-text: #212529;
+  --color-text-dim: #6c757d;
+  --color-error: #dc3545;
+}
+
+:root {
+  color: #17171f;
+  background: #f6f7fb;
+  font-family:
+    Inter, "Segoe UI", "Noto Sans SC", "Microsoft YaHei", system-ui,
+    sans-serif;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  min-width: 320px;
+  min-height: 100vh;
+  margin: 0;
+  background:
+    linear-gradient(
+      90deg,
+      #fdf1f4 0%,
+      #faf2fd 20%,
+      #ebf9fd 40%,
+      #eafdf3 60%,
+      #fdfcea 80%,
+      #fdf2ec 100%
+    );
+}
+
+body::before {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image:
+    url("/bg/bg_pattern_logo_pc.webp"),
+    url("/bg/bg_pattern_texture_pc.webp");
+  background-position: top center, top center;
+  background-size: max(1920px, 100vw) auto, max(1920px, 100vw) auto;
+  background-repeat: repeat-y, repeat-y;
+  opacity: 0.9;
+  content: "";
+}
+
+body::after {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image:
+    url("/bg/monkey.png"),
+    url("/bg/monkey.png"),
+    url("/bg/monkey.png"),
+    url("/bg/monkey.png"),
+    url("/bg/monkey.png"),
+    url("/bg/monkey.png");
+  background-position:
+    10vw 18vh,
+    78vw 12vh,
+    55vw 36vh,
+    18vw 58vh,
+    84vw 70vh,
+    42vw 86vh;
+  background-repeat: no-repeat;
+  background-size: 52px 52px;
+  opacity: 0.2;
+  content: "";
+}
+
+button,
+input,
+select {
+  font: inherit;
+}
+
+button {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 0;
+  border-radius: 8px;
+  color: #1b1b24;
+  background: #ffffff;
+  box-shadow: 0 1px 0 rgba(23, 23, 31, 0.08), 0 12px 30px rgba(48, 57, 82, 0.08);
+  cursor: pointer;
+  transition: transform 160ms ease, box-shadow 160ms ease, opacity 160ms ease;
+}
+
+button:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 1px 0 rgba(23, 23, 31, 0.08), 0 16px 34px rgba(48, 57, 82, 0.12);
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.46;
+}
+
+button svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2;
+}
+
+@keyframes homeMarquee {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+h1 {
+  margin: 0;
+  font-size: clamp(2rem, 5vw, 4.75rem);
+  line-height: 0.98;
+  letter-spacing: 0;
+  white-space: nowrap;
+}
+
+@keyframes shimmer {
+  from {
+    transform: translateX(-100%);
+  }
+
+  to {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes cropIn {
+  from {
+    opacity: 0;
+    transform: scale(1.025);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+input {
+  width: 100%;
+  min-height: 52px;
+  border: 1px solid rgba(23, 23, 31, 0.1);
+  border-radius: 8px;
+  padding: 0 16px;
+  outline: none;
+  background: #ffffff;
+  color: #17171f;
+  box-shadow: 0 12px 30px rgba(48, 57, 82, 0.08);
+}
+
+select {
+  appearance: none;
+  width: 100%;
+  min-height: 52px;
+  border: 1px solid rgba(23, 23, 31, 0.1);
+  border-radius: 8px;
+  padding: 0 44px 0 16px;
+  outline: none;
+  background:
+    linear-gradient(45deg, transparent 50%, #17171f 50%) calc(100% - 22px) 50% / 6px 6px no-repeat,
+    linear-gradient(135deg, #17171f 50%, transparent 50%) calc(100% - 16px) 50% / 6px 6px no-repeat,
+    #ffffff;
+  color: #17171f;
+  box-shadow: 0 12px 30px rgba(48, 57, 82, 0.08);
+  cursor: pointer;
+}
+
+select option {
+  color: #17171f;
+  background: #ffffff;
+}
+
+input:focus,
+select:focus {
+  border-color: #ff3d6e;
+  box-shadow: 0 0 0 4px rgba(255, 61, 110, 0.14), 0 12px 30px rgba(48, 57, 82, 0.08);
+}
+
+@keyframes shake {
+  20% {
+    transform: translateX(-6px);
+  }
+
+  40% {
+    transform: translateX(6px);
+  }
+
+  60% {
+    transform: translateX(-4px);
+  }
+
+  80% {
+    transform: translateX(4px);
+  }
+}
+
+@keyframes revealPop {
+  from {
+    opacity: 0;
+    transform: scale(0.985);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@media (max-width: 920px) {
+  body::before {
+    background-image:
+      url("/bg/bg_pattern_logo_sp.webp"),
+      url("/bg/bg_pattern_texture_sp.webp");
+    background-position: top center, top center;
+    background-size: 100vw auto, 100vw auto;
+  }
+
+  body::after {
+    background-position:
+      8vw 14vh,
+      74vw 10vh,
+      50vw 34vh,
+      16vw 58vh,
+      78vw 74vh,
+      42vw 90vh;
+    background-size: 42px 42px;
+    opacity: 0.22;
+  }
+
+  .shell {
+    grid-template-columns: 1fr;
+  }
+
+  .home-hero {
+    grid-template-columns: 1fr;
+  }
+
+  .home-copy h1 {
+    font-size: clamp(2.6rem, 8.5vw, 4.6rem);
+    white-space: normal;
+  }
+
+  .home-community {
+    align-items: center;
+    justify-items: start;
+    grid-template-columns: minmax(0, 320px) minmax(0, 1fr);
+    text-align: left;
+  }
+
+  .home-icon-grid {
+    width: 100%;
+    gap: 8px;
+  }
+
+  .settings-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .setting-group {
+    grid-column: span 2;
+  }
+
+  .qr-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .queue-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .scores-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .player-shell .topbar {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .player-shell .player-top-actions {
+    justify-content: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .player-shell .scoreboard {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .score-rank-list li,
+  .score-recent-list article {
+    grid-template-columns: 44px minmax(0, 1fr) auto;
+  }
+
+  .score-rank-list li em {
+    grid-column: 2;
+  }
+
+  .score-rank-list .score-delete {
+    grid-column: 3;
+    grid-row: 2;
+  }
+
+  .score-recent-list .score-delete {
+    grid-column: 3;
+    grid-row: 1;
+  }
+
+  .queue-head,
+  .queue-board-head,
+  .queue-hud {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .queue-start-form {
+    grid-template-columns: 1fr;
+  }
+
+  .health-panel {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .side-panel {
+    grid-template-columns: 1fr;
+    grid-template-rows: minmax(360px, 68vh) auto;
+  }
+
+  .answer-card,
+  .answer-image,
+  .answer-placeholder {
+    min-height: 68vh;
+  }
+}
+
+@media print {
+  body {
+    background: #ffffff;
+  }
+
+  body::before,
+  body::after,
+  .qr-actions {
+    display: none;
+  }
+
+  .qr-shell {
+    width: 100%;
+    min-height: auto;
+    padding: 0;
+  }
+
+  .qr-panel,
+  .qr-card,
+  .qr-note,
+  .qr-lan {
+    box-shadow: none;
+    background: #ffffff;
+    backdrop-filter: none;
+  }
+}
+
+/* Community Section Styles */
+
+/* --- Linktree Style Homepage --- */
+
+/* --- Admin UI Fixes --- */
+
+/* JSON Editor row action buttons — make them visible and nice */
+
+.json-editor-container .json-editor-btn-edit,
+.json-editor-container [class*="json-editor-btntype"] {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  min-height: 32px;
+  border: 1px solid rgba(0,0,0,0.1);
+  border-radius: 6px;
+  padding: 6px 12px;
+  margin: 0 2px;
+  background: #f4f6fa;
+  color: #333;
+  font-size: 0.85rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+}
+
+.json-editor-container .json-editor-btn-edit:hover,
+.json-editor-container [class*="json-editor-btntype"]:hover {
+  background: #e8ecf1;
+  border-color: rgba(0,0,0,0.18);
+}
+
+/* Delete button in red */
+
+.json-editor-container [class*="json-editor-btntype-delete"] {
+  color: #dc3545;
+  border-color: rgba(220,53,69,0.2);
+}
+
+.json-editor-container [class*="json-editor-btntype-delete"]:hover {
+  background: #fff0f0;
+  border-color: rgba(220,53,69,0.4);
+}
+
+/* Add button in green */
+
+.json-editor-container [class*="json-editor-btntype-add"] {
+  color: #28a745;
+  border-color: rgba(40,167,69,0.2);
+}
+
+.json-editor-container [class*="json-editor-btntype-add"]:hover {
+  background: #f0fff4;
+  border-color: rgba(40,167,69,0.4);
+}
+
+/* Move buttons */
+
+.json-editor-container [class*="json-editor-btntype-move"] {
+  color: #6c757d;
+}
+
+/* Table header buttons */
+
+/* Compact the table layout slightly */
+
+/* Stopwatch Challenge */

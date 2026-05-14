@@ -1,0 +1,152 @@
+.qr-shell {
+  position: relative;
+  z-index: 1;
+  width: min(1120px, calc(100% - 32px));
+  min-height: 100vh;
+  margin: 0 auto;
+  padding: 28px 0;
+}
+
+.qr-panel {
+  padding: 24px;
+  border: 1px solid rgba(23, 23, 31, 0.08);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 24px 70px rgba(49, 57, 84, 0.12);
+  backdrop-filter: blur(18px);
+}
+
+.qr-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.qr-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.qr-actions a {
+  display: inline-flex;
+  min-height: 42px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  padding: 0 14px;
+  background: #ffffff;
+  color: #17171f;
+  font-weight: 800;
+  text-decoration: none;
+  box-shadow: 0 1px 0 rgba(23, 23, 31, 0.08), 0 12px 30px rgba(48, 57, 82, 0.08);
+}
+
+.qr-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 14px;
+}
+
+.qr-card {
+  display: grid;
+  gap: 14px;
+  align-content: start;
+  border: 1px solid rgba(23, 23, 31, 0.08);
+  border-radius: 8px;
+  padding: 18px;
+  background: #ffffff;
+}
+
+.qr-card span {
+  color: #ff3d6e;
+  font-size: 0.78rem;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+.qr-card h2 {
+  margin: 4px 0 0;
+  font-size: 1.65rem;
+  line-height: 1.1;
+}
+
+.qr-card p {
+  min-height: 44px;
+  margin: 8px 0 0;
+  color: #565b68;
+  line-height: 1.5;
+}
+
+.qr-card img {
+  width: min(100%, 260px);
+  justify-self: center;
+  border: 1px solid rgba(23, 23, 31, 0.08);
+  border-radius: 8px;
+  padding: 10px;
+  background: #ffffff;
+}
+
+.qr-card code,
+.qr-lan code {
+  display: block;
+  overflow-wrap: anywhere;
+  border-radius: 8px;
+  padding: 10px 12px;
+  background: #f4f6fa;
+  color: #17171f;
+  font-size: 0.84rem;
+}
+
+.qr-note,
+.qr-lan,
+.wifi-panel {
+  display: grid;
+  gap: 8px;
+  margin-top: 14px;
+  border: 1px solid rgba(23, 23, 31, 0.08);
+  border-radius: 8px;
+  padding: 14px;
+  background: rgba(255, 255, 255, 0.76);
+}
+
+.qr-note strong,
+.qr-lan strong,
+.wifi-panel strong {
+  color: #17171f;
+  font-weight: 900;
+}
+
+.qr-note span,
+.wifi-panel span {
+  color: #565b68;
+  line-height: 1.6;
+}
+
+.wifi-form {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1.2fr) minmax(120px, 0.6fr) minmax(140px, 0.7fr);
+  gap: 10px;
+}
+
+.wifi-qr {
+  display: grid;
+  width: min(100%, 260px);
+  justify-items: center;
+  gap: 8px;
+}
+
+.wifi-qr img {
+  width: 220px;
+  border: 1px solid rgba(23, 23, 31, 0.08);
+  border-radius: 8px;
+  padding: 10px;
+  background: #ffffff;
+}
+
+.wifi-qr code {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}

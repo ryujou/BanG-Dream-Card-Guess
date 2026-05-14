@@ -9,9 +9,9 @@ import { Jimp } from "jimp";
 import QRCode from "qrcode";
 import { WebSocketServer } from "ws";
 
-import { sendJson, securityHeaders, requestIp, isMutatingMethod, requiresCsrfCheck } from "./src/server/utils/http.mjs";
-import { proxyBestdori } from "./src/server/http/bestdoriProxy.mjs";
-import { serveStatic, streamFile } from "./src/server/app/static.mjs";
+import { sendJson, securityHeaders, requestIp, isMutatingMethod, requiresCsrfCheck } from "./dist-server/server/utils/http.js";
+import { proxyBestdori } from "./dist-server/server/http/bestdoriProxy.js";
+import { serveStatic, streamFile } from "./dist-server/server/app/static.js";
 import {
   dataDir, settingsStorePath, faceBoxesStorePath,
   BESTDORI_ORIGIN, BESTDORI_BASE,

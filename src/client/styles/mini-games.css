@@ -1,0 +1,435 @@
+.note-shooter-shell {
+  position: relative;
+  z-index: 1;
+  width: 100vw;
+  height: 100dvh;
+  background: #333333;
+}
+
+.note-shooter-frame {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.bang-klotski-shell {
+  position: relative;
+  z-index: 1;
+  width: min(1380px, calc(100% - 32px));
+  min-height: 100vh;
+  margin: 0 auto;
+  padding: 20px 0;
+}
+
+.bang-klotski-panel {
+  display: grid;
+  gap: 12px;
+  border: 1px solid rgba(23, 23, 31, 0.08);
+  border-radius: 8px;
+  padding: 14px;
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 24px 70px rgba(49, 57, 84, 0.12);
+  backdrop-filter: blur(18px);
+}
+
+.bang-klotski-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.bang-klotski-head h1 {
+  margin: 0;
+  font-size: clamp(2rem, 6vw, 4.2rem);
+  line-height: 0.95;
+  white-space: normal;
+}
+
+.bang-klotski-frame-wrap {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  max-height: calc(100dvh - 220px);
+  min-height: 560px;
+  border: 1px solid rgba(23, 23, 31, 0.08);
+  border-radius: 8px;
+  overflow: hidden;
+  background: #1a1a1a;
+}
+
+.bang-klotski-frame {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.bang-klotski-credit {
+  margin: 0;
+  color: #4f5565;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.bang-klotski-credit a {
+  color: inherit;
+  font-weight: 800;
+}
+
+.stopwatch-page {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 24px 14px;
+  overflow: hidden;
+}
+
+.stopwatch-card {
+  position: relative;
+  z-index: 1;
+  width: min(740px, 100%);
+  border: 1px solid rgba(158, 189, 255, 0.26);
+  border-radius: 22px;
+  padding: 20px;
+  background: rgba(10, 14, 24, 0.72);
+  box-shadow: 0 36px 90px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(14px);
+  color: #ebf3ff;
+}
+
+.stopwatch-header {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.stopwatch-back {
+  color: #9fd5ff;
+  font-weight: 800;
+  text-decoration: none;
+  width: fit-content;
+}
+
+.stopwatch-header h1 {
+  margin: 0;
+  font-size: clamp(2rem, 6.2vw, 3.2rem);
+  color: #f3f7ff;
+  white-space: normal;
+}
+
+.stopwatch-header p {
+  margin: 0;
+  color: #b2c2dd;
+  font-size: 0.98rem;
+  font-weight: 700;
+}
+
+.stopwatch-display-wrap {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.stopwatch-target {
+  display: inline-flex;
+  width: fit-content;
+  border-radius: 999px;
+  padding: 6px 12px;
+  background: rgba(151, 193, 255, 0.14);
+  color: #9fd5ff;
+  font-weight: 900;
+}
+
+.stopwatch-timer {
+  font-size: clamp(2.5rem, 12vw, 5.2rem);
+  line-height: 1;
+  font-weight: 900;
+  letter-spacing: 0.02em;
+}
+
+.stopwatch-mode-hint {
+  font-size: 0.92rem;
+  font-weight: 800;
+}
+
+.stopwatch-mode-hint.is-idle {
+  color: #a7b8d4;
+}
+
+.stopwatch-mode-hint.is-holding {
+  color: #43ffd8;
+}
+
+.stopwatch-mode-hint.is-win {
+  color: #7dff8d;
+}
+
+.stopwatch-mode-hint.is-lose {
+  color: #ffab84;
+}
+
+.stopwatch-hold-pad {
+  width: 100%;
+  min-height: 180px;
+  border: 1px solid rgba(133, 191, 255, 0.32);
+  border-radius: 18px;
+  color: #eaf2ff;
+  background: linear-gradient(160deg, rgba(55, 108, 255, 0.34), rgba(68, 255, 221, 0.14));
+  font-size: clamp(1.2rem, 4vw, 1.8rem);
+  font-weight: 900;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05), 0 14px 28px rgba(0, 0, 0, 0.26);
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.stopwatch-page[data-mode="holding"] .stopwatch-hold-pad {
+  background: linear-gradient(160deg, rgba(0, 178, 139, 0.45), rgba(30, 240, 205, 0.25));
+  border-color: rgba(83, 255, 210, 0.56);
+  box-shadow: 0 0 0 3px rgba(83, 255, 210, 0.2), 0 20px 38px rgba(0, 0, 0, 0.3);
+}
+
+.stopwatch-page[data-mode="win"] .stopwatch-hold-pad {
+  border-color: rgba(125, 255, 141, 0.6);
+  background: linear-gradient(160deg, rgba(37, 180, 74, 0.38), rgba(88, 255, 120, 0.2));
+}
+
+.stopwatch-page[data-mode="lose"] .stopwatch-hold-pad {
+  border-color: rgba(255, 171, 132, 0.52);
+  background: linear-gradient(160deg, rgba(198, 79, 44, 0.3), rgba(255, 147, 99, 0.12));
+}
+
+.stopwatch-card-minimal {
+  width: min(520px, 100%);
+  display: grid;
+  place-items: center;
+  gap: 24px;
+  text-align: center;
+}
+
+.stopwatch-hold-circle {
+  width: min(72vw, 320px);
+  height: min(72vw, 320px);
+  min-height: 220px;
+  border-radius: 50%;
+  padding: 0;
+}
+
+.stopwatch-hold-circle span {
+  font-size: clamp(1.3rem, 4.2vw, 2rem);
+}
+
+.stopwatch-result {
+  margin-top: 14px;
+  border: 1px solid rgba(136, 175, 255, 0.26);
+  border-radius: 14px;
+  padding: 12px;
+  background: rgba(8, 12, 20, 0.58);
+}
+
+.stopwatch-result p {
+  margin: 4px 0;
+  color: #d9e5fb;
+  font-weight: 700;
+}
+
+.stopwatch-retry {
+  width: 100%;
+  margin-top: 12px;
+}
+
+.stopwatch-stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.stopwatch-stats article {
+  border: 1px solid rgba(121, 164, 255, 0.24);
+  border-radius: 12px;
+  padding: 10px;
+  background: rgba(8, 13, 22, 0.58);
+}
+
+.stopwatch-stats span {
+  display: block;
+  color: #9fb2d2;
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
+.stopwatch-stats strong {
+  display: block;
+  margin-top: 4px;
+  color: #eef5ff;
+  font-size: 1.2rem;
+  font-weight: 900;
+}
+
+.stopwatch-stats small {
+  color: #8fa4c9;
+  font-weight: 700;
+}
+
+.stopwatch-host-settings {
+  margin-top: 14px;
+  border: 1px solid rgba(139, 179, 255, 0.24);
+  border-radius: 14px;
+  padding: 10px 12px;
+  background: rgba(8, 12, 20, 0.6);
+}
+
+.stopwatch-host-settings summary {
+  cursor: pointer;
+  color: #cde0ff;
+  font-weight: 900;
+}
+
+.stopwatch-settings-form {
+  display: grid;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.stopwatch-settings-form label {
+  display: grid;
+  gap: 6px;
+}
+
+.stopwatch-settings-form label > span {
+  color: #acc2e7;
+  font-size: 0.9rem;
+  font-weight: 800;
+}
+
+.stopwatch-input-wrap {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px;
+  align-items: center;
+}
+
+.stopwatch-input-wrap input {
+  min-height: 44px;
+  border: 1px solid rgba(140, 177, 245, 0.34);
+  border-radius: 10px;
+  padding: 0 10px;
+  background: rgba(5, 10, 18, 0.72);
+  color: #eef5ff;
+  box-shadow: none;
+}
+
+.stopwatch-input-wrap em {
+  color: #a7bfe5;
+  font-style: normal;
+  font-weight: 800;
+}
+
+.stopwatch-settings-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.stopwatch-settings-error {
+  margin: 0;
+  min-height: 1.2em;
+  color: #ff9a9a;
+  font-weight: 800;
+}
+
+@media (max-width: 920px) {
+  .stopwatch-host-settings {
+    padding: 8px 10px;
+  }
+}
+
+@media (max-width: 700px) {
+  .stopwatch-page {
+    padding: 12px;
+  }
+
+  .stopwatch-card {
+    padding: 14px;
+    border-radius: 16px;
+  }
+
+  .stopwatch-hold-pad {
+    min-height: 170px;
+  }
+
+  .stopwatch-hold-circle {
+    width: min(78vw, 300px);
+    height: min(78vw, 300px);
+    min-height: 200px;
+  }
+
+  .stopwatch-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .stopwatch-settings-actions {
+    grid-template-columns: 1fr;
+  }
+
+  .host-mini-settings-actions {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 920px) {
+  .bang-klotski-shell {
+    width: 100%;
+    min-height: 100dvh;
+    padding: 0;
+  }
+
+  .bang-klotski-panel {
+    min-height: 100dvh;
+    gap: 0;
+    border: 0;
+    border-radius: 0;
+    padding: 0;
+    background: rgba(255, 255, 255, 0.94);
+    box-shadow: none;
+  }
+
+  .bang-klotski-head {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+    padding: 14px 16px 10px;
+  }
+
+  .bang-klotski-head .eyebrow {
+    font-size: 0.72rem;
+  }
+
+  .bang-klotski-head h1 {
+    font-size: clamp(1.9rem, 11vw, 2.8rem);
+  }
+
+  .bang-klotski-head .qr-actions a {
+    width: fit-content;
+    padding: 10px 14px;
+    font-size: 0.95rem;
+  }
+
+  .bang-klotski-frame-wrap {
+    aspect-ratio: auto;
+    height: calc(100dvh - 154px);
+    min-height: 520px;
+    max-height: none;
+    border-inline: 0;
+    border-radius: 0;
+  }
+
+  .bang-klotski-credit {
+    display: none;
+  }
+}
