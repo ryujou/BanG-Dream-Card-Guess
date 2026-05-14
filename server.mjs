@@ -9,6 +9,9 @@ import { Jimp } from "jimp";
 import QRCode from "qrcode";
 import { WebSocketServer } from "ws";
 
+import { sendJson, securityHeaders, requestIp, isMutatingMethod, requiresCsrfCheck } from "./src/server/utils/http.mjs";
+import { proxyBestdori } from "./src/server/http/bestdoriProxy.mjs";
+import { serveStatic, streamFile } from "./src/server/app/static.mjs";
 import {
   dataDir, settingsStorePath, faceBoxesStorePath,
   BESTDORI_ORIGIN, BESTDORI_BASE,
@@ -211,7 +214,7 @@ const server = createServer(async (req, res) => {
   }
 
   // Static files (public/ or dist/)
-  return serveStatic(req.url, res);
+  return serveStatic(req.url, res, publicDir, distDir);
 });
 
 // --- WebSocket ---
@@ -704,6 +707,11 @@ function clearAutoNext() { if (autoNextTimer) clearTimeout(autoNextTimer); autoN
 function stopTimer() { if (timer) clearInterval(timer); timer = null; }
 
 // --- State broadcast ---
+/**
+ * @typedef {import('./src/shared/types/websocket').AppSnapshot} AppSnapshot
+ * @typedef {import('./src/shared/types/websocket').ServerMessage} ServerMessage
+ */
+
 function healthSnapshot() {
   const faceImages = Object.keys(faceBoxStore.images || {}).length;
   let cachedCount = 0;
@@ -735,6 +743,10 @@ function publicHealthSnapshot() {
   };
 }
 
+/**
+ * @param {string} role 
+ * @returns {AppSnapshot}
+ */
 function publicState(role) {
   const current = game.current && {
     displayName: ["player", "self"].includes(role) && game.status === "playing" ? "" : game.current.displayName,
@@ -763,80 +775,19 @@ function broadcast() {
 }
 
 // --- Bestdori proxy ---
-async function proxyBestdori(url, res) {
-  const targetPath = url.pathname.replace(/^\/bestdori/, "");
-  const target = `${BESTDORI_ORIGIN}${targetPath}`;
-  try {
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 10_000);
-    const response = await fetch(target, { signal: controller.signal });
-    clearTimeout(timeoutId);
-    res.writeHead(response.status, {
-      ...securityHeaders(),
-      "Content-Type": response.headers.get("content-type") || "application/octet-stream",
-      "Cache-Control": "public, max-age=86400",
-    });
-    res.end(Buffer.from(await response.arrayBuffer()));
-  } catch {
-    sendJson(res, { error: "Upstream timeout" }, 504);
-  }
-}
+
 
 // --- Static file serving ---
-async function serveStatic(requestPath, res) {
-  const cleanPath = decodeURIComponent(requestPath.split("?")[0]);
-  const staticPath = cleanPath === "/" ? "index.html" : cleanPath.replace(/^\/+/, "");
-  let filePath = path.join(publicDir, staticPath);
-  if (filePath.startsWith(publicDir) && existsSync(filePath) && !(await stat(filePath).catch(() => null))?.isDirectory()) return streamFile(filePath, res);
 
-  filePath = path.join(distDir, cleanPath === "/" ? "index.html" : cleanPath);
-  if (!filePath.startsWith(distDir)) { res.writeHead(403, securityHeaders()); return res.end("Forbidden"); }
-  if (!existsSync(filePath) || (await stat(filePath).catch(() => null))?.isDirectory()) filePath = path.join(distDir, "index.html");
-  streamFile(filePath, res);
-}
 
-function streamFile(filePath, res) {
-  const ext = path.extname(filePath).toLowerCase();
-  res.writeHead(200, {
-    ...securityHeaders(),
-    "Content-Type": MIME[ext] || "application/octet-stream",
-    "Cache-Control": ext === ".html" ? "no-cache" : "public, max-age=3600",
-  });
-  createReadStream(filePath).on("error", () => {
-    if (!res.headersSent) { res.writeHead(404, securityHeaders()); res.end("Not found"); }
-  }).pipe(res);
-}
+
 
 // --- Helpers ---
-function sendJson(res, value, status = 200) {
-  res.writeHead(status, { ...securityHeaders(), "Content-Type": "application/json; charset=utf-8" });
-  res.end(JSON.stringify(value));
-}
 
-function securityHeaders() {
-  return {
-    "Content-Security-Policy": [
-      "default-src 'self'",
-      "img-src 'self' data: https:",
-      "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net",
-      "script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net",
-      "connect-src 'self' ws: wss:",
-      "font-src 'self' data: https:",
-      "frame-ancestors 'self'",
-      "base-uri 'self'",
-      "object-src 'none'",
-    ].join("; "),
-    "X-Content-Type-Options": "nosniff",
-    "X-Frame-Options": "SAMEORIGIN",
-    "Referrer-Policy": "strict-origin-when-cross-origin",
-    "X-XSS-Protection": "1; mode=block",
-    "Strict-Transport-Security": "max-age=31536000; includeSubDomains",
-  };
-}
 
-function isMutatingMethod(method) {
-  return ["POST", "PUT", "PATCH", "DELETE"].includes(String(method || "").toUpperCase());
-}
+
+
+
 
 function isTrustedOrigin(req) {
   const origin = req.headers.origin;
@@ -861,10 +812,7 @@ function isTrustedWebSocketOrigin(req) {
   }
 }
 
-function requestIp(req) {
-  const forwarded = String(req.headers["x-forwarded-for"] || "").split(",")[0].trim();
-  return forwarded || req.socket?.remoteAddress || "unknown";
-}
+
 
 function checkLoginRateLimit(ip) {
   const now = Date.now();
@@ -882,12 +830,7 @@ function clearLoginRateLimit(ip) {
   loginAttempts.delete(ip);
 }
 
-function requiresCsrfCheck(req, pathname) {
-  if (pathname === "/api/login") return false;
-  if (pathname === "/api/queue-scores") return false;
-  if (pathname.startsWith("/note-shooter-api/")) return false;
-  return isAuthenticated(req);
-}
+
 
 function hasValidCsrf(req) {
   const cookieToken = getCookie(req, CSRF_COOKIE);
