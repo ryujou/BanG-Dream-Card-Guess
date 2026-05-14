@@ -1,5 +1,4 @@
 ﻿import "./styles.css";
-import { mountStopwatchChallenge } from "./stopwatch-challenge";
 
 const COMMUNITY_URL = "https://qm.qq.com/q/6ytGE7qIWQ";
 const HOME_ANNOUNCEMENTS = [
@@ -33,6 +32,7 @@ let settingsInteractionUntil = 0;
 let audioContext = null;
 let communityData = null;
 let communityAdminRendering = false;
+let stopwatchLoader = null;
 
 const DIFFICULTY_PRESETS = {
   easy: { label: "简单", cropSize: 230, candidateCount: 90 },
@@ -203,7 +203,7 @@ async function renderHome() {
           <h2>更多平台</h2>
           <div class="linktree-links">
             ${data.socialLinks.map(link => `
-              <a class="linktree-pill" href="${escapeHtml(link.url)}" target="_blank" rel="noreferrer">
+              <a class="linktree-pill" href="${safeUrl(link.url)}" target="_blank" rel="noreferrer">
                 <span class="pill-text">${escapeHtml(link.title)}</span>
               </a>
             `).join('')}
@@ -216,7 +216,7 @@ async function renderHome() {
           <h2>成员名单</h2>
           <div class="linktree-members">
             ${data.members.map(m => `
-              <a class="member-pill" href="${escapeHtml(m.url)}" target="_blank" rel="noreferrer">
+              <a class="member-pill" href="${safeUrl(m.url)}" target="_blank" rel="noreferrer">
                 <strong>${escapeHtml(m.name)}</strong>
                 <span>${escapeHtml(m.desc)}</span>
               </a>
@@ -248,7 +248,7 @@ async function renderHome() {
           <h2>活动回顾</h2>
           <div class="linktree-gallery">
             ${data.photos.map(p => `
-              <img src="${escapeHtml(p)}" alt="活动照片" loading="lazy" />
+              <img src="${safeUrl(p)}" alt="活动照片" loading="lazy" />
             `).join('')}
           </div>
         </section>` : ''}
@@ -438,7 +438,25 @@ function renderQueue() {
 }
 
 function renderStopwatchChallenge() {
-  mountStopwatchChallenge(app);
+  app.innerHTML = `
+    <main class="stopwatch-page" data-mode="idle">
+      <section class="stopwatch-card stopwatch-card-minimal">
+        <div class="stopwatch-display-wrap">
+          <div class="stopwatch-target">加载中...</div>
+        </div>
+      </section>
+    </main>
+  `;
+  if (!stopwatchLoader) stopwatchLoader = import("./stopwatch-challenge.js");
+  stopwatchLoader
+    .then((mod) => {
+      if (route !== "stopwatch-challenge") return;
+      mod.mountStopwatchChallenge(app);
+    })
+    .catch(() => {
+      if (route !== "stopwatch-challenge") return;
+      app.innerHTML = `<main class="login-shell"><section class="login-panel"><h1>加载失败</h1><p>请刷新后重试</p></section></main>`;
+    });
 }
 
 function renderQueueLeaderboard(items) {
@@ -571,7 +589,7 @@ function renderScoreRecent(items, canDelete = false) {
 async function deleteNoteShooterScore({ id, playerId = "", scope = "" }) {
   if (!id && !playerId) return;
   try {
-    const response = await fetch("/api/note-shooter-scores", {
+    const response = await apiFetch("/api/note-shooter-scores", {
       method: "DELETE",
       headers: { "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8" },
       body: new URLSearchParams({ id, playerId, scope }),
@@ -706,7 +724,7 @@ function renderLogin() {
             <span>主持密码</span>
             <input name="password" type="password" autocomplete="current-password" placeholder="输入主持密码" autofocus />
           </label>
-          ${loginError ? `<div class="login-error">${loginError}</div>` : ""}
+          ${loginError ? `<div class="login-error">${escapeHtml(loginError)}</div>` : ""}
           <button class="primary" type="submit">登录</button>
           <a class="text-link" href="/player">返回玩家页</a>
         </form>
@@ -719,7 +737,7 @@ function renderLogin() {
     const form = new FormData(event.currentTarget);
     loginError = "";
 
-    const response = await fetch("/api/login", {
+    const response = await apiFetch("/api/login", {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
       body: new URLSearchParams({ password: form.get("password") || "" }),
@@ -859,7 +877,7 @@ function renderHost() {
   });
 
   app.querySelector("#logoutButton")?.addEventListener("click", async () => {
-    await fetch("/api/logout", { method: "POST" });
+    await apiFetch("/api/logout", { method: "POST" });
     location.href = "/login";
   });
 
@@ -1043,7 +1061,7 @@ function renderSettings() {
   app.querySelector("#importSettings").addEventListener("click", () => app.querySelector("#importSettingsFile").click());
   app.querySelector("#importSettingsFile").addEventListener("change", importSettingsFile);
   app.querySelector("#logoutButton").addEventListener("click", async () => {
-    await fetch("/api/logout", { method: "POST" });
+    await apiFetch("/api/logout", { method: "POST" });
     location.href = "/login";
   });
 }
@@ -1170,7 +1188,7 @@ function renderHistory(game) {
     <div class="history">
       ${game.history.map((item) => `
         <div class="history-item ${item.result}">
-          <span>${item.result === "correct" ? "✓" : "!"}</span>
+          <span>${item.result === "correct" ? "?" : "!"}</span>
           <strong>${item.name}</strong>
         </div>
       `).join("")}
@@ -1246,14 +1264,14 @@ function checkField(name, label, checked) {
 function renderHealthPanel(health) {
   return `
     <section class="health-panel">
-      <div><span>筛选卡池</span><strong>${health.filteredCards ?? "--"}</strong></div>
-      <div><span>本地缓存</span><strong>${health.cachedSets ?? "--"}/${health.totalCards ?? "--"}</strong></div>
-      <div><span>缓存比例</span><strong>${health.cachePercent ?? "--"}%</strong></div>
-      <div><span>玩家连接</span><strong>${health.roleCounts?.player ?? 0}</strong></div>
-      <div><span>主持连接</span><strong>${health.roleCounts?.host ?? 0}</strong></div>
+      <div><span>筛选卡池</span><strong>${escapeHtml(String(health.filteredCards ?? "--"))}</strong></div>
+      <div><span>本地缓存</span><strong>${escapeHtml(String(health.cachedSets ?? "--"))}/${escapeHtml(String(health.totalCards ?? "--"))}</strong></div>
+      <div><span>缓存比例</span><strong>${escapeHtml(String(health.cachePercent ?? "--"))}%</strong></div>
+      <div><span>玩家连接</span><strong>${escapeHtml(String(health.roleCounts?.player ?? 0))}</strong></div>
+      <div><span>主持连接</span><strong>${escapeHtml(String(health.roleCounts?.host ?? 0))}</strong></div>
       <div><span>下一题预载</span><strong>${health.preloaded ? "就绪" : "等待"}</strong></div>
-      <div><span>人脸框数据</span><strong>${health.faceBoxImages ?? 0}</strong></div>
-      <div><span>当前人脸策略</span><strong>${faceModeLabel(health.effectiveFaceCropMode)}</strong></div>
+      <div><span>人脸框数据</span><strong>${escapeHtml(String(health.faceBoxImages ?? 0))}</strong></div>
+      <div><span>当前人脸策略</span><strong>${escapeHtml(String(faceModeLabel(health.effectiveFaceCropMode)))}</strong></div>
     </section>
   `;
 }
@@ -1421,6 +1439,36 @@ function registerServiceWorker() {
   });
 }
 
+function apiFetch(input, init = {}) {
+  const nextInit = { ...init };
+  const method = String(nextInit.method || "GET").toUpperCase();
+  if (["POST", "PUT", "PATCH", "DELETE"].includes(method)) {
+    const csrf = getCookieValue("bbc_csrf");
+    if (csrf) nextInit.headers = { ...(nextInit.headers || {}), "X-CSRF-Token": csrf };
+  }
+  return fetch(input, nextInit);
+}
+
+function getCookieValue(name) {
+  const cookie = document.cookie || "";
+  const pairs = cookie.split(";").map((item) => item.trim());
+  for (const pair of pairs) {
+    if (!pair.startsWith(`${name}=`)) continue;
+    return decodeURIComponent(pair.slice(name.length + 1));
+  }
+  return "";
+}
+
+let jsonEditorAssetsLoaded = false;
+async function ensureJsonEditorAssets() {
+  if (jsonEditorAssetsLoaded && window.JSONEditor) return;
+  await import("@json-editor/json-editor/src/style.css");
+  const mod = await import("@json-editor/json-editor/dist/jsoneditor.js");
+  window.JSONEditor = window.JSONEditor || mod.default || mod.JSONEditor;
+  if (!window.JSONEditor) throw new Error("JSONEditor load failed");
+  jsonEditorAssetsLoaded = true;
+}
+
 function escapeAttr(value) {
   return String(value).replace(/[&"]/g, (char) => ({ "&": "&amp;", '"': "&quot;" }[char]));
 }
@@ -1541,18 +1589,15 @@ async function renderCommunityAdmin() {
     </main>
   `;
 
-  // Dynamically load JSON Editor from CDN
+  // Dynamically load JSON Editor from CDN with fallback URLs
   if (!window.JSONEditor) {
-    // Load CSS first
-    const link = document.createElement("link");
-    link.rel = "stylesheet";
-    link.href = "https://cdn.jsdelivr.net/npm/@json-editor/json-editor@latest/dist/jsoneditor.min.css";
-    document.head.appendChild(link);
-
-    const script = document.createElement("script");
-    script.src = "https://cdn.jsdelivr.net/npm/@json-editor/json-editor@latest/dist/jsoneditor.min.js";
-    document.head.appendChild(script);
-    await new Promise(resolve => script.onload = resolve);
+    try {
+      await ensureJsonEditorAssets();
+    } catch (error) {
+      alert(error instanceof Error ? error.message : "JSONEditor 资源加载失败");
+      communityAdminRendering = false;
+      return;
+    }
 
     // Monkey-patch translate method to force Chinese for ALL keys
     const origTranslate = window.JSONEditor.prototype.translate;
@@ -1663,7 +1708,7 @@ async function renderCommunityAdmin() {
       const reader = new FileReader();
       reader.onload = async (ev) => {
         const base64 = ev.target.result;
-        const res = await fetch("/api/upload", {
+        const res = await apiFetch("/api/upload", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ image: base64 })
@@ -1694,7 +1739,7 @@ async function renderCommunityAdmin() {
 
     try {
       const parsed = editor.getValue();
-      const res = await fetch("/api/community", {
+      const res = await apiFetch("/api/community", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(parsed)
@@ -1715,6 +1760,21 @@ async function renderCommunityAdmin() {
   });
   communityAdminRendering = false;
 }
+
+function safeUrl(value) {
+  const raw = String(value || "").trim();
+  if (!raw) return "#";
+  try {
+    const url = new URL(raw, location.origin);
+    if (!["http:", "https:"].includes(url.protocol)) return "#";
+    return escapeAttr(url.href);
+  } catch {
+    return "#";
+  }
+}
+
+
+
 
 
 

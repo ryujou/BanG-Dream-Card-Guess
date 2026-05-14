@@ -18,7 +18,7 @@ import {
   arraySetting, numberArraySetting,
   persistedTeamName, roundConfigKey, effectiveFaceCropMode,
 } from "./src/server/config.mjs";
-import { AUTH_COOKIE, HOST_PASSWORD, isAuthenticated, verifyPassword, buildAuthCookie, createAuthSession, getAuthToken, revokeAuthSession } from "./src/server/auth.mjs";
+import { AUTH_COOKIE, CSRF_COOKIE, HOST_PASSWORD, isAuthenticated, verifyPassword, buildAuthCookie, buildCsrfCookie, createAuthSession, createCsrfToken, getAuthToken, getCookie, revokeAuthSession } from "./src/server/auth.mjs";
 import { smartCrop, faceBoxesFor } from "./src/server/crop.mjs";
 import { readCommunityData, writeCommunityData } from "./src/server/community.mjs";
 import { originList, pageUrls, networkState, lanHosts } from "./src/server/network.mjs";
@@ -67,13 +67,24 @@ let roundToken = 0;
 let preparedRound = null;
 let preparedRoundKey = "";
 const clients = new Map();
+const loginAttempts = new Map();
+const LOGIN_RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000;
+const LOGIN_RATE_LIMIT_MAX_ATTEMPTS = 10;
 
 // --- HTTP server ---
 const server = createServer(async (req, res) => {
   const url = new URL(req.url || "/", `http://127.0.0.1`);
+  const originValid = isTrustedOrigin(req);
+
+  if (isMutatingMethod(req.method) && !originValid) {
+    return sendJson(res, { error: "Invalid origin" }, 403);
+  }
+  if (isMutatingMethod(req.method) && requiresCsrfCheck(req, url.pathname) && !hasValidCsrf(req)) {
+    return sendJson(res, { error: "Invalid CSRF token" }, 403);
+  }
 
   // API routes
-  if (url.pathname === "/api/health") return sendJson(res, healthSnapshot());
+  if (url.pathname === "/api/health") return sendJson(res, publicHealthSnapshot());
   if (url.pathname === "/api/network") return sendJson(res, networkState(req));
   if (url.pathname === "/api/stopwatch-settings" && req.method === "GET") {
     return sendJson(res, {
@@ -153,27 +164,37 @@ const server = createServer(async (req, res) => {
     return sendJson(res, { ok: true });
   }
   if (url.pathname === "/api/login" && req.method === "POST") {
+    const loginIp = requestIp(req);
+    if (!checkLoginRateLimit(loginIp)) {
+      return sendJson(res, { ok: false, message: "Too many attempts" }, 429);
+    }
     const body = parseRequestPayload(req, await readRequestBody(req));
     if (verifyPassword(body.password)) {
+      clearLoginRateLimit(loginIp);
       const token = createAuthSession();
-      res.setHeader("Set-Cookie", buildAuthCookie(token, req));
+      const csrfToken = createCsrfToken();
+      res.setHeader("Set-Cookie", [buildAuthCookie(token, req), buildCsrfCookie(csrfToken, req)]);
       return sendJson(res, { ok: true });
     }
     return sendJson(res, { ok: false }, 403);
   }
   if (url.pathname === "/api/logout" && req.method === "POST") {
     revokeAuthSession(getAuthToken(req));
+    res.setHeader("Set-Cookie", [
+      `${AUTH_COOKIE}=; Path=/; HttpOnly; SameSite=Lax; Max-Age=0`,
+      `${CSRF_COOKIE}=; Path=/; SameSite=Lax; Max-Age=0`,
+    ]);
     return sendJson(res, { ok: true });
   }
   if (url.pathname === "/api/qr" && req.method === "GET") {
     const text = url.searchParams.get("text") || "";
     if (!text || text.length > 1024) {
-      res.writeHead(400, { "Content-Type": "text/plain; charset=utf-8" });
+      res.writeHead(400, { ...securityHeaders(), "Content-Type": "text/plain; charset=utf-8" });
       return res.end("Missing or too long QR text");
     }
     try {
       const svg = await QRCode.toString(text, { type: "svg", width: 320, margin: 1, color: { dark: "#334462", light: "#FFFFFFFF" } });
-      res.writeHead(200, { "Content-Type": "image/svg+xml; charset=utf-8", "Cache-Control": "no-cache" });
+      res.writeHead(200, { ...securityHeaders(), "Content-Type": "image/svg+xml; charset=utf-8", "Cache-Control": "no-cache" });
       return res.end(svg);
     } catch { return sendJson(res, { error: "生成失败" }, 500); }
   }
@@ -196,6 +217,10 @@ const server = createServer(async (req, res) => {
 // --- WebSocket ---
 const wss = new WebSocketServer({ server, path: "/ws" });
 wss.on("connection", (ws, req) => {
+  if (!isTrustedWebSocketOrigin(req)) {
+    ws.close(1008, "Invalid origin");
+    return;
+  }
   let authenticated = isAuthenticated(req);
 
   ws.on("message", async (raw) => {
@@ -697,6 +722,19 @@ function healthSnapshot() {
   };
 }
 
+function publicHealthSnapshot() {
+  const health = healthSnapshot();
+  return {
+    totalCards: health.totalCards,
+    filteredCards: health.filteredCards,
+    cachedSets: health.cachedSets,
+    cachePercent: health.cachePercent,
+    roleCounts: health.roleCounts,
+    preloaded: health.preloaded,
+    effectiveFaceCropMode: health.effectiveFaceCropMode,
+  };
+}
+
 function publicState(role) {
   const current = game.current && {
     displayName: ["player", "self"].includes(role) && game.status === "playing" ? "" : game.current.displayName,
@@ -728,12 +766,20 @@ function broadcast() {
 async function proxyBestdori(url, res) {
   const targetPath = url.pathname.replace(/^\/bestdori/, "");
   const target = `${BESTDORI_ORIGIN}${targetPath}`;
-  const response = await fetch(target);
-  res.writeHead(response.status, {
-    "Content-Type": response.headers.get("content-type") || "application/octet-stream",
-    "Cache-Control": "public, max-age=86400",
-  });
-  res.end(Buffer.from(await response.arrayBuffer()));
+  try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 10_000);
+    const response = await fetch(target, { signal: controller.signal });
+    clearTimeout(timeoutId);
+    res.writeHead(response.status, {
+      ...securityHeaders(),
+      "Content-Type": response.headers.get("content-type") || "application/octet-stream",
+      "Cache-Control": "public, max-age=86400",
+    });
+    res.end(Buffer.from(await response.arrayBuffer()));
+  } catch {
+    sendJson(res, { error: "Upstream timeout" }, 504);
+  }
 }
 
 // --- Static file serving ---
@@ -744,23 +790,110 @@ async function serveStatic(requestPath, res) {
   if (filePath.startsWith(publicDir) && existsSync(filePath) && !(await stat(filePath).catch(() => null))?.isDirectory()) return streamFile(filePath, res);
 
   filePath = path.join(distDir, cleanPath === "/" ? "index.html" : cleanPath);
-  if (!filePath.startsWith(distDir)) { res.writeHead(403); return res.end("Forbidden"); }
+  if (!filePath.startsWith(distDir)) { res.writeHead(403, securityHeaders()); return res.end("Forbidden"); }
   if (!existsSync(filePath) || (await stat(filePath).catch(() => null))?.isDirectory()) filePath = path.join(distDir, "index.html");
   streamFile(filePath, res);
 }
 
 function streamFile(filePath, res) {
   const ext = path.extname(filePath).toLowerCase();
-  res.writeHead(200, { "Content-Type": MIME[ext] || "application/octet-stream", "Cache-Control": ext === ".html" ? "no-cache" : "public, max-age=3600" });
+  res.writeHead(200, {
+    ...securityHeaders(),
+    "Content-Type": MIME[ext] || "application/octet-stream",
+    "Cache-Control": ext === ".html" ? "no-cache" : "public, max-age=3600",
+  });
   createReadStream(filePath).on("error", () => {
-    if (!res.headersSent) { res.writeHead(404); res.end("Not found"); }
+    if (!res.headersSent) { res.writeHead(404, securityHeaders()); res.end("Not found"); }
   }).pipe(res);
 }
 
 // --- Helpers ---
 function sendJson(res, value, status = 200) {
-  res.writeHead(status, { "Content-Type": "application/json; charset=utf-8" });
+  res.writeHead(status, { ...securityHeaders(), "Content-Type": "application/json; charset=utf-8" });
   res.end(JSON.stringify(value));
+}
+
+function securityHeaders() {
+  return {
+    "Content-Security-Policy": [
+      "default-src 'self'",
+      "img-src 'self' data: https:",
+      "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net",
+      "script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net",
+      "connect-src 'self' ws: wss:",
+      "font-src 'self' data: https:",
+      "frame-ancestors 'self'",
+      "base-uri 'self'",
+      "object-src 'none'",
+    ].join("; "),
+    "X-Content-Type-Options": "nosniff",
+    "X-Frame-Options": "SAMEORIGIN",
+    "Referrer-Policy": "strict-origin-when-cross-origin",
+    "X-XSS-Protection": "1; mode=block",
+    "Strict-Transport-Security": "max-age=31536000; includeSubDomains",
+  };
+}
+
+function isMutatingMethod(method) {
+  return ["POST", "PUT", "PATCH", "DELETE"].includes(String(method || "").toUpperCase());
+}
+
+function isTrustedOrigin(req) {
+  const origin = req.headers.origin;
+  if (!origin) return true;
+  try {
+    const host = req.headers.host || "";
+    const originUrl = new URL(origin);
+    return originUrl.host === host;
+  } catch {
+    return false;
+  }
+}
+
+function isTrustedWebSocketOrigin(req) {
+  const origin = req.headers.origin;
+  if (!origin) return true;
+  try {
+    const host = req.headers.host || "";
+    return new URL(origin).host === host;
+  } catch {
+    return false;
+  }
+}
+
+function requestIp(req) {
+  const forwarded = String(req.headers["x-forwarded-for"] || "").split(",")[0].trim();
+  return forwarded || req.socket?.remoteAddress || "unknown";
+}
+
+function checkLoginRateLimit(ip) {
+  const now = Date.now();
+  const entry = loginAttempts.get(ip);
+  if (!entry || now - entry.firstAt > LOGIN_RATE_LIMIT_WINDOW_MS) {
+    loginAttempts.set(ip, { firstAt: now, count: 1 });
+    return true;
+  }
+  if (entry.count >= LOGIN_RATE_LIMIT_MAX_ATTEMPTS) return false;
+  entry.count += 1;
+  return true;
+}
+
+function clearLoginRateLimit(ip) {
+  loginAttempts.delete(ip);
+}
+
+function requiresCsrfCheck(req, pathname) {
+  if (pathname === "/api/login") return false;
+  if (pathname === "/api/queue-scores") return false;
+  if (pathname.startsWith("/note-shooter-api/")) return false;
+  return isAuthenticated(req);
+}
+
+function hasValidCsrf(req) {
+  const cookieToken = getCookie(req, CSRF_COOKIE);
+  const headerToken = String(req.headers["x-csrf-token"] || "");
+  if (!cookieToken || !headerToken) return false;
+  return cookieToken === headerToken;
 }
 
 // --- Start ---
