@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.proxyBestdori = proxyBestdori;
 const http_js_1 = require("../utils/http.js");
 // @ts-ignore
-const config_mjs_1 = require("../config.mjs");
+const config_mjs_1 = require("../../../src/server/config.mjs");
 async function proxyBestdori(url, res) {
     const targetPath = url.pathname.replace(/^\/bestdori/, "");
     const target = `${config_mjs_1.BESTDORI_ORIGIN}${targetPath}`;

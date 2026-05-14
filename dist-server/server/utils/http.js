@@ -6,7 +6,7 @@ exports.requestIp = requestIp;
 exports.isMutatingMethod = isMutatingMethod;
 exports.requiresCsrfCheck = requiresCsrfCheck;
 // @ts-ignore - Ignore types for auth.mjs for now
-const auth_mjs_1 = require("../auth.mjs");
+const auth_mjs_1 = require("../../../src/server/auth.mjs");
 function sendJson(res, value, status = 200) {
     res.writeHead(status, { ...securityHeaders(), "Content-Type": "application/json; charset=utf-8" });
     res.end(JSON.stringify(value));

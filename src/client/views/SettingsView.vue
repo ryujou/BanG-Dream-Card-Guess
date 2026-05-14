@@ -101,40 +101,33 @@
           </div>
         </fieldset>
         
-        <label class="toggle-field">
+        <label class="setting-check">
           <input type="checkbox" name="allowRecrop" v-model="draft.allowRecrop">
-          <span class="toggle-switch"></span>
-          <span class="toggle-label">允许重切</span>
+          <span>允许重切</span>
         </label>
-        <label class="toggle-field">
+        <label class="setting-check">
           <input type="checkbox" name="showPlayerRecrop" v-model="draft.showPlayerRecrop">
-          <span class="toggle-switch"></span>
-          <span class="toggle-label">玩家页显示重切</span>
+          <span>玩家页显示重切</span>
         </label>
-        <label class="toggle-field">
+        <label class="setting-check">
           <input type="checkbox" name="soundEnabled" v-model="draft.soundEnabled">
-          <span class="toggle-switch"></span>
-          <span class="toggle-label">开启音效</span>
+          <span>开启音效</span>
         </label>
-        <label class="toggle-field">
+        <label class="setting-check">
           <input type="checkbox" name="showTimer" v-model="draft.showTimer">
-          <span class="toggle-switch"></span>
-          <span class="toggle-label">显示倒计时</span>
+          <span>显示倒计时</span>
         </label>
-        <label class="toggle-field">
+        <label class="setting-check">
           <input type="checkbox" name="revealAfterJudge" v-model="draft.revealAfterJudge">
-          <span class="toggle-switch"></span>
-          <span class="toggle-label">判定后自动揭晓</span>
+          <span>判定后自动揭晓</span>
         </label>
-        <label class="toggle-field">
+        <label class="setting-check">
           <input type="checkbox" name="streakBonus" v-model="draft.streakBonus">
-          <span class="toggle-switch"></span>
-          <span class="toggle-label">连击加分</span>
+          <span>连击加分</span>
         </label>
-        <label class="toggle-field">
+        <label class="setting-check">
           <input type="checkbox" name="autoNext" v-model="draft.autoNext">
-          <span class="toggle-switch"></span>
-          <span class="toggle-label">自动下一题</span>
+          <span>自动下一题</span>
         </label>
         
         <div class="settings-actions">

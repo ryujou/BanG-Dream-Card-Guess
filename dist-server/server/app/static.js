@@ -9,7 +9,7 @@ const node_path_1 = __importDefault(require("node:path"));
 const node_fs_1 = require("node:fs");
 const promises_1 = require("node:fs/promises");
 // @ts-ignore
-const config_mjs_1 = require("../config.mjs");
+const config_mjs_1 = require("../../../src/server/config.mjs");
 const http_js_1 = require("../utils/http.js");
 async function serveStatic(requestUrl, res, publicDir, distDir) {
     const cleanPath = decodeURIComponent(requestUrl.split("?")[0]);

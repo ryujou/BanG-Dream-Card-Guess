@@ -1,7 +1,7 @@
 import type { ServerResponse } from "node:http";
 import { securityHeaders, sendJson } from "../utils/http.js";
 // @ts-ignore
-import { BESTDORI_ORIGIN } from "../config.mjs";
+import { BESTDORI_ORIGIN } from "../../../src/server/config.mjs";
 
 export async function proxyBestdori(url: URL, res: ServerResponse): Promise<void> {
   const targetPath = url.pathname.replace(/^\/bestdori/, "");
