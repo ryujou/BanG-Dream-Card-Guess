@@ -63,9 +63,18 @@ const router = createRouter({
       component: () => import('../views/StopwatchChallengeView.vue'),
     },
     {
+      path: '/stopwatch-challenge',
+      redirect: '/games/stopwatch-challenge',
+    },
+    {
       path: '/games/bang-klotski',
       name: 'bang-klotski',
       component: () => import('../views/BangKlotskiView.vue'),
+    },
+    {
+      path: '/community-admin',
+      name: 'community-admin',
+      component: () => import('../views/CommunityAdminView.vue'),
     },
     {
       path: '/:pathMatch(.*)*',

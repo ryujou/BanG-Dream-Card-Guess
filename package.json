@@ -3,6 +3,7 @@
   "description": "邦邦猜本地摊位互动 Web 游戏",
   "version": "1.5.1",
   "private": true,
+  "type": "module",
   "main": "server.mjs",
   "scripts": {
     "typecheck": "vue-tsc --noEmit",

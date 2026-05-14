@@ -1,17 +1,10 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.sendJson = sendJson;
-exports.securityHeaders = securityHeaders;
-exports.requestIp = requestIp;
-exports.isMutatingMethod = isMutatingMethod;
-exports.requiresCsrfCheck = requiresCsrfCheck;
 // @ts-ignore - Ignore types for auth.mjs for now
-const auth_mjs_1 = require("../../../src/server/auth.mjs");
-function sendJson(res, value, status = 200) {
+import { isAuthenticated } from "../../../src/server/auth.mjs";
+export function sendJson(res, value, status = 200) {
     res.writeHead(status, { ...securityHeaders(), "Content-Type": "application/json; charset=utf-8" });
     res.end(JSON.stringify(value));
 }
-function securityHeaders() {
+export function securityHeaders() {
     return {
         "Content-Security-Policy": [
             "default-src 'self'",
@@ -31,19 +24,19 @@ function securityHeaders() {
         "Strict-Transport-Security": "max-age=31536000; includeSubDomains",
     };
 }
-function requestIp(req) {
+export function requestIp(req) {
     const forwarded = String(req.headers["x-forwarded-for"] || "").split(",")[0].trim();
     return forwarded || req.socket?.remoteAddress || "unknown";
 }
-function isMutatingMethod(method) {
+export function isMutatingMethod(method) {
     return ["POST", "PUT", "PATCH", "DELETE"].includes(String(method || "").toUpperCase());
 }
-function requiresCsrfCheck(req, pathname) {
+export function requiresCsrfCheck(req, pathname) {
     if (pathname === "/api/login")
         return false;
     if (pathname === "/api/queue-scores")
         return false;
     if (pathname.startsWith("/note-shooter-api/"))
         return false;
-    return (0, auth_mjs_1.isAuthenticated)(req);
+    return isAuthenticated(req);
 }
