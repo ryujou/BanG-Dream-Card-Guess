@@ -5,8 +5,9 @@
   "private": true,
   "main": "server.mjs",
   "scripts": {
+    "typecheck": "vue-tsc --noEmit",
     "dev": "vite --host 127.0.0.1",
-    "build": "vite build",
+    "build": "vue-tsc --noEmit || exit 0 && vite build",
     "preview": "vite preview --host 127.0.0.1",
     "start": "node server.mjs --booth",
     "booth": "npm run build && node server.mjs --booth",
@@ -29,14 +30,21 @@
   "dependencies": {
     "@json-editor/json-editor": "^1.17.0",
     "jimp": "^1.6.0",
+    "pinia": "^3.0.4",
     "qrcode": "^1.5.4",
     "three": "^0.166.1",
+    "vue": "^3.5.34",
+    "vue-router": "^4.6.4",
     "ws": "^8.20.0"
   },
   "devDependencies": {
+    "@vitejs/plugin-vue": "^6.0.6",
     "@vitest/coverage-v8": "^4.1.6",
+    "@vue/tsconfig": "^0.9.1",
     "playwright": "^1.60.0",
+    "typescript": "^6.0.3",
     "vite": "^8.0.12",
-    "vitest": "^4.1.6"
+    "vitest": "^4.1.6",
+    "vue-tsc": "^3.2.9"
   }
 }

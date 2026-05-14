@@ -1,4 +1,5 @@
 import { defineConfig } from "vite";
+import vue from "@vitejs/plugin-vue";
 
 const bestdoriProxy = {
   target: "https://bestdori.com",
@@ -7,6 +8,7 @@ const bestdoriProxy = {
 };
 
 export default defineConfig({
+  plugins: [vue()],
   server: {
     proxy: {
       "/bestdori": bestdoriProxy,
