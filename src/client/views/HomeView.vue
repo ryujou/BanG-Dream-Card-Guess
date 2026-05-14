@@ -52,36 +52,33 @@
       </section>
 
       <section v-if="data.members && data.members.length" class="linktree-section">
-        <h2>成员 / 贡献者</h2>
-        <div class="linktree-member-grid">
-          <a v-for="(member, i) in data.members" :key="i" class="linktree-member" :href="safeUrl(member.link) || '#'" :target="member.link ? '_blank' : undefined" :rel="member.link ? 'noreferrer' : undefined">
-            <img class="member-avatar" :src="safeUrl(member.avatar)" :alt="member.name" />
-            <div class="member-info">
-              <strong class="member-name">{{ member.name }}</strong>
-              <span v-if="member.role" class="member-role">{{ member.role }}</span>
-            </div>
+        <h2>成员介绍</h2>
+        <div class="linktree-members">
+          <a v-for="(m, i) in data.members" :key="i" class="member-pill" :href="safeUrl(m.url)" target="_blank" rel="noreferrer">
+            <strong>{{ m.name }}</strong>
+            <span>{{ m.desc }}</span>
           </a>
         </div>
       </section>
 
       <section v-if="data.events && data.events.length" class="linktree-section">
         <h2>近期活动</h2>
-        <div class="linktree-event-list">
-          <article v-for="(event, i) in data.events" :key="i" class="linktree-event">
-            <div class="event-date">{{ event.date }}</div>
-            <h3 class="event-title">{{ event.title }}</h3>
-            <p v-if="event.description" class="event-desc">{{ event.description }}</p>
-          </article>
+        <div class="linktree-events">
+          <div v-for="(e, i) in data.events" :key="i" class="event-box">
+            <div class="event-box-header">
+              <span class="event-date">{{ e.date }}</span>
+              <span class="event-location">{{ e.location }}</span>
+            </div>
+            <strong>{{ e.title }}</strong>
+            <p>{{ e.desc }}</p>
+          </div>
         </div>
       </section>
 
       <section v-if="data.photos && data.photos.length" class="linktree-section">
-        <h2>活动返图</h2>
-        <div class="linktree-photo-grid">
-          <a v-for="(photo, i) in data.photos" :key="i" class="photo-card" :href="safeUrl(photo.url)" target="_blank" rel="noreferrer">
-            <img :src="safeUrl(photo.url)" :alt="photo.caption || '活动照片'" loading="lazy" />
-            <span v-if="photo.caption" class="photo-caption">{{ photo.caption }}</span>
-          </a>
+        <h2>活动回顾</h2>
+        <div class="linktree-gallery">
+          <img v-for="(p, i) in data.photos" :key="i" :src="safeUrl(p)" alt="活动照片" loading="lazy" />
         </div>
       </section>
 
