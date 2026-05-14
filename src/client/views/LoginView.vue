@@ -27,15 +27,11 @@
 import { ref } from 'vue';
 import { useRoute } from 'vue-router';
 import { apiFetch } from '../api/http';
+import { safeNextPath } from '../utils/guards';
 
 const route = useRoute();
 const password = ref("");
 const loginError = ref("");
-
-function safeNextPath(value: string | null): string {
-  const next = String(value || "/host");
-  return next.startsWith("/") && !next.startsWith("//") ? next : "/host";
-}
 
 async function handleLogin() {
   loginError.value = "";

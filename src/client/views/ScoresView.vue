@@ -75,6 +75,7 @@
 import { ref, computed, onMounted, onUnmounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { apiFetch } from '../api/http';
+import { formatQueueDuration, formatQueueTime } from '../utils/format';
 
 const router = useRouter();
 
@@ -88,17 +89,6 @@ let queueScoreEvents: EventSource | null = null;
 const leaderboard = computed(() => queueScores.value?.leaderboard || []);
 const recent = computed(() => queueScores.value?.recent || []);
 const updatedText = computed(() => queueScoresUpdatedAt.value ? new Date(queueScoresUpdatedAt.value).toLocaleTimeString() : "等待同步");
-
-function formatQueueDuration(value: any) {
-  const seconds = Math.max(0, Math.floor(Number(value) || 0));
-  return seconds ? `${seconds}s` : "-";
-}
-
-function formatQueueTime(value: any) {
-  const time = Number(value);
-  if (!Number.isFinite(time)) return "-";
-  return new Date(time).toLocaleTimeString();
-}
 
 async function loadQueueScores(force = false) {
   if (queueScoresLoading.value && !force) return;

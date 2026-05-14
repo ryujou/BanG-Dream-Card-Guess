@@ -13,7 +13,9 @@
     "booth": "npm run build && node server.mjs --booth",
     "solo": "npm run build && node server.mjs --solo",
     "cache-cards": "node scripts/cache-cards.mjs",
-    "detect-faces": "python scripts/detect-faces.py"
+    "detect-faces": "python scripts/detect-faces.py",
+    "test": "vitest run",
+    "test:e2e": "playwright test"
   },
   "license": "MIT",
   "contributors": [
@@ -38,9 +40,12 @@
     "ws": "^8.20.0"
   },
   "devDependencies": {
+    "@playwright/test": "^1.60.0",
     "@vitejs/plugin-vue": "^6.0.6",
     "@vitest/coverage-v8": "^4.1.6",
+    "@vue/test-utils": "^2.4.10",
     "@vue/tsconfig": "^0.9.1",
+    "jsdom": "^29.1.1",
     "playwright": "^1.60.0",
     "typescript": "^6.0.3",
     "vite": "^8.0.12",

@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import { ref, readonly } from 'vue';
-import type { AppSnapshot, ServerMessage } from '../types/websocket';
+import type { AppSnapshot, ServerMessage } from '../../shared/types/websocket';
 
 export const useGameStore = defineStore('game', () => {
   const snapshot = ref<AppSnapshot | null>(null);

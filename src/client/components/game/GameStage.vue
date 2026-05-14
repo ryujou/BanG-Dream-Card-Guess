@@ -22,6 +22,7 @@
 
 <script setup lang="ts">
 import { computed, watch, ref } from 'vue';
+import { statusText as getStatusText } from '../../utils/stateText';
 
 const props = defineProps<{
   game?: any;
@@ -52,13 +53,6 @@ watch(() => cropKey.value, (newKey, oldKey) => {
 const crop = computed(() => props.game?.current?.crop);
 
 const statusText = computed(() => {
-  const statusMap: Record<string, string> = {
-    idle: "READY",
-    loading: "LOADING",
-    playing: "PLAYING",
-    revealed: "ANSWER",
-    finished: "DONE",
-  };
-  return statusMap[props.game?.status || ""] || "READY";
+  return getStatusText(props.game?.status);
 });
 </script>

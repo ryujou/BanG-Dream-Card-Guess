@@ -91,22 +91,11 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
+import { safeUrl } from '../utils/image';
 
 const COMMUNITY_URL = "https://qm.qq.com/q/6ytGE7qIWQ";
 
 const data = ref<any>({ aboutUs: "", members: [], events: [], socialLinks: [], photos: [] });
-
-function safeUrl(value: string | undefined): string {
-  const raw = String(value || "").trim();
-  if (!raw) return "#";
-  try {
-    const url = new URL(raw, window.location.origin);
-    if (!["http:", "https:"].includes(url.protocol)) return "#";
-    return url.href;
-  } catch {
-    return "#";
-  }
-}
 
 onMounted(async () => {
   try {

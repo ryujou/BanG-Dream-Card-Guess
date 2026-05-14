@@ -61,36 +61,22 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
+import { loadWifiQr, saveWifiQr, wifiQrText } from '../utils/storage';
 
 const qrInfo = ref<any>(null);
 const qrLoading = ref(false);
 const qrError = ref("");
 
-function loadWifiQr() {
-  try {
-    return { ssid: "", password: "", auth: "WPA", ...JSON.parse(localStorage.getItem("bangbangcai:wifi") || "{}") };
-  } catch {
-    return { ssid: "", password: "", auth: "WPA" };
-  }
-}
-
 const wifiQr = ref(loadWifiQr());
 const wifiForm = ref({ ...wifiQr.value });
 
-function escapeWifi(str: string) {
-  return str.replace(/([\\;:])/g, "\\$1");
-}
-
 const wifiText = computed(() => {
-  if (!wifiQr.value.ssid) return "";
-  const auth = wifiQr.value.auth === "nopass" ? "nopass" : "WPA";
-  const pass = auth === "nopass" ? "" : escapeWifi(wifiQr.value.password);
-  return `WIFI:T:${auth};S:${escapeWifi(wifiQr.value.ssid)};P:${pass};;`;
+  return wifiQrText(wifiQr.value);
 });
 
 function handleWifiForm() {
   wifiQr.value = { ...wifiForm.value };
-  localStorage.setItem("bangbangcai:wifi", JSON.stringify(wifiQr.value));
+  saveWifiQr(wifiQr.value);
 }
 
 const appMode = computed(() => qrInfo.value?.appMode || "booth");
