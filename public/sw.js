@@ -1,8 +1,10 @@
-const CACHE_NAME = "bangbangcai-v23";
+const CACHE_NAME = "bangbangcai-v24";
 const PRECACHE_URLS = [
   "/",
   "/player",
   "/note-shooter",
+  "/games/stopwatch-challenge",
+  "/stopwatch-challenge",
   "/note-shooter/bangdream.html",
   "/scores",
   "/solo",

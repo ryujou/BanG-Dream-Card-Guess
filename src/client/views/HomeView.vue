@@ -24,7 +24,7 @@
           <span class="pill-icon">🎍</span>
           <span class="pill-text">打发时间: 音符射手</span>
         </router-link>
-        <router-link class="linktree-pill" to="/stopwatch-challenge">
+        <router-link class="linktree-pill" to="/games/stopwatch-challenge">
           <span class="pill-icon">⏱</span>
           <span class="pill-text">掐秒表挑战</span>
         </router-link>

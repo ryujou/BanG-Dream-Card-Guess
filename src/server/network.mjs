@@ -32,6 +32,7 @@ export function pageUrls(origin) {
   return {
     player: `${origin}/player`,
     noteShooter: `${origin}/note-shooter`,
+    stopwatchChallenge: `${origin}/games/stopwatch-challenge`,
     queue: `${origin}/note-shooter`,
     scores: `${origin}/scores`,
     login: `${origin}/login`,

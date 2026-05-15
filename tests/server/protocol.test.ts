@@ -105,4 +105,90 @@ describe('Server Protocol Tests', () => {
       ws.on('error', reject);
     });
   });
+
+  it('WS: unauthenticated player cannot execute host-only start command', async () => {
+    const ws = new WebSocket(WS_URL);
+    await waitForOpen(ws);
+    ws.send(JSON.stringify({ type: 'hello', role: 'player' }));
+    await waitForType(ws, 'state');
+    ws.send(JSON.stringify({ type: 'command', command: 'start', payload: {} }));
+    const msg = await waitForType(ws, 'error');
+    expect(msg).toHaveProperty('type', 'error');
+    expect(msg.message).toBeTruthy();
+    ws.close();
+  });
+
+  it('WS: authenticated commands keep state message shape stable', async () => {
+    const ws = new WebSocket(WS_URL);
+    await waitForOpen(ws);
+    ws.send(JSON.stringify({ type: 'hello', role: 'host' }));
+    await waitForType(ws, 'authRequired');
+    ws.send(JSON.stringify({ type: 'auth', password: 'test-password' }));
+    const auth = await waitForType(ws, 'authResult');
+    expect(auth.ok).toBe(true);
+    await waitForType(ws, 'state');
+
+    ws.send(JSON.stringify({ type: 'command', command: 'settings', payload: { autoNext: false, roundSeconds: 60 } }));
+    const settingsState = await waitForType(ws, 'state');
+    expectStateShape(settingsState);
+    expect(settingsState.state.settings).toHaveProperty('roundSeconds');
+
+    ws.send(JSON.stringify({ type: 'command', command: 'start', payload: {} }));
+    const startState = await waitForType(ws, 'state', 10000);
+    expectStateShape(startState);
+    expect(startState.state.game).toHaveProperty('status');
+
+    ws.send(JSON.stringify({ type: 'command', command: 'next', payload: {} }));
+    const nextState = await waitForType(ws, 'state', 10000);
+    expectStateShape(nextState);
+
+    ws.send(JSON.stringify({ type: 'command', command: 'reveal', payload: {} }));
+    const revealState = await waitForType(ws, 'state');
+    expectStateShape(revealState);
+    expect(revealState.state.game.status).toBe('revealed');
+
+    ws.send(JSON.stringify({ type: 'command', command: 'reset', payload: {} }));
+    const resetState = await waitForType(ws, 'state');
+    expectStateShape(resetState);
+    expect(resetState.state.game.status).toBe('idle');
+    ws.close();
+  }, 20000);
 });
+
+function waitForOpen(ws) {
+  return new Promise((resolve, reject) => {
+    ws.once('open', resolve);
+    ws.once('error', reject);
+  });
+}
+
+function waitForType(ws, type, timeout = 4000) {
+  return new Promise((resolve, reject) => {
+    const timer = setTimeout(() => {
+      ws.off('message', onMessage);
+      reject(new Error(`Timeout waiting for ${type}`));
+    }, timeout);
+    function onMessage(data) {
+      const msg = JSON.parse(data.toString());
+      if (msg.type !== type) return;
+      clearTimeout(timer);
+      ws.off('message', onMessage);
+      resolve(msg);
+    }
+    ws.on('message', onMessage);
+    ws.once('error', reject);
+  });
+}
+
+function expectStateShape(msg) {
+  expect(msg).toHaveProperty('type', 'state');
+  expect(msg.state).toHaveProperty('appMode');
+  expect(msg.state).toHaveProperty('settings');
+  expect(msg.state).toHaveProperty('meta');
+  expect(msg.state).toHaveProperty('health');
+  expect(msg.state).toHaveProperty('game');
+  expect(msg.state.game).toHaveProperty('status');
+  expect(msg.state.game).toHaveProperty('score');
+  expect(msg.state.game).toHaveProperty('streak');
+  expect(msg.state.game).toHaveProperty('history');
+}

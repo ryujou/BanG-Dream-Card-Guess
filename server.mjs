@@ -34,6 +34,18 @@ import {
   parseRequestPayload, readRequestBody,
   normalizeNoteShooterPlayerId, normalizeQueueUsername,
 } from "./src/server/scores.mjs";
+import {
+  createInitialGameState,
+  markRoundLoadFailed,
+  markRoundLoading,
+  markRoundPlaying,
+} from "./dist-server/server/game/state.js";
+import { undoHistory } from "./dist-server/server/game/history.js";
+import { applyRoundResult } from "./dist-server/server/game/scoring.js";
+import { sanitizeSettings } from "./dist-server/server/game/settings.js";
+import { isPlayerAllowedCommand, isSoloAllowedCommand, validateCommandPayload } from "./dist-server/server/game/commands.js";
+import { applyGameCommand } from "./dist-server/server/game/reducer.js";
+import { createPublicSnapshot } from "./dist-server/server/game/snapshot.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const distDir = path.join(__dirname, "dist");
@@ -56,14 +68,38 @@ const settings = { ...defaultSettings, ...(persistedConfig.settings || {}) };
 const persistLock = { timer: null };
 
 // --- Game state ---
-const game = {
-  status: "idle", leftSeconds: settings.roundSeconds, loading: false,
-  score: 0, streak: 0, total: 0, recrops: 0,
-  cropHistory: [], recentCards: [], recentCharacters: [], undoStack: [],
-  current: null, history: [],
-  teams: { A: { name: persistedTeamName?.("A", "A 队") || "A 队", score: 0 }, B: { name: persistedTeamName?.("B", "B 队") || "B 队", score: 0 } },
-  roundKey: "",
+const GAME_MESSAGES = {
+  correct: "回答正确",
+  wrong: "回答错误",
+  timeout: "时间到",
+  skip: "已跳过",
+  loading: "加载下一题",
+  recropDone: "已重切",
+  reveal: "答案揭晓",
+  hideAnswer: "答案已隐藏",
+  reset: "已重置",
+  stop: "游戏已停止",
+  emptyGuess: "请输入角色名或昵称",
 };
+const SETTINGS_DEPS = {
+  defaultSettings,
+  difficultyPresets: DIFFICULTY_PRESETS,
+  faceCropModes: FACE_CROP_MODES,
+  bandIds: BAND_OPTIONS.map((b) => b.id),
+  rarities: RARITY_OPTIONS,
+  attributes: ATTRIBUTE_OPTIONS,
+  cardCharacterLimits: CARD_CHARACTER_LIMITS,
+  cardVariants: CARD_VARIANTS,
+  arraySetting,
+  numberArraySetting,
+};
+function currentTeamNames() {
+  return {
+    A: persistedTeamName?.("A", "A 队") || "A 队",
+    B: persistedTeamName?.("B", "B 队") || "B 队",
+  };
+}
+const game = createInitialGameState(settings, currentTeamNames());
 let timer = null;
 let autoNextTimer = null;
 let roundToken = 0;
@@ -264,9 +300,10 @@ wss.on("connection", (ws, req) => {
 // --- Command handler ---
 async function handleCommand(ws, command, payload) {
   const client = clients.get(ws);
-  const soloAllowed = APP_MODE === "solo" && client?.role === "self" && ["start", "next", "recrop", "reveal", "stop", "reset", "selfGuess"].includes(command);
-  const playerAllowed = APP_MODE === "booth" && client?.role === "player" && command === "recrop";
+  const soloAllowed = APP_MODE === "solo" && client?.role === "self" && isSoloAllowedCommand(command);
+  const playerAllowed = APP_MODE === "booth" && client?.role === "player" && isPlayerAllowedCommand(command);
   if (!client?.authenticated && !soloAllowed && !playerAllowed) throw new Error("请先登录主持端");
+  const safePayload = validateCommandPayload(command, payload);
 
   switch (command) {
     case "start":
@@ -277,14 +314,25 @@ async function handleCommand(ws, command, payload) {
     case "skip": finishRound("skip"); break;
     case "undo": undoLastJudgement(); break;
     case "stop": stopGame(); break;
-    case "reveal": clearAutoNext(); game.status = "revealed"; game.message = "答案揭晓"; stopTimer(); broadcast(); break;
-    case "selfGuess": judgeSelfGuess(payload.guess); break;
-    case "hideAnswer": if (game.status === "revealed") game.status = "playing"; game.message = "答案已隐藏"; broadcast(); break;
+    case "reveal": clearAutoNext(); stopTimer(); applyPureCommand(command, safePayload); break;
+    case "selfGuess": judgeSelfGuess(safePayload.guess); break;
+    case "hideAnswer": applyPureCommand(command, safePayload); break;
     case "reset": resetGame(); break;
     case "settings": updateSettings(payload); await saveSettings(); break;
     case "importSettings": updateSettings(payload); await saveSettings(); break;
     default: throw new Error(`未知命令: ${command}`);
   }
+}
+
+function applyPureCommand(command, payload = {}) {
+  const result = applyGameCommand(game, settings, command, payload, {
+    appMode: APP_MODE,
+    now: Date.now(),
+    teamNames: currentTeamNames(),
+    messages: GAME_MESSAGES,
+  });
+  if (result.handled) broadcast();
+  return result;
 }
 
 // --- Game functions ---
@@ -306,25 +354,8 @@ async function recrop() {
 function finishRound(result) {
   if (!game.current || game.status !== "playing") return;
   clearAutoNext();
-  game.undoStack.unshift(captureUndoState());
-  game.undoStack = game.undoStack.slice(0, 8);
   stopTimer();
-  game.total += 1;
-  game.status = settings.revealAfterJudge ? "revealed" : "finished";
-  if (result === "correct") {
-    const bonus = settings.streakBonus ? game.streak : 0;
-    const points = settings.correctPoints + bonus;
-    game.score += points;
-    game.streak += 1;
-    if (settings.mode === "versus") game.teams[settings.currentTeam].score += points;
-    game.message = "回答正确";
-  } else {
-    game.score = Math.max(0, game.score - settings.wrongPenalty);
-    game.streak = 0;
-    game.message = result === "wrong" ? "回答错误" : result === "timeout" ? "时间到" : "已跳过";
-  }
-  game.history.unshift({ result, name: game.current.displayName, team: settings.currentTeam, at: Date.now() });
-  game.history = game.history.slice(0, 12);
+  applyRoundResult(game, settings, result, Date.now(), GAME_MESSAGES);
   broadcast();
   if (settings.autoNext) {
     const token = roundToken;
@@ -335,27 +366,11 @@ function finishRound(result) {
   }
 }
 
-function captureUndoState() {
-  return {
-    status: game.status, leftSeconds: game.leftSeconds, loading: game.loading,
-    score: game.score, streak: game.streak, total: game.total,
-    recrops: game.recrops,
-    cropHistory: game.cropHistory.map((item) => ({ ...item })),
-    recentCards: [...game.recentCards], recentCharacters: [...game.recentCharacters],
-    current: game.current,
-    history: game.history.map((item) => ({ ...item })),
-    teams: { A: { ...game.teams.A }, B: { ...game.teams.B } },
-    message: game.message,
-  };
-}
-
 function undoLastJudgement() {
-  const undo = game.undoStack.shift();
-  if (!undo) return;
+  if (!game.undoStack.length) return;
   stopTimer();
   clearAutoNext();
-  Object.assign(game, undo);
-  game.undoStack = game.undoStack.slice(0, 8);
+  undoHistory(game);
   if (game.status === "playing") startTimer();
   broadcast();
 }
@@ -363,97 +378,48 @@ function undoLastJudgement() {
 function stopGame() {
   stopTimer();
   clearAutoNext();
-  game.status = "stopped";
-  game.message = "游戏已停止";
-  game.current = null;
-  broadcast();
+  applyPureCommand("stop");
 }
 
 function judgeSelfGuess(guess) {
-  if (APP_MODE !== "solo" || !game.current || game.status !== "playing") return;
-  const answer = normalizeAnswer(guess);
-  if (!answer) { game.message = "请输入角色名或昵称"; broadcast(); return; }
-  const match = game.current.acceptedAnswers.some((accepted) => accepted.toLowerCase() === answer.toLowerCase());
-  finishRound(match ? "correct" : "wrong");
-}
-
-function normalizeAnswer(value) {
-  return String(value || "").trim();
+  const beforeStatus = game.status;
+  clearAutoNext();
+  const result = applyGameCommand(game, settings, "selfGuess", { guess }, {
+    appMode: APP_MODE,
+    now: Date.now(),
+    teamNames: currentTeamNames(),
+    messages: GAME_MESSAGES,
+  });
+  if (!result.handled) return;
+  if (result.result) {
+    stopTimer();
+    if (settings.autoNext && beforeStatus === "playing") {
+      const token = roundToken;
+      autoNextTimer = setTimeout(() => {
+        autoNextTimer = null;
+        if (token === roundToken && (game.status === "revealed" || game.status === "finished")) startRound();
+      }, settings.autoNextDelay);
+    }
+  }
+  broadcast();
 }
 
 function resetGame() {
   stopTimer();
   clearAutoNext();
-  game.status = "idle";
-  game.score = 0;
-  game.streak = 0;
-  game.total = 0;
-  game.current = null;
-  game.history = [];
-  game.undoStack = [];
-  game.recrops = 0;
-  game.cropHistory = [];
-  game.recentCards = [];
-  game.recentCharacters = [];
-  game.teams = { A: { name: persistedTeamName?.("A", "A 队") || "A 队", score: 0 }, B: { name: persistedTeamName?.("B", "B 队") || "B 队", score: 0 } };
-  game.message = "已重置";
-  broadcast();
+  applyPureCommand("reset");
 }
 
 async function updateSettings(next) {
-  const prevDifficulty = settings.difficulty;
-  const prevSolo = settings.mode;
-
-  if (next.mode !== undefined) settings.mode = ["single", "versus"].includes(next.mode) ? next.mode : settings.mode;
-  if (next.difficulty !== undefined) settings.difficulty = ["easy", "normal", "hard"].includes(next.difficulty) ? next.difficulty : settings.difficulty;
-  if (next.faceCropMode !== undefined) settings.faceCropMode = FACE_CROP_MODES.includes(next.faceCropMode) ? next.faceCropMode : settings.faceCropMode;
-  if (next.roundSeconds !== undefined) settings.roundSeconds = Math.max(5, Math.min(600, Number(next.roundSeconds) || settings.roundSeconds));
-  if (next.questionsPerPlayer !== undefined) settings.questionsPerPlayer = Math.max(1, Math.min(50, Number(next.questionsPerPlayer) || settings.questionsPerPlayer));
-  if (next.cropSize !== undefined) settings.cropSize = Math.max(60, Math.min(260, Number(next.cropSize) || settings.cropSize));
-  if (next.candidateCount !== undefined) settings.candidateCount = Math.max(10, Math.min(500, Number(next.candidateCount) || settings.candidateCount));
-  if (next.maxRecrops !== undefined) settings.maxRecrops = Math.max(0, Math.min(10, Number(next.maxRecrops) || 0));
-  if (next.correctPoints !== undefined) settings.correctPoints = Math.max(0, Number(next.correctPoints) || 0);
-  if (next.wrongPenalty !== undefined) settings.wrongPenalty = Math.max(0, Number(next.wrongPenalty) || 0);
-  if (next.autoNextDelay !== undefined) settings.autoNextDelay = Math.max(500, Math.min(30000, Number(next.autoNextDelay) || 1800));
-  if (next.stopwatchTargetSeconds !== undefined) {
-    const target = Number(next.stopwatchTargetSeconds);
-    if (Number.isFinite(target)) settings.stopwatchTargetSeconds = Math.max(1, Math.min(99.99, target));
-  }
-  if (next.stopwatchToleranceSeconds !== undefined) {
-    const tolerance = Number(next.stopwatchToleranceSeconds);
-    if (Number.isFinite(tolerance)) settings.stopwatchToleranceSeconds = Math.max(0.01, Math.min(99.99, tolerance));
-  }
-  if (settings.stopwatchToleranceSeconds > settings.stopwatchTargetSeconds) {
-    settings.stopwatchToleranceSeconds = settings.stopwatchTargetSeconds;
-  }
-  for (const key of ["allowRecrop", "showPlayerRecrop", "soundEnabled", "streakBonus", "showTimer", "revealAfterJudge", "autoNext"]) {
-    if (next[key] !== undefined) settings[key] = !!next[key];
-  }
-  if (next.cardBands !== undefined) settings.cardBands = arraySetting(next.cardBands, defaultSettings.cardBands, BAND_OPTIONS.map((b) => b.id));
-  if (next.cardRarities !== undefined) settings.cardRarities = numberArraySetting(next.cardRarities, defaultSettings.cardRarities, RARITY_OPTIONS);
-  if (next.cardAttributes !== undefined) settings.cardAttributes = arraySetting(next.cardAttributes, defaultSettings.cardAttributes, ATTRIBUTE_OPTIONS);
-  if (next.cardCharacterLimits !== undefined) settings.cardCharacterLimits = arraySetting(next.cardCharacterLimits, defaultSettings.cardCharacterLimits, CARD_CHARACTER_LIMITS);
-  if (next.cardVariants !== undefined) settings.cardVariants = arraySetting(next.cardVariants, defaultSettings.cardVariants, CARD_VARIANTS);
-  if (next.avoidRecentCards !== undefined) settings.avoidRecentCards = Math.max(0, Math.min(200, Number(next.avoidRecentCards) || 0));
-  if (next.avoidRecentCharacters !== undefined) settings.avoidRecentCharacters = Math.max(0, Math.min(100, Number(next.avoidRecentCharacters) || 0));
-
   if (next.teams) {
     if (next.teams.A?.name !== undefined) game.teams.A.name = String(next.teams.A.name).trim().slice(0, 20) || "A 队";
     if (next.teams.B?.name !== undefined) game.teams.B.name = String(next.teams.B.name).trim().slice(0, 20) || "B 队";
   }
-  if (next.currentTeam !== undefined) settings.currentTeam = ["A", "B"].includes(next.currentTeam) ? next.currentTeam : settings.currentTeam;
-
-  const diffChanged = prevDifficulty !== settings.difficulty;
-  const modeChanged = prevSolo !== settings.mode;
-
-  if (diffChanged) {
-    const preset = DIFFICULTY_PRESETS[settings.difficulty];
-    if (preset) { settings.cropSize = preset.cropSize; settings.candidateCount = preset.candidateCount; }
-  }
+  const { difficultyChanged, modeChanged } = sanitizeSettings(settings, next, SETTINGS_DEPS);
 
   broadcast();
 
-  if (diffChanged || modeChanged) { preparedRound = null; stopTimer(); clearAutoNext(); game.status = "idle"; game.current = null; game.message = "配置已更新，题目已重置"; broadcast(); }
+  if (difficultyChanged || modeChanged) { preparedRound = null; stopTimer(); clearAutoNext(); game.status = "idle"; game.current = null; game.message = "配置已更新，题目已重置"; broadcast(); }
 }
 
 async function saveSettings() {
@@ -658,13 +624,7 @@ async function startRound() {
   clearAutoNext();
   stopTimer();
 
-  game.status = "loading";
-  game.loading = true;
-  game.leftSeconds = settings.roundSeconds;
-  game.recrops = 0;
-  game.cropHistory = [];
-  game.current = null;
-  game.message = "加载下一题";
+  markRoundLoading(game, settings, "加载下一题");
   broadcast();
 
   let round = null;
@@ -672,9 +632,7 @@ async function startRound() {
     round = await takePreparedRound() || await createRound();
   } catch (error) {
     if (token === roundToken) {
-      game.status = "idle";
-      game.loading = false;
-      game.message = error instanceof Error ? error.message : "题目加载失败";
+      markRoundLoadFailed(game, error instanceof Error ? error.message : "题目加载失败");
       broadcast();
     }
     throw error;
@@ -683,11 +641,7 @@ async function startRound() {
 
   rememberRound(round);
   rememberCrop(round.crop);
-  game.current = round;
-  game.status = "playing";
-  game.loading = false;
-  game.leftSeconds = settings.roundSeconds;
-  game.message = "答题中";
+  markRoundPlaying(game, settings, round, "答题中");
   broadcast();
   startTimer();
   prepareNextRound();
@@ -748,19 +702,14 @@ function publicHealthSnapshot() {
  * @returns {AppSnapshot}
  */
 function publicState(role) {
-  const current = game.current && {
-    displayName: ["player", "self"].includes(role) && game.status === "playing" ? "" : game.current.displayName,
-    acceptedAnswers: role === "host" ? game.current.acceptedAnswers : [],
-    imageUrl: game.current.imageUrl, imageWidth: game.current.imageWidth, imageHeight: game.current.imageHeight,
-    crop: game.current.crop,
-  };
-  return {
+  return createPublicSnapshot({
     appMode: APP_MODE,
+    role,
     settings,
     meta: { bands: BAND_OPTIONS, rarities: RARITY_OPTIONS, attributes: ATTRIBUTE_OPTIONS, difficultyPresets: DIFFICULTY_PRESETS, faceCropModes: FACE_CROP_MODES },
     health: healthSnapshot(),
-    game: { ...game, current, cropHistory: undefined, recentCards: undefined, recentCharacters: undefined, undoStack: undefined, canUndo: game.undoStack.length > 0, loading: game.loading },
-  };
+    game,
+  });
 }
 
 function sendState(ws) {

@@ -179,7 +179,7 @@ async function renderHome() {
             <span class="pill-icon">🎍</span>
             <span class="pill-text">打发时间: 音符射手</span>
           </a>
-          <a class="linktree-pill" href="/stopwatch-challenge">
+          <a class="linktree-pill" href="/games/stopwatch-challenge">
             <span class="pill-icon">⏱</span>
             <span class="pill-text">掐秒表挑战</span>
           </a>
@@ -1772,7 +1772,6 @@ function safeUrl(value) {
     return "#";
   }
 }
-
 
 
 
