@@ -4,7 +4,7 @@ import WebSocket from 'ws';
 
 describe('Server Protocol Tests', () => {
   let serverProcess;
-  const PORT = 5174;
+  const PORT = 17000 + Math.floor(Math.random() * 1000);
   const BASE_URL = `http://127.0.0.1:${PORT}`;
   const WS_URL = `ws://127.0.0.1:${PORT}/ws`;
   
@@ -16,8 +16,7 @@ describe('Server Protocol Tests', () => {
     serverProcess.stdout.on('data', (d) => console.log('SERVER STDOUT:', d.toString()));
     serverProcess.stderr.on('data', (d) => console.log('SERVER STDERR:', d.toString()));
 
-    // wait for server to start
-    await new Promise(resolve => setTimeout(resolve, 2000));
+    await waitForServer(`${BASE_URL}/api/health`);
   });
 
   afterAll(() => {
@@ -153,6 +152,27 @@ describe('Server Protocol Tests', () => {
     expect(resetState.state.game.status).toBe('idle');
     ws.close();
   }, 20000);
+
+  it('WS: command errors keep protocol shape and connection remains usable', async () => {
+    const ws = new WebSocket(WS_URL);
+    await waitForOpen(ws);
+    ws.send(JSON.stringify({ type: 'hello', role: 'host' }));
+    await waitForType(ws, 'authRequired');
+    ws.send(JSON.stringify({ type: 'auth', password: 'test-password' }));
+    await waitForType(ws, 'authResult');
+    await waitForType(ws, 'state');
+
+    ws.send(JSON.stringify({ type: 'command', command: 'not-a-command', payload: {} }));
+    const error = await waitForType(ws, 'error');
+    expect(error).toHaveProperty('type', 'error');
+    expect(typeof error.message).toBe('string');
+
+    ws.send(JSON.stringify({ type: 'command', command: 'reset', payload: {} }));
+    const resetState = await waitForType(ws, 'state');
+    expectStateShape(resetState);
+    expect(resetState.state.game.status).toBe('idle');
+    ws.close();
+  });
 });
 
 function waitForOpen(ws) {
@@ -160,6 +180,20 @@ function waitForOpen(ws) {
     ws.once('open', resolve);
     ws.once('error', reject);
   });
+}
+
+async function waitForServer(url, timeout = 10000) {
+  const deadline = Date.now() + timeout;
+  while (Date.now() < deadline) {
+    try {
+      const res = await fetch(url);
+      if (res.ok) return;
+    } catch {
+      // retry until timeout
+    }
+    await new Promise(resolve => setTimeout(resolve, 100));
+  }
+  throw new Error(`Timeout waiting for server at ${url}`);
 }
 
 function waitForType(ws, type, timeout = 4000) {

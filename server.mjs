@@ -1,12 +1,9 @@
 // BanG Dream! Card Guess - HTTP/WebSocket server
 import { createServer } from "node:http";
-import { readFileSync, existsSync, createReadStream } from "node:fs";
 import { mkdir, stat, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { randomBytes } from "node:crypto";
-import { Jimp } from "jimp";
-import QRCode from "qrcode";
 import { WebSocketServer } from "ws";
 
 import { sendJson, securityHeaders, requestIp, isMutatingMethod, requiresCsrfCheck } from "./dist-server/server/utils/http.js";
@@ -14,26 +11,20 @@ import { proxyBestdori } from "./dist-server/server/http/bestdoriProxy.js";
 import { serveStatic, streamFile } from "./dist-server/server/app/static.js";
 import {
   dataDir, settingsStorePath, faceBoxesStorePath,
-  BESTDORI_ORIGIN, BESTDORI_BASE,
-  BAND_OPTIONS, BAND_BY_CHARACTER, RARITY_OPTIONS, ATTRIBUTE_OPTIONS,
+  BESTDORI_ORIGIN,
+  BAND_OPTIONS, RARITY_OPTIONS, ATTRIBUTE_OPTIONS,
   DIFFICULTY_PRESETS, FACE_CROP_MODES, CARD_CHARACTER_LIMITS, CARD_VARIANTS, MIME, unique,
-  defaultSettings, readPersistedConfig, readFaceBoxStore,
+  defaultSettings, readPersistedConfig,
   arraySetting, numberArraySetting,
   persistedTeamName, roundConfigKey, effectiveFaceCropMode,
 } from "./src/server/config.mjs";
 import { AUTH_COOKIE, CSRF_COOKIE, HOST_PASSWORD, isAuthenticated, verifyPassword, buildAuthCookie, buildCsrfCookie, createAuthSession, createCsrfToken, getAuthToken, getCookie, revokeAuthSession } from "./src/server/auth.mjs";
-import { smartCrop, faceBoxesFor } from "./src/server/crop.mjs";
 import { readCommunityData, writeCommunityData } from "./src/server/community.mjs";
-import { originList, pageUrls, networkState, lanHosts } from "./src/server/network.mjs";
 import {
-  readQueueScores, writeQueueScores, readNoteShooterScores, writeNoteShooterScores,
-  handleQueueScoreEvents, broadcastQueueScores,
-  handleNoteShooterScoreEvents, broadcastNoteShooterScores,
-  handleNoteShooterApi,
-  queueScoreState, noteShooterScoreState,
   parseRequestPayload, readRequestBody,
   normalizeNoteShooterPlayerId, normalizeQueueUsername,
 } from "./src/server/scores.mjs";
+import { createProductionServices } from "./dist-server/server/services/production.js";
 import {
   createInitialGameState,
   markRoundLoadFailed,
@@ -54,13 +45,18 @@ const cardCacheDir = path.join(publicDir, "cards");
 const resourceDir = path.join(__dirname, "resource");
 const APP_MODE = process.env.APP_MODE === "solo" || process.argv.includes("--solo") ? "solo" : "booth";
 
-// --- Data loading ---
-const cards = JSON.parse(readFileSync(path.join(resourceDir, "all5_2.json"), "utf-8"));
-const nicknames = JSON.parse(readFileSync(path.join(resourceDir, "nickname.json"), "utf-8"));
-const faceBoxStore = readFaceBoxStore();
-const cardPool = Object.entries(cards)
-  .map(([id, card]) => ({ ...card, id }))
-  .filter((card) => card?.resourceSetName && nicknames[String(card.characterId)]?.length);
+// --- Services ---
+const services = createProductionServices({ resourceDir, cardCacheDir });
+const {
+  cardProvider,
+  cropService,
+  timerService,
+  scoreStore,
+  qrcodeService,
+  networkService,
+} = services;
+const faceBoxStore = cardProvider.faceBoxStore;
+const cardPool = cardProvider.cardPool;
 
 // --- Settings ---
 const persistedConfig = readPersistedConfig();
@@ -100,8 +96,6 @@ function currentTeamNames() {
   };
 }
 const game = createInitialGameState(settings, currentTeamNames());
-let timer = null;
-let autoNextTimer = null;
 let roundToken = 0;
 let preparedRound = null;
 let preparedRoundKey = "";
@@ -124,7 +118,7 @@ const server = createServer(async (req, res) => {
 
   // API routes
   if (url.pathname === "/api/health") return sendJson(res, publicHealthSnapshot());
-  if (url.pathname === "/api/network") return sendJson(res, networkState(req));
+  if (url.pathname === "/api/network") return sendJson(res, networkService.networkState(req));
   if (url.pathname === "/api/stopwatch-settings" && req.method === "GET") {
     return sendJson(res, {
       targetSeconds: Number(settings.stopwatchTargetSeconds) || 10,
@@ -167,23 +161,23 @@ const server = createServer(async (req, res) => {
     }
   }
 
-  if (url.pathname === "/api/queue-scores" && req.method === "GET") return sendJson(res, queueScoreState());
-  if (url.pathname === "/api/queue-scores/events") return handleQueueScoreEvents(req, res);
+  if (url.pathname === "/api/queue-scores" && req.method === "GET") return sendJson(res, scoreStore.queueScoreState());
+  if (url.pathname === "/api/queue-scores/events") return scoreStore.handleQueueScoreEvents(req, res);
   if (url.pathname === "/api/queue-scores" && req.method === "POST") {
     const body = parseRequestPayload(req, await readRequestBody(req));
     const username = normalizeQueueUsername(body.username);
     const score = Math.max(0, Math.min(999999, Math.floor(Number(body.score))));
     const duration = Math.max(0, Math.min(3600, Math.floor(Number(body.duration || 0))));
     if (!username || !Number.isFinite(score)) return sendJson(res, { ok: false, message: "用户名或分数无效" }, 400);
-    const scores = readQueueScores();
+    const scores = scoreStore.readQueueScores();
     scores.unshift({ id: randomBytes(8).toString("hex"), username, score, duration, at: Date.now() });
-    await writeQueueScores(scores);
-    broadcastQueueScores();
-    return sendJson(res, { ok: true, ...queueScoreState(scores) });
+    await scoreStore.writeQueueScores(scores);
+    scoreStore.broadcastQueueScores();
+    return sendJson(res, { ok: true, ...scoreStore.queueScoreState(scores) });
   }
-  if (url.pathname.startsWith("/note-shooter-api/")) return handleNoteShooterApi(url, req, res);
-  if (url.pathname === "/api/note-shooter-scores" && req.method === "GET") return sendJson(res, noteShooterScoreState());
-  if (url.pathname === "/api/note-shooter-scores/events") return handleNoteShooterScoreEvents(req, res);
+  if (url.pathname.startsWith("/note-shooter-api/")) return scoreStore.handleNoteShooterApi(url, req, res);
+  if (url.pathname === "/api/note-shooter-scores" && req.method === "GET") return sendJson(res, scoreStore.noteShooterScoreState());
+  if (url.pathname === "/api/note-shooter-scores/events") return scoreStore.handleNoteShooterScoreEvents(req, res);
   if (url.pathname === "/api/note-shooter-scores" && req.method === "DELETE") {
     const body = parseRequestPayload(req, await readRequestBody(req));
     const password = String(body.password || "");
@@ -194,12 +188,12 @@ const server = createServer(async (req, res) => {
     if (!isAuthenticated(req) && !verifyPassword(password)) return sendJson(res, { ok: false, message: "权限不足" }, 401);
     if (!id && !playerId) return sendJson(res, { ok: false, message: "缺少成绩 ID" }, 400);
 
-    const scores = readNoteShooterScores();
+    const scores = scoreStore.readNoteShooterScores();
     const nextScores = scope === "player" && playerId
       ? scores.filter((entry) => entry.player_id !== playerId)
       : scores.filter((entry) => entry.id !== id);
-    await writeNoteShooterScores(nextScores);
-    broadcastNoteShooterScores();
+    await scoreStore.writeNoteShooterScores(nextScores);
+    scoreStore.broadcastNoteShooterScores();
     return sendJson(res, { ok: true });
   }
   if (url.pathname === "/api/login" && req.method === "POST") {
@@ -232,7 +226,7 @@ const server = createServer(async (req, res) => {
       return res.end("Missing or too long QR text");
     }
     try {
-      const svg = await QRCode.toString(text, { type: "svg", width: 320, margin: 1, color: { dark: "#334462", light: "#FFFFFFFF" } });
+      const svg = await qrcodeService.createQrImage(qrcodeService.createQrPayload(text), { type: "svg", width: 320, margin: 1, color: { dark: "#334462", light: "#FFFFFFFF" } });
       res.writeHead(200, { ...securityHeaders(), "Content-Type": "image/svg+xml; charset=utf-8", "Cache-Control": "no-cache" });
       return res.end(svg);
     } catch { return sendJson(res, { error: "生成失败" }, 500); }
@@ -341,8 +335,7 @@ async function recrop() {
   game.loading = true;
   game.message = "重新裁剪中";
   broadcast();
-  const image = await Jimp.read(game.current.sourceBuffer);
-  const crop = await smartCrop(image, settings.cropSize, settings, game.cropHistory, game.current.faceBoxes || []);
+  const crop = await cropService.recropCard(game.current, settings, game.cropHistory);
   rememberCrop(crop);
   game.current.crop = crop;
   game.recrops += 1;
@@ -359,10 +352,9 @@ function finishRound(result) {
   broadcast();
   if (settings.autoNext) {
     const token = roundToken;
-    autoNextTimer = setTimeout(() => {
-      autoNextTimer = null;
+    timerService.startAutoNextTimer(settings.autoNextDelay, () => {
       if (token === roundToken && (game.status === "revealed" || game.status === "finished")) startRound();
-    }, settings.autoNextDelay);
+    });
   }
 }
 
@@ -395,10 +387,9 @@ function judgeSelfGuess(guess) {
     stopTimer();
     if (settings.autoNext && beforeStatus === "playing") {
       const token = roundToken;
-      autoNextTimer = setTimeout(() => {
-        autoNextTimer = null;
+      timerService.startAutoNextTimer(settings.autoNextDelay, () => {
         if (token === roundToken && (game.status === "revealed" || game.status === "finished")) startRound();
-      }, settings.autoNextDelay);
+      });
     }
   }
   broadcast();
@@ -435,60 +426,7 @@ async function saveSettings() {
 
 // --- Card picking ---
 function filteredCardPool() {
-  const bandSet = new Set(settings.cardBands || []);
-  const raritySet = new Set((settings.cardRarities || []).map(Number));
-  const attributeSet = new Set(settings.cardAttributes || []);
-
-  const filtered = cardPool.filter((card) => {
-    const band = BAND_BY_CHARACTER.get(Number(card.characterId));
-    if (bandSet.size && !bandSet.has(band)) return false;
-    if (raritySet.size && !raritySet.has(Number(card.rarity))) return false;
-    if (attributeSet.size && !attributeSet.has(card.attribute)) return false;
-    const allowedVariants = settings.cardVariants || ["normal", "trained"];
-    if (allowedVariants.length === 1 && allowedVariants[0] === "trained" && !card.stat?.training) return false;
-    
-    // Check if the card can provide AT LEAST ONE valid variant that satisfies both the variant requirement AND character limit requirement
-    const variants = [];
-    if (allowedVariants.includes("normal")) variants.push("card_normal.png");
-    if (allowedVariants.includes("trained") && card.stat?.training) variants.push("card_after_training.png");
-
-    if (variants.length === 0) return false;
-
-    const allowedLimits = settings.cardCharacterLimits || ["single", "multiple"];
-    if (allowedLimits.length < 2) {
-      let match = false;
-      for (const file of variants) {
-        const cacheRelativePath = `${card.resourceSetName}_rip/${file}`;
-        const faces = faceBoxesFor(faceBoxStore, cacheRelativePath);
-        const personCount = faces.filter(f => f.label === "face").length;
-        if (allowedLimits.includes("single") && personCount === 1) match = true;
-        if (allowedLimits.includes("multiple") && personCount > 1) match = true;
-      }
-      if (!match) return false;
-    }
-
-    return true;
-  });
-
-  return filtered.length ? filtered : cardPool;
-}
-
-function pick(list) { return list[Math.floor(Math.random() * list.length)]; }
-
-function pickRoundCard() {
-  const pool = filteredCardPool();
-  const recentCards = new Set(game.recentCards.slice(0, settings.avoidRecentCards));
-  const recentCharacters = new Set(game.recentCharacters.slice(0, settings.avoidRecentCharacters));
-  const passes = [
-    (card) => !recentCards.has(String(card.id)) && !recentCharacters.has(Number(card.characterId)),
-    (card) => !recentCards.has(String(card.id)),
-    () => true,
-  ];
-  for (const pass of passes) {
-    const candidates = pool.filter(pass);
-    if (candidates.length) return pick(candidates);
-  }
-  return pick(pool);
+  return cardProvider.filteredCardPool(settings);
 }
 
 function rememberRound(round) {
@@ -503,95 +441,8 @@ function rememberCrop(crop) {
   game.cropHistory = game.cropHistory.slice(-8);
 }
 
-async function fetchCardResource(card) {
-  const allowedVariants = settings.cardVariants || ["normal", "trained"];
-  let variants = [];
-  if (allowedVariants.includes("normal")) variants.push("card_normal.png");
-  if (allowedVariants.includes("trained") && card.stat?.training) variants.push("card_after_training.png");
-
-  // Filter based on character limit (if not all checked)
-  const allowedLimits = settings.cardCharacterLimits || ["single", "multiple"];
-  if (allowedLimits.length < 2) {
-    variants = variants.filter(file => {
-      const cacheRelativePath = `${card.resourceSetName}_rip/${file}`;
-      const faces = faceBoxesFor(faceBoxStore, cacheRelativePath);
-      const personCount = faces.filter(f => f.label === "face").length;
-      if (allowedLimits.includes("single") && personCount === 1) return true;
-      if (allowedLimits.includes("multiple") && personCount > 1) return true;
-      return false;
-    });
-  }
-
-  // Fallback if empty (should be prevented by filteredCardPool)
-  if (variants.length === 0) {
-    variants = ["card_normal.png"];
-    if (card.stat?.training) variants.push("card_after_training.png");
-  }
-
-  // Randomize if there are multiple valid variants
-  if (variants.length > 1 && Math.random() > 0.5) {
-    variants = [variants[1], variants[0]];
-  }
-
-  for (const file of variants) {
-    const cacheRelativePath = `${card.resourceSetName}_rip/${file}`;
-    const cachePath = path.join(cardCacheDir, cacheRelativePath);
-    const imageUrl = `/cards/${cacheRelativePath.replaceAll("\\", "/")}`;
-    const url = `${BESTDORI_BASE}/${card.resourceSetName}_rip/${file}`;
-
-    if (existsSync(cachePath)) {
-      return {
-        buffer: readFileSync(cachePath),
-        imageUrl,
-        cacheRelativePath: cacheRelativePath.replaceAll("\\", "/"),
-        variant: file === "card_after_training.png" ? "trained" : "normal",
-      };
-    }
-    try {
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 20000);
-      let buffer;
-      try {
-        const response = await fetch(url, { signal: controller.signal });
-        const contentType = response.headers.get("content-type") || "";
-        if (!response.ok || !contentType.includes("image")) continue;
-        buffer = Buffer.from(await response.arrayBuffer());
-      } finally {
-        clearTimeout(timeoutId);
-      }
-      await mkdir(path.dirname(cachePath), { recursive: true });
-      await writeFile(cachePath, buffer);
-      return { buffer, imageUrl, cacheRelativePath: cacheRelativePath.replaceAll("\\", "/"), variant: file === "card_after_training.png" ? "trained" : "normal" };
-    } catch { continue; }
-  }
-  throw new Error("下载卡面失败");
-}
-
 async function createRound() {
-  const card = pickRoundCard();
-  const names = nicknames[String(card.characterId)];
-  const { buffer, imageUrl, variant, cacheRelativePath } = await fetchCardResource(card);
-  const faceBoxes = faceBoxesFor(faceBoxStore, cacheRelativePath);
-  const image = await Jimp.read(buffer);
-  const crop = await smartCrop(image, settings.cropSize, settings, [], faceBoxes);
-
-  return {
-    cardId: card.id,
-    characterId: card.characterId,
-    displayName: names[7] || names[0],
-    acceptedAnswers: names,
-    imageUrl,
-    variant,
-    rarity: card.rarity,
-    attribute: card.attribute,
-    band: BAND_BY_CHARACTER.get(Number(card.characterId)) || "",
-    faceBoxes,
-    faceCropMode: effectiveFaceCropMode(settings),
-    imageWidth: image.bitmap.width,
-    imageHeight: image.bitmap.height,
-    sourceBuffer: buffer,
-    crop,
-  };
+  return cardProvider.createRound(settings, game.recentCards, game.recentCharacters);
 }
 
 function prepareNextRound() {
@@ -649,16 +500,19 @@ async function startRound() {
 function startTimer() {
   stopTimer();
   if (!settings.showTimer) return;
-  timer = setInterval(() => {
+  timerService.startRoundTimer(game.leftSeconds, (leftSeconds) => {
     if (game.status !== "playing") return;
-    game.leftSeconds = Math.max(0, game.leftSeconds - 1);
-    if (game.leftSeconds <= 0) finishRound("timeout");
-    else broadcast();
-  }, 1000);
+    game.leftSeconds = leftSeconds;
+    broadcast();
+  }, () => {
+    if (game.status !== "playing") return;
+    game.leftSeconds = 0;
+    finishRound("timeout");
+  });
 }
 
-function clearAutoNext() { if (autoNextTimer) clearTimeout(autoNextTimer); autoNextTimer = null; }
-function stopTimer() { if (timer) clearInterval(timer); timer = null; }
+function clearAutoNext() { timerService.stopAutoNextTimer(); }
+function stopTimer() { timerService.stopRoundTimer(); }
 
 // --- State broadcast ---
 /**
@@ -668,14 +522,13 @@ function stopTimer() { if (timer) clearInterval(timer); timer = null; }
 
 function healthSnapshot() {
   const faceImages = Object.keys(faceBoxStore.images || {}).length;
-  let cachedCount = 0;
-  try { const raw = readFileSync(path.join(cardCacheDir, ".cache-meta.json"), "utf-8"); cachedCount = JSON.parse(raw).count || 0; } catch { /* ignore */ }
+  const cacheInfo = cardProvider.getCacheInfo();
   const roleCounts = { player: 0, host: 0, settings: 0, self: 0 };
   for (const { role } of clients.values()) { if (roleCounts[role] !== undefined) roleCounts[role] += 1; }
   return {
     totalCards: cardPool.length, filteredCards: filteredCardPool().length,
-    cachedSets: cachedCount, cachePercent: cachedCount ? Math.round((Math.min(cachedCount, cardPool.length) / cardPool.length) * 100) : 0,
-    lanHosts: lanHosts(),
+    cachedSets: cacheInfo.cachedSets, cachePercent: cacheInfo.cachePercent,
+    lanHosts: networkService.lanHosts(),
     bands: BAND_OPTIONS, rarities: RARITY_OPTIONS, attributes: ATTRIBUTE_OPTIONS,
     faceBoxImages: faceImages, faceBoxesPath: faceBoxesStorePath,
     clients: clients.size, roleCounts,
@@ -794,8 +647,20 @@ server.listen(port, "0.0.0.0", () => {
   const labels = APP_MODE === "solo"
     ? [["Solo", "solo"], ["NoteShooter", "noteShooter"], ["Scores", "scores"], ["QR", "qr"]]
     : [["Player", "player"], ["NoteShooter", "noteShooter"], ["Scores", "scores"], ["Host login", "login"], ["Host", "host"], ["Settings", "settings"], ["QR", "qr"]];
-  const lines = originList(port).flatMap((origin) => {
-    const pages = pageUrls(origin);
+  const lines = unique(["127.0.0.1", ...networkService.getLocalAddresses()]).flatMap((host) => {
+    const origin = `http://${host}:${port}`;
+    const pages = {
+      player: `${origin}/player`,
+      noteShooter: `${origin}/note-shooter`,
+      stopwatchChallenge: `${origin}/games/stopwatch-challenge`,
+      queue: `${origin}/note-shooter`,
+      scores: `${origin}/scores`,
+      login: `${origin}/login`,
+      host: `${origin}/host`,
+      settings: `${origin}/settings`,
+      solo: `${origin}/solo`,
+      qr: `${origin}/qr`,
+    };
     return labels.map(([label, key]) => `${label.padEnd(10)} ${pages[key]}`);
   });
   console.log(`BangBangCai ${APP_MODE} server running:\n${lines.join("\n")}`);
