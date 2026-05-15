@@ -44,6 +44,11 @@ const router = createRouter({
       component: () => import('../views/QrView.vue'),
     },
     {
+      path: '/diagnostics',
+      name: 'diagnostics',
+      component: () => import('../views/DiagnosticsView.vue'),
+    },
+    {
       path: '/scores',
       name: 'scores',
       component: () => import('../views/ScoresView.vue'),

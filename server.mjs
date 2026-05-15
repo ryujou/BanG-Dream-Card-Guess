@@ -7,6 +7,7 @@ import { randomBytes } from "node:crypto";
 import { WebSocketServer } from "ws";
 
 import { sendJson, securityHeaders, requestIp, isMutatingMethod, requiresCsrfCheck } from "./dist-server/server/utils/http.js";
+import { logger } from "./dist-server/server/utils/logger.js";
 import { proxyBestdori } from "./dist-server/server/http/bestdoriProxy.js";
 import { serveStatic, streamFile } from "./dist-server/server/app/static.js";
 import {
@@ -44,6 +45,7 @@ const publicDir = path.join(__dirname, "public");
 const cardCacheDir = path.join(publicDir, "cards");
 const resourceDir = path.join(__dirname, "resource");
 const APP_MODE = process.env.APP_MODE === "solo" || process.argv.includes("--solo") ? "solo" : "booth";
+const APP_VERSION = process.env.npm_package_version || "1.5.1";
 
 // --- Services ---
 const services = createProductionServices({ resourceDir, cardCacheDir });
@@ -118,6 +120,15 @@ const server = createServer(async (req, res) => {
 
   // API routes
   if (url.pathname === "/api/health") return sendJson(res, publicHealthSnapshot());
+  if (url.pathname === "/api/diagnostics" && req.method === "GET") {
+    if (!isAuthenticated(req)) return sendJson(res, { error: "Unauthorized" }, 401);
+    return sendJson(res, diagnosticsSnapshot(req));
+  }
+  if (url.pathname === "/api/diagnostics/export" && req.method === "GET") {
+    if (!isAuthenticated(req)) return sendJson(res, { error: "Unauthorized" }, 401);
+    res.setHeader("Content-Disposition", `attachment; filename="bangbangcai-diagnostics-${Date.now()}.json"`);
+    return sendJson(res, diagnosticsSnapshot(req, { exportMode: true }));
+  }
   if (url.pathname === "/api/network") return sendJson(res, networkService.networkState(req));
   if (url.pathname === "/api/stopwatch-settings" && req.method === "GET") {
     return sendJson(res, {
@@ -171,8 +182,13 @@ const server = createServer(async (req, res) => {
     if (!username || !Number.isFinite(score)) return sendJson(res, { ok: false, message: "用户名或分数无效" }, 400);
     const scores = scoreStore.readQueueScores();
     scores.unshift({ id: randomBytes(8).toString("hex"), username, score, duration, at: Date.now() });
-    await scoreStore.writeQueueScores(scores);
-    scoreStore.broadcastQueueScores();
+    try {
+      await scoreStore.writeQueueScores(scores);
+      scoreStore.broadcastQueueScores();
+    } catch (error) {
+      logger.error(error, { event: "queue_scores_write_failed" });
+      throw error;
+    }
     return sendJson(res, { ok: true, ...scoreStore.queueScoreState(scores) });
   }
   if (url.pathname.startsWith("/note-shooter-api/")) return scoreStore.handleNoteShooterApi(url, req, res);
@@ -192,8 +208,13 @@ const server = createServer(async (req, res) => {
     const nextScores = scope === "player" && playerId
       ? scores.filter((entry) => entry.player_id !== playerId)
       : scores.filter((entry) => entry.id !== id);
-    await scoreStore.writeNoteShooterScores(nextScores);
-    scoreStore.broadcastNoteShooterScores();
+    try {
+      await scoreStore.writeNoteShooterScores(nextScores);
+      scoreStore.broadcastNoteShooterScores();
+    } catch (error) {
+      logger.error(error, { event: "note_shooter_scores_write_failed" });
+      throw error;
+    }
     return sendJson(res, { ok: true });
   }
   if (url.pathname === "/api/login" && req.method === "POST") {
@@ -251,9 +272,11 @@ const server = createServer(async (req, res) => {
 const wss = new WebSocketServer({ server, path: "/ws" });
 wss.on("connection", (ws, req) => {
   if (!isTrustedWebSocketOrigin(req)) {
+    logger.warn("Rejected WebSocket connection with invalid origin", { origin: req.headers.origin || "" });
     ws.close(1008, "Invalid origin");
     return;
   }
+  logger.info("WebSocket connected", { ip: requestIp(req), clients: clients.size + 1 });
   let authenticated = isAuthenticated(req);
 
   ws.on("message", async (raw) => {
@@ -265,6 +288,7 @@ wss.on("connection", (ws, req) => {
           clients.set(ws, { role: "self", authenticated: false });
         } else if (["host", "settings"].includes(requestedRole) && !authenticated) {
           clients.set(ws, { role: "player", authenticated: false });
+          logger.warn("WebSocket auth required", { requestedRole });
           ws.send(JSON.stringify({ type: "authRequired" }));
         } else {
           clients.set(ws, { role: requestedRole, authenticated });
@@ -284,10 +308,14 @@ wss.on("connection", (ws, req) => {
         await handleCommand(ws, message.command, message.payload || {});
       }
     } catch (error) {
+      logger.error(error, { event: "websocket_message_error" });
       ws.send(JSON.stringify({ type: "error", message: error instanceof Error ? error.message : "操作失败" }));
     }
   });
-  ws.on("close", () => clients.delete(ws));
+  ws.on("close", () => {
+    clients.delete(ws);
+    logger.info("WebSocket disconnected", { clients: clients.size });
+  });
   sendState(ws);
 });
 
@@ -314,7 +342,9 @@ async function handleCommand(ws, command, payload) {
     case "reset": resetGame(); break;
     case "settings": updateSettings(payload); await saveSettings(); break;
     case "importSettings": updateSettings(payload); await saveSettings(); break;
-    default: throw new Error(`未知命令: ${command}`);
+    default:
+      logger.warn("Unknown WebSocket command", { command, role: client?.role || "unknown" });
+      throw new Error(`未知命令: ${command}`);
   }
 }
 
@@ -335,7 +365,15 @@ async function recrop() {
   game.loading = true;
   game.message = "重新裁剪中";
   broadcast();
-  const crop = await cropService.recropCard(game.current, settings, game.cropHistory);
+  let crop;
+  try {
+    crop = await cropService.recropCard(game.current, settings, game.cropHistory);
+  } catch (error) {
+    logger.error(error, { event: "crop_failed", cardId: game.current?.cardId });
+    game.loading = false;
+    broadcast();
+    throw error;
+  }
   rememberCrop(crop);
   game.current.crop = crop;
   game.recrops += 1;
@@ -450,7 +488,7 @@ function prepareNextRound() {
   if (preparedRound && preparedRoundKey === key) return;
   preparedRoundKey = key;
   preparedRound = createRound().catch((error) => {
-    console.warn(`预加载失败: ${error instanceof Error ? error.message : error}`);
+    logger.warn("Card preload failed", { message: error instanceof Error ? error.message : String(error) });
     return null;
   });
 }
@@ -482,6 +520,7 @@ async function startRound() {
   try {
     round = await takePreparedRound() || await createRound();
   } catch (error) {
+    logger.error(error, { event: "card_load_failed" });
     if (token === roundToken) {
       markRoundLoadFailed(game, error instanceof Error ? error.message : "题目加载失败");
       broadcast();
@@ -525,6 +564,8 @@ function healthSnapshot() {
   const cacheInfo = cardProvider.getCacheInfo();
   const roleCounts = { player: 0, host: 0, settings: 0, self: 0 };
   for (const { role } of clients.values()) { if (roleCounts[role] !== undefined) roleCounts[role] += 1; }
+  const recentErrors = logger.recentErrors();
+  const routes = networkService.getPublicRoutes(port);
   return {
     totalCards: cardPool.length, filteredCards: filteredCardPool().length,
     cachedSets: cacheInfo.cachedSets, cachePercent: cacheInfo.cachePercent,
@@ -534,6 +575,38 @@ function healthSnapshot() {
     clients: clients.size, roleCounts,
     preloaded: !!preparedRound, effectiveFaceCropMode: effectiveFaceCropMode(settings),
     uptimeSeconds: Math.floor(process.uptime()),
+    ok: true,
+    appMode: APP_MODE,
+    uptimeMs: Math.floor(process.uptime() * 1000),
+    version: APP_VERSION,
+    nodeVersion: process.version,
+    connectedClients: clients.size,
+    roles: roleCounts,
+    cache: {
+      cardCount: cardPool.length,
+      hasCache: cacheInfo.cachedSets > 0,
+      cachedSets: cacheInfo.cachedSets,
+      cachePercent: cacheInfo.cachePercent,
+    },
+    game: {
+      status: game.status,
+      roundActive: game.status === "playing",
+      hasCurrentCard: !!game.current,
+    },
+    services: {
+      cards: "ok",
+      crop: "ok",
+      scores: "ok",
+      qrcode: "ok",
+    },
+    network: {
+      addressesCount: networkService.lanHosts().length,
+      routesCount: routes.length,
+    },
+    errors: {
+      recentCount: recentErrors.length,
+      lastMessage: recentErrors.at(-1)?.message || "",
+    },
   };
 }
 
@@ -547,6 +620,64 @@ function publicHealthSnapshot() {
     roleCounts: health.roleCounts,
     preloaded: health.preloaded,
     effectiveFaceCropMode: health.effectiveFaceCropMode,
+    ok: health.ok,
+    appMode: health.appMode,
+    uptimeMs: health.uptimeMs,
+    version: health.version,
+    nodeVersion: health.nodeVersion,
+    connectedClients: health.connectedClients,
+    roles: health.roles,
+    cache: health.cache,
+    game: health.game,
+    services: health.services,
+    network: health.network,
+    errors: health.errors,
+  };
+}
+
+function scoreSummary() {
+  const queue = scoreStore.queueScoreState();
+  const noteShooter = scoreStore.noteShooterScoreState();
+  return {
+    queue: { total: queue.total || 0, topCount: queue.top?.length || 0, recentCount: queue.recent?.length || 0 },
+    noteShooter: { total: noteShooter.total || 0, leaderboardCount: noteShooter.leaderboard?.length || 0, recentCount: noteShooter.recent?.length || 0 },
+  };
+}
+
+function websocketSummary() {
+  return {
+    connectedClients: clients.size,
+    roles: healthSnapshot().roleCounts,
+  };
+}
+
+function diagnosticsSnapshot(req, options = {}) {
+  const health = publicHealthSnapshot();
+  const network = networkService.networkState(req);
+  return {
+    ok: true,
+    exportMode: !!options.exportMode,
+    generatedAt: new Date().toISOString(),
+    health,
+    network: {
+      port: network.port,
+      currentOrigin: network.currentOrigin,
+      lanHosts: network.lanHosts,
+      requestHost: network.requestHost,
+      addressesCount: Array.isArray(network.lanHosts) ? network.lanHosts.length : 0,
+    },
+    websocket: websocketSummary(),
+    game: {
+      status: game.status,
+      roundActive: game.status === "playing",
+      hasCurrentCard: !!game.current,
+      score: game.score,
+      streak: game.streak,
+      historyCount: game.history.length,
+    },
+    cache: health.cache,
+    scores: scoreSummary(),
+    recentErrors: logger.recentErrors(),
   };
 }
 
@@ -663,8 +794,19 @@ server.listen(port, "0.0.0.0", () => {
     };
     return labels.map(([label, key]) => `${label.padEnd(10)} ${pages[key]}`);
   });
-  console.log(`BangBangCai ${APP_MODE} server running:\n${lines.join("\n")}`);
+  logger.info(`BangBangCai ${APP_MODE} server running:\n${lines.join("\n")}`);
   if (!process.env.HOST_PASSWORD) {
-    console.log(`\n[!] No HOST_PASSWORD set. Generated: ${HOST_PASSWORD}\n    Set via: HOST_PASSWORD="your-password" npm run start`);
+    logger.warn("No HOST_PASSWORD set; generated runtime host password");
   }
+});
+
+process.on("uncaughtExceptionMonitor", (error) => {
+  logger.error(error, { event: "uncaughtException" });
+});
+
+process.on("unhandledRejection", (reason) => {
+  logger.error(reason instanceof Error ? reason : String(reason), { event: "unhandledRejection" });
+  setImmediate(() => {
+    throw reason instanceof Error ? reason : new Error(String(reason));
+  });
 });

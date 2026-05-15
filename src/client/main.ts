@@ -14,6 +14,8 @@ import './styles/settings.css';
 // @ts-ignore
 import './styles/qr.css';
 // @ts-ignore
+import './styles/diagnostics.css';
+// @ts-ignore
 import './styles/scores.css';
 // @ts-ignore
 import './styles/mini-games.css';
