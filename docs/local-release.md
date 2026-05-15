@@ -99,3 +99,16 @@ npm run solo
 - 本阶段所有改动仅保留在本地分支。
 - 不需要执行 `git push`。
 - 不需要创建 GitHub PR。
+
+## TypeScript build model
+
+The local release contains TypeScript source for the frontend, backend, shared types, tests, and Node helper scripts.
+
+- `npm run typecheck` checks the Vue frontend and shared types.
+- `npm run build:server` compiles the backend from `src/server/**/*.ts` to `dist-server`.
+- `npm run build:scripts` compiles `scripts/*.ts` to `dist-scripts`.
+- `server.mjs` remains as a compatibility entry and loads `dist-server/server/index.js`.
+- `npm run booth` and `npm run solo` still build and start the app without extra user steps.
+- `npm run package:local` compiles the packaging script, then writes `artifacts/bang-dream-card-guess-local.tar.gz`.
+
+No git push or GitHub PR is required for local delivery.

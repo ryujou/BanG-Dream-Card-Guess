@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+﻿import { describe, expect, it } from "vitest";
 import {
   ATTRIBUTE_OPTIONS,
   BAND_OPTIONS,
@@ -10,7 +10,7 @@ import {
   arraySetting,
   defaultSettings as serverDefaultSettings,
   numberArraySetting,
-} from "../../../src/server/config.mjs";
+} from "../../../src/server/config";
 import { defaultSettings, exportSettings, importSettings, mergeSettings, sanitizeSettings } from "../../../src/server/game/settings";
 
 const deps = {
@@ -79,8 +79,8 @@ describe("game settings", () => {
   });
 
   it("exports settings with team names without changing the payload shape", () => {
-    const payload = exportSettings({ mode: "single" }, { A: { name: "A 队" }, B: { name: "B 队" } });
-    expect(payload).toEqual({ settings: { mode: "single" }, teams: { A: { name: "A 队" }, B: { name: "B 队" } } });
+    const payload = exportSettings({ mode: "single" }, { A: { name: "Team A" }, B: { name: "Team B" } });
+    expect(payload).toEqual({ settings: { mode: "single" }, teams: { A: { name: "Team A" }, B: { name: "Team B" } } });
   });
 });
 

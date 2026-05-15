@@ -1,6 +1,5 @@
 import { Jimp } from "jimp";
-// @ts-ignore
-import { smartCrop } from "../../../src/server/crop.mjs";
+import { smartCrop } from "../crop.js";
 export function createCropService() {
     return {
         async cropCard(buffer, settings, faceBoxes) {
@@ -30,3 +29,4 @@ export function createFakeCropService(crop = { x: 0, y: 0, image: "" }) {
         },
     };
 }
+//# sourceMappingURL=cropService.js.map

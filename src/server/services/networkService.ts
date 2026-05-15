@@ -1,21 +1,20 @@
-// @ts-ignore Existing network module is authored as ESM JavaScript.
-import * as network from "../../../src/server/network.mjs";
+import * as network from "../network.js";
 
 export interface NetworkService {
   getLocalAddresses(): string[];
   getPublicRoutes(activePort: number): unknown[];
-  networkState(req: unknown): unknown;
+  networkState(req: unknown): any;
   lanHosts(): string[];
 }
 
 export function createNetworkService(): NetworkService {
   return {
-    getLocalAddresses: network.lanHosts,
+    getLocalAddresses: () => network.lanHosts() as string[],
     getPublicRoutes(activePort) {
       return network.originList(activePort).map((origin: string) => network.pageUrls(origin));
     },
     networkState: network.networkState,
-    lanHosts: network.lanHosts,
+    lanHosts: () => network.lanHosts() as string[],
   };
 }
 

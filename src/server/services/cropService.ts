@@ -1,6 +1,5 @@
 import { Jimp } from "jimp";
-// @ts-ignore
-import { smartCrop } from "../../../src/server/crop.mjs";
+import { smartCrop } from "../crop.js";
 
 export interface CropService {
   cropCard(buffer: Buffer, settings: Record<string, any>, faceBoxes: any[]): Promise<{ image: any; crop: any }>;
@@ -38,4 +37,3 @@ export function createFakeCropService(crop: any = { x: 0, y: 0, image: "" }): Cr
     },
   };
 }
-

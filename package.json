@@ -9,17 +9,18 @@
     "typecheck": "vue-tsc --noEmit",
     "dev": "vite --host 127.0.0.1",
     "build:server": "tsc -p tsconfig.server.json",
+    "build:scripts": "tsc -p tsconfig.scripts.json",
     "build": "vue-tsc --noEmit || exit 0 && vite build && npm run build:server",
     "preview": "vite preview --host 127.0.0.1",
-    "start": "node server.mjs --booth",
+    "start": "npm run build:server && node server.mjs --booth",
     "booth": "npm run build && node server.mjs --booth",
     "solo": "npm run build && node server.mjs --solo",
-    "cache-cards": "node scripts/cache-cards.mjs",
+    "cache-cards": "npm run build:scripts && node dist-scripts/cache-cards.js",
     "detect-faces": "python scripts/detect-faces.py",
     "test": "vitest run",
     "test:e2e": "playwright test",
     "verify": "npm run typecheck && npm run build && npm test && npm run test:e2e",
-    "package:local": "node scripts/package-local.mjs"
+    "package:local": "npm run build:scripts && node dist-scripts/package-local.js"
   },
   "license": "MIT",
   "contributors": [

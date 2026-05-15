@@ -1,10 +1,10 @@
-// 本地成绩管理：队列游戏、音符射手排行榜
+﻿// 本地成绩管理：队列游戏、音符射手排行榜
 import { readFileSync } from "node:fs";
 import { writeFile, mkdir } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { randomBytes } from "node:crypto";
-import { dataDir } from "./config.mjs";
+import { dataDir } from "./config.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const rootDir = path.resolve(__dirname, "..", "..");
@@ -13,8 +13,8 @@ export const noteShooterScoresStorePath = path.join(dataDir, "note-shooter-score
 const REQUEST_BODY_LIMIT = 1024 * 1024;
 const scoreRateLimits = new Map();
 
-export const queueScoreStreams = new Set();
-export const noteShooterScoreStreams = new Set();
+export const queueScoreStreams = new Set<any>();
+export const noteShooterScoreStreams = new Set<any>();
 
 export function readQueueScores() {
   try {

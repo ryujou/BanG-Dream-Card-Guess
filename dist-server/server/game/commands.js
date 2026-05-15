@@ -25,3 +25,4 @@ export function isSoloAllowedCommand(command) {
 export function isPlayerAllowedCommand(command) {
     return command === "recrop";
 }
+//# sourceMappingURL=commands.js.map

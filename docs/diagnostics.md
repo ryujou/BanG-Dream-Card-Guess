@@ -44,3 +44,7 @@
 2. 点击复制诊断信息。
 3. 或访问 `/api/diagnostics/export` 保存 JSON。
 4. 反馈问题时附上导出的 JSON、启动命令和浏览器地址。
+
+## Version source after TypeScript migration
+
+Diagnostics still report the package version from `package.json`. The value is read by the compiled backend entry and does not expose local file paths, cookies, tokens, or passwords.

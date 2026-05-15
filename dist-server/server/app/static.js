@@ -1,8 +1,7 @@
 import path from "node:path";
 import { existsSync, createReadStream } from "node:fs";
 import { stat } from "node:fs/promises";
-// @ts-ignore
-import { MIME } from "../../../src/server/config.mjs";
+import { MIME } from "../config.js";
 import { securityHeaders } from "../utils/http.js";
 export async function serveStatic(requestUrl, res, publicDir, distDir) {
     const cleanPath = decodeURIComponent(requestUrl.split("?")[0]);
@@ -37,3 +36,4 @@ export function streamFile(filePath, res) {
         }
     }).pipe(res);
 }
+//# sourceMappingURL=static.js.map

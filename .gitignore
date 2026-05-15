@@ -1,5 +1,6 @@
 lib
 dist
+dist-scripts
 external
 public/cards/
 data/*

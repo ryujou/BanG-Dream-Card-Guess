@@ -20,3 +20,4 @@ export function createFakeQRCodeService(svg = "<svg></svg>") {
         },
     };
 }
+//# sourceMappingURL=qrcodeService.js.map

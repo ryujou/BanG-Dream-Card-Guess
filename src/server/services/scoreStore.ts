@@ -1,17 +1,16 @@
-// @ts-ignore Existing score module is authored as ESM JavaScript.
-import * as scores from "../../../src/server/scores.mjs";
+import * as scores from "../scores.js";
 
 export interface ScoreStore {
-  readQueueScores(): unknown[];
-  writeQueueScores(scores: unknown[]): Promise<void>;
-  queueScoreState(scores?: unknown[]): unknown;
+  readQueueScores(): any[];
+  writeQueueScores(scores: any[]): Promise<void>;
+  queueScoreState(scores?: any[]): any;
   handleQueueScoreEvents(req: unknown, res: unknown): void;
-  broadcastQueueScores(state?: unknown): void;
-  readNoteShooterScores(): unknown[];
-  writeNoteShooterScores(scores: unknown[]): Promise<void>;
-  noteShooterScoreState(scores?: unknown[]): unknown;
+  broadcastQueueScores(state?: any): void;
+  readNoteShooterScores(): any[];
+  writeNoteShooterScores(scores: any[]): Promise<void>;
+  noteShooterScoreState(scores?: any[]): any;
   handleNoteShooterScoreEvents(req: unknown, res: unknown): void;
-  broadcastNoteShooterScores(state?: unknown): void;
+  broadcastNoteShooterScores(state?: any): void;
   handleNoteShooterApi(url: URL, req: unknown, res: unknown): Promise<void>;
 }
 

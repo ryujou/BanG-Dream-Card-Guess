@@ -1,5 +1,4 @@
-// @ts-ignore - Ignore types for auth.mjs for now
-import { isAuthenticated } from "../../../src/server/auth.mjs";
+import { isAuthenticated } from "../auth.js";
 import type { IncomingMessage, ServerResponse } from "node:http";
 
 export function sendJson(res: ServerResponse, value: any, status: number = 200): void {

@@ -30,7 +30,7 @@ const overlapScript = () => {
   const violations = [];
   for (const el of visible) {
     const rect = el.getBoundingClientRect();
-    const label = (el.innerText || el.getAttribute('aria-label') || el.getAttribute('placeholder') || el.tagName).trim().slice(0, 80);
+    const label = (((el as HTMLElement).innerText) || el.getAttribute('aria-label') || el.getAttribute('placeholder') || el.tagName).trim().slice(0, 80);
     const isOut = rect.left < -1 || rect.right > viewportW + 1;
     if (isOut) {
       violations.push({
@@ -51,7 +51,7 @@ const overlapScript = () => {
       violations.push({
         type: 'covered_interactive',
         tag: ctrl.tagName,
-        label: (ctrl.innerText || ctrl.getAttribute('aria-label') || ctrl.getAttribute('placeholder') || ctrl.tagName).trim().slice(0, 80),
+        label: (((ctrl as HTMLElement).innerText) || ctrl.getAttribute('aria-label') || ctrl.getAttribute('placeholder') || ctrl.tagName).trim().slice(0, 80),
         coveredBy: top.tagName,
       });
     }

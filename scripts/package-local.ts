@@ -1,4 +1,4 @@
-import { mkdirSync, rmSync, existsSync } from "node:fs";
+﻿import { mkdirSync, rmSync, existsSync } from "node:fs";
 import { spawnSync } from "node:child_process";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -15,6 +15,7 @@ const excludes = [
   "node_modules",
   "dist",
   "dist-server",
+  "dist-scripts",
   ".server-build",
   "data/settings.json",
   "data/*scores*.json",

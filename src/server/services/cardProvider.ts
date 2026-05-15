@@ -1,8 +1,6 @@
 import { readFileSync } from "node:fs";
-// @ts-ignore
-import { BAND_BY_CHARACTER, BESTDORI_BASE, effectiveFaceCropMode, readFaceBoxStore } from "../../../src/server/config.mjs";
-// @ts-ignore
-import { faceBoxesFor } from "../../../src/server/crop.mjs";
+import { BAND_BY_CHARACTER, BESTDORI_BASE, effectiveFaceCropMode, readFaceBoxStore } from "../config.js";
+import { faceBoxesFor } from "../crop.js";
 import type { CardCache } from "./cardCache.js";
 import type { CropService } from "./cropService.js";
 import type { RandomService } from "./randomService.js";

@@ -2,8 +2,7 @@ import path from "node:path";
 import { existsSync, createReadStream } from "node:fs";
 import { stat } from "node:fs/promises";
 import type { ServerResponse } from "node:http";
-// @ts-ignore
-import { MIME } from "../../../src/server/config.mjs";
+import { MIME } from "../config.js";
 import { securityHeaders } from "../utils/http.js";
 
 export async function serveStatic(requestUrl: string, res: ServerResponse, publicDir: string, distDir: string): Promise<void> {

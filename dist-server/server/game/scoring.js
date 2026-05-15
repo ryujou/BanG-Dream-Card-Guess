@@ -48,3 +48,4 @@ export function applyRoundResult(game, settings, result, now, messages) {
     appendHistory(game, result, settings.currentTeam, now);
     return game;
 }
+//# sourceMappingURL=scoring.js.map

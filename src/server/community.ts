@@ -1,7 +1,7 @@
-import { readFileSync } from "node:fs";
+﻿import { readFileSync } from "node:fs";
 import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
-import { dataDir } from "./config.mjs";
+import { dataDir } from "./config.js";
 
 export const communityStorePath = path.join(dataDir, "community.json");
 

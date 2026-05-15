@@ -70,3 +70,15 @@ npm run verify
 - 所有改动仅本地保存。
 - 不需要 push。
 - 不需要 GitHub PR。
+
+## TypeScript migration acceptance
+
+The current branch is TypeScript-managed across the frontend, backend, shared types, tests, and Node helper scripts.
+
+- Backend source entry: `src/server/index.ts`.
+- Compatibility entry: `server.mjs`.
+- Backend compiler: `tsconfig.server.json` using Node ESM output in `dist-server`.
+- Script compiler: `tsconfig.scripts.json` using Node ESM output in `dist-scripts`.
+- Frontend compiler: `vue-tsc` for `src/client` and `src/shared`.
+
+The public behavior contract remains unchanged: routes, HTTP API, WebSocket messages, game rules, AppSnapshot, settings, scores, QR behavior, and command names are expected to remain compatible.

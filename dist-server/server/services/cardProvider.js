@@ -1,8 +1,6 @@
 import { readFileSync } from "node:fs";
-// @ts-ignore
-import { BAND_BY_CHARACTER, BESTDORI_BASE, effectiveFaceCropMode, readFaceBoxStore } from "../../../src/server/config.mjs";
-// @ts-ignore
-import { faceBoxesFor } from "../../../src/server/crop.mjs";
+import { BAND_BY_CHARACTER, BESTDORI_BASE, effectiveFaceCropMode, readFaceBoxStore } from "../config.js";
+import { faceBoxesFor } from "../crop.js";
 export function createCardProvider(options) {
     const fetchImpl = options.fetchImpl || fetch;
     const faceBoxStore = options.faceBoxStore || readFaceBoxStore();
@@ -207,3 +205,4 @@ export function createFakeCardProvider(rounds = []) {
         },
     };
 }
+//# sourceMappingURL=cardProvider.js.map

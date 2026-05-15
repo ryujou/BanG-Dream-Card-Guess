@@ -1,5 +1,4 @@
-// @ts-ignore - Ignore types for auth.mjs for now
-import { isAuthenticated } from "../../../src/server/auth.mjs";
+import { isAuthenticated } from "../auth.js";
 export function sendJson(res, value, status = 200) {
     res.writeHead(status, { ...securityHeaders(), "Content-Type": "application/json; charset=utf-8" });
     res.end(JSON.stringify(value));
@@ -40,3 +39,4 @@ export function requiresCsrfCheck(req, pathname) {
         return false;
     return isAuthenticated(req);
 }
+//# sourceMappingURL=http.js.map

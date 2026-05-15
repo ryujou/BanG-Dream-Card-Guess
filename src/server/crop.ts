@@ -1,6 +1,6 @@
-// 卡面裁剪、智能评分、人脸感知
+﻿// 卡面裁剪、智能评分、人脸感知
 import { Jimp } from "jimp";
-import { effectiveFaceCropMode, FACE_LABELS_BY_CLASS } from "./config.mjs";
+import { effectiveFaceCropMode, FACE_LABELS_BY_CLASS } from "./config.js";
 
 export function faceBoxesFor(faceBoxStore, relativePath) {
   const entry = faceBoxStore.images?.[relativePath.replaceAll("\\", "/")];

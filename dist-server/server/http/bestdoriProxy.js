@@ -1,6 +1,6 @@
 import { securityHeaders, sendJson } from "../utils/http.js";
 // @ts-ignore
-import { BESTDORI_ORIGIN } from "../../../src/server/config.mjs";
+import { BESTDORI_ORIGIN } from "../config.js";
 export async function proxyBestdori(url, res) {
     const targetPath = url.pathname.replace(/^\/bestdori/, "");
     const target = `${BESTDORI_ORIGIN}${targetPath}`;
@@ -20,3 +20,4 @@ export async function proxyBestdori(url, res) {
         sendJson(res, { error: "Upstream timeout" }, 504);
     }
 }
+//# sourceMappingURL=bestdoriProxy.js.map

@@ -87,3 +87,4 @@ export function stopGameState(game, message) {
     });
     return game;
 }
+//# sourceMappingURL=state.js.map

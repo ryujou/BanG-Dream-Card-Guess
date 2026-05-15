@@ -5,7 +5,7 @@ import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const rootDir = path.resolve(__dirname, "..");
-const cards = JSON.parse(readFileSync(path.join(rootDir, "resource", "all5_2.json"), "utf-8"));
+const cards = JSON.parse(readFileSync(path.join(rootDir, "resource", "all5_2.json"), "utf-8")) as Record<string, any>;
 const cardCacheDir = path.join(rootDir, "public", "cards");
 const BESTDORI_BASE = "https://bestdori.com/assets/jp/characters/resourceset";
 const concurrency = Number(process.env.CONCURRENCY || 8);
@@ -33,7 +33,7 @@ let cursor = 0;
 await mkdir(cardCacheDir, { recursive: true });
 await Promise.all(Array.from({ length: concurrency }, worker));
 
-console.log(`完成：已缓存 ${saved}，已存在 ${skipped}，失败/不存在 ${failed}，总任务 ${jobs.length}`);
+console.log(`完成：已缓存 ${saved}，已存在 ${skipped}，失�?不存�?${failed}，总任�?${jobs.length}`);
 
 async function worker() {
   while (cursor < jobs.length) {

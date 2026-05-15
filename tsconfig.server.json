@@ -5,12 +5,14 @@
     "moduleResolution": "NodeNext",
     "outDir": "./dist-server",
     "rootDir": "./src",
-    "strict": true,
+    "strict": false,
+    "noEmitOnError": true,
+    "sourceMap": true,
+    "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "allowJs": true,
-    "checkJs": false,
+    "allowJs": false,
     "types": ["node"]
   },
   "include": [

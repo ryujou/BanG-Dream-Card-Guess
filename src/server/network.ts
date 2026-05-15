@@ -1,6 +1,6 @@
-// 网络地址检测与 URL 生成
+﻿// 网络地址检测与 URL 生成
 import { networkInterfaces } from "node:os";
-import { unique } from "./config.mjs";
+import { unique } from "./config.js";
 
 export function currentOriginFromRequest(req) {
   const host = req.headers.host || "127.0.0.1";
@@ -17,10 +17,10 @@ export function originList(activePort) {
 }
 
 export function lanHosts() {
-  const hosts = [];
+  const hosts: string[] = [];
   for (const items of Object.values(networkInterfaces())) {
     for (const item of items || []) {
-      if ((item.family === "IPv4" || item.family === 4) && !item.internal) {
+      if (item.family === "IPv4" && !item.internal) {
         hosts.push(item.address);
       }
     }

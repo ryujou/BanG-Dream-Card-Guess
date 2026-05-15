@@ -33,3 +33,4 @@ export function createPublicCurrent(game, role) {
         crop: game.current.crop,
     };
 }
+//# sourceMappingURL=snapshot.js.map

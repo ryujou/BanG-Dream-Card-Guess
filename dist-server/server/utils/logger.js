@@ -55,3 +55,4 @@ export const logger = {
     recentErrors: () => recentErrors.map((entry) => ({ ...entry, context: entry.context ? { ...entry.context } : undefined })),
     clearRecentErrors: () => { recentErrors.splice(0, recentErrors.length); },
 };
+//# sourceMappingURL=logger.js.map

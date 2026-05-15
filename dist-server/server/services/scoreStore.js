@@ -1,5 +1,4 @@
-// @ts-ignore Existing score module is authored as ESM JavaScript.
-import * as scores from "../../../src/server/scores.mjs";
+import * as scores from "../scores.js";
 export function createScoreStore() {
     return {
         readQueueScores: scores.readQueueScores,
@@ -42,3 +41,4 @@ export function createMemoryScoreStore() {
         handleNoteShooterApi: async () => undefined,
     };
 }
+//# sourceMappingURL=scoreStore.js.map

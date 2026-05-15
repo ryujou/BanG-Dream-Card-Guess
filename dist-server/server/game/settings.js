@@ -106,3 +106,4 @@ export function importSettings(current, next, deps) {
 export function exportSettings(settings, teams) {
     return { settings, teams };
 }
+//# sourceMappingURL=settings.js.map

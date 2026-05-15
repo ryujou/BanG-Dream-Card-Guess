@@ -1,4 +1,4 @@
-// 主持登录认证
+﻿// 主持登录认证
 import { randomBytes, timingSafeEqual } from "node:crypto";
 
 export const HOST_PASSWORD = process.env.HOST_PASSWORD || randomBytes(16).toString("hex");

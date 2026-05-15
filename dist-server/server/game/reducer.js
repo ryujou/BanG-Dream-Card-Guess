@@ -61,3 +61,4 @@ export function applySelfGuess(game, settings, guess, context) {
 export function normalizeAnswer(value) {
     return String(value || "").trim();
 }
+//# sourceMappingURL=reducer.js.map

@@ -1,4 +1,4 @@
-// 常量、默认配置、配置工具函数
+﻿// 常量、默认配置、配置工具函数
 import { readFileSync } from "node:fs";
 import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
@@ -50,7 +50,7 @@ export const MIME = {
   ".ico": "image/x-icon",
 };
 
-export function unique(values) {
+export function unique<T>(values: T[]): T[] {
   return [...new Set(values.filter(Boolean))];
 }
 

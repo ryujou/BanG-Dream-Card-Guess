@@ -419,3 +419,12 @@ artifacts/bang-dream-card-guess-local.tar.gz
 ```
 
 所有改动仅本地保存，不需要 `git push`，不需要创建 GitHub PR。
+
+## TypeScript runtime notes
+
+- The backend implementation has been moved to TypeScript under `src/server/index.ts` and related `src/server/**/*.ts` modules.
+- `server.mjs` is kept only as a Node compatibility entry. It loads `dist-server/server/index.js` after `npm run build:server`.
+- Frontend type checking is handled by `vue-tsc` through `tsconfig.json` for `src/client` and `src/shared`.
+- Backend compilation is handled by `tsc -p tsconfig.server.json` and outputs Node ESM files to `dist-server`.
+- Script compilation is handled by `tsc -p tsconfig.scripts.json` and outputs runnable files to `dist-scripts`.
+- Production commands remain unchanged: `npm run booth`, `npm run solo`, `npm run package:local`, and `npm run verify`.

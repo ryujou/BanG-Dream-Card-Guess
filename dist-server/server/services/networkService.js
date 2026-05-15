@@ -1,13 +1,12 @@
-// @ts-ignore Existing network module is authored as ESM JavaScript.
-import * as network from "../../../src/server/network.mjs";
+import * as network from "../network.js";
 export function createNetworkService() {
     return {
-        getLocalAddresses: network.lanHosts,
+        getLocalAddresses: () => network.lanHosts(),
         getPublicRoutes(activePort) {
             return network.originList(activePort).map((origin) => network.pageUrls(origin));
         },
         networkState: network.networkState,
-        lanHosts: network.lanHosts,
+        lanHosts: () => network.lanHosts(),
     };
 }
 export function createFakeNetworkService(hosts = ["127.0.0.1"]) {
@@ -18,3 +17,4 @@ export function createFakeNetworkService(hosts = ["127.0.0.1"]) {
         lanHosts: () => hosts.slice(),
     };
 }
+//# sourceMappingURL=networkService.js.map

@@ -36,3 +36,4 @@ export function undoHistory(game, limit = 8) {
     game.undoStack = game.undoStack.slice(0, limit);
     return { restored: true, status: game.status };
 }
+//# sourceMappingURL=history.js.map
