@@ -102,7 +102,8 @@ export function readPersistedConfig() {
 }
 let persistTimer = null;
 export function savePersistentConfigSoon() {
-    clearTimeout(persistTimer);
+    if (persistTimer)
+        clearTimeout(persistTimer);
     persistTimer = setTimeout(async () => {
         try {
             await mkdir(dataDir, { recursive: true });

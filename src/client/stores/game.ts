@@ -60,7 +60,7 @@ export const useGameStore = defineStore('game', () => {
     });
   }
 
-  function command(commandStr: string, payload: any = {}) {
+  function command(commandStr: string, payload: Record<string, unknown> = {}) {
     if (!socket || socket.readyState !== WebSocket.OPEN) return;
     socket.send(JSON.stringify({ type: 'command', command: commandStr, payload }));
   }

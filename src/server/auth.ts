@@ -7,21 +7,22 @@ export const CSRF_COOKIE = "bbc_csrf";
 export const AUTH_SESSION_TTL_MS = 24 * 60 * 60 * 1000;
 export const authenticatedSessions = new Map();
 
-export function sameSecret(a, b) {
+export function sameSecret(a: unknown, b: unknown): boolean {
   const sa = String(a);
   const sb = String(b);
   if (sa.length !== sb.length) return false;
   return timingSafeEqual(Buffer.from(sa), Buffer.from(sb));
 }
 
-export function isAuthenticated(req) {
+export function isAuthenticated(req: unknown): boolean {
   const token = getAuthToken(req);
   if (!token) return false;
   return hasValidAuthSession(token);
 }
 
-export function getAuthToken(req) {
-  const cookies = parseCookies(req.headers.cookie || "");
+export function getAuthToken(req: unknown): string {
+  const headers = (req as { headers?: Record<string, string> })?.headers || {};
+  const cookies = parseCookies(headers.cookie || "");
   return cookies[AUTH_COOKIE] || "";
 }
 
@@ -35,7 +36,7 @@ export function createCsrfToken() {
   return randomBytes(24).toString("hex");
 }
 
-export function revokeAuthSession(token) {
+export function revokeAuthSession(token: string) {
   if (!token) return;
   authenticatedSessions.delete(token);
 }
@@ -46,7 +47,7 @@ export function clearExpiredAuthSessions(now = Date.now()) {
   }
 }
 
-export function hasValidAuthSession(token, now = Date.now()) {
+export function hasValidAuthSession(token: string, now = Date.now()): boolean {
   clearExpiredAuthSessions(now);
   const expiresAt = authenticatedSessions.get(token);
   if (!expiresAt) return false;
@@ -57,22 +58,24 @@ export function hasValidAuthSession(token, now = Date.now()) {
   return true;
 }
 
-export function buildAuthCookie(token, req) {
-  const secure = String(req?.headers["x-forwarded-proto"] || "").toLowerCase() === "https";
-  const host = String(req?.headers?.host || "").split(":")[0].toLowerCase();
+export function buildAuthCookie(token: string, req: unknown): string {
+  const headers = (req as { headers?: Record<string, string> })?.headers || {};
+  const secure = String(headers["x-forwarded-proto"] || "").toLowerCase() === "https";
+  const host = String(headers.host || "").split(":")[0].toLowerCase();
   const domain = host.endsWith("xtbang.top") ? "; Domain=.xtbang.top" : "";
   return `${AUTH_COOKIE}=${token}; Path=/; HttpOnly; SameSite=Lax; Max-Age=${Math.floor(AUTH_SESSION_TTL_MS / 1000)}${domain}${secure ? "; Secure" : ""}`;
 }
 
-export function buildCsrfCookie(token, req) {
-  const secure = String(req?.headers["x-forwarded-proto"] || "").toLowerCase() === "https";
-  const host = String(req?.headers?.host || "").split(":")[0].toLowerCase();
+export function buildCsrfCookie(token: string, req: unknown): string {
+  const headers = (req as { headers?: Record<string, string> })?.headers || {};
+  const secure = String(headers["x-forwarded-proto"] || "").toLowerCase() === "https";
+  const host = String(headers.host || "").split(":")[0].toLowerCase();
   const domain = host.endsWith("xtbang.top") ? "; Domain=.xtbang.top" : "";
   return `${CSRF_COOKIE}=${token}; Path=/; SameSite=Lax; Max-Age=${Math.floor(AUTH_SESSION_TTL_MS / 1000)}${domain}${secure ? "; Secure" : ""}`;
 }
 
-function parseCookies(header) {
-  const result = {};
+function parseCookies(header: string): Record<string, string> {
+  const result: Record<string, string> = {};
   if (!header) return result;
   for (const part of header.split(";")) {
     const idx = part.indexOf("=");
@@ -81,11 +84,12 @@ function parseCookies(header) {
   return result;
 }
 
-export function getCookie(req, name) {
-  const cookies = parseCookies(req.headers.cookie || "");
+export function getCookie(req: unknown, name: string): string {
+  const headers = (req as { headers?: Record<string, string> })?.headers || {};
+  const cookies = parseCookies(headers.cookie || "");
   return cookies[name] || "";
 }
 
-export function verifyPassword(password) {
+export function verifyPassword(password: string): boolean {
   return sameSecret(password, HOST_PASSWORD);
 }

@@ -203,7 +203,7 @@ const defaultDraft = () => ({
 
 const draft = ref(defaultDraft());
 
-const bands = computed(() => snapshot.value?.meta?.bands || []);
+const bands = computed(() => (snapshot.value?.meta?.bands as any[]) || []);
 const rarities = computed(() => snapshot.value?.meta?.rarities || [1, 2, 3, 4, 5]);
 const attributes = computed(() => snapshot.value?.meta?.attributes || ["cool", "happy", "powerful", "pure"]);
 

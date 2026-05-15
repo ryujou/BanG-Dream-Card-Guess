@@ -7,7 +7,7 @@ export function createInitialTeams(teamNames) {
 export function createInitialGameState(settings, teamNames) {
     return {
         status: "idle",
-        leftSeconds: settings.roundSeconds,
+        leftSeconds: Number(settings.roundSeconds) || 60,
         loading: false,
         score: 0,
         streak: 0,
@@ -32,7 +32,7 @@ export function createInitialAppState(settings, teamNames) {
 export function resetGameState(game, settings, teamNames, message) {
     Object.assign(game, {
         status: "idle",
-        leftSeconds: settings.roundSeconds,
+        leftSeconds: Number(settings.roundSeconds) || 60,
         loading: false,
         score: 0,
         streak: 0,
@@ -53,7 +53,7 @@ export function markRoundLoading(game, settings, message) {
     Object.assign(game, {
         status: "loading",
         loading: true,
-        leftSeconds: settings.roundSeconds,
+        leftSeconds: Number(settings.roundSeconds) || 60,
         recrops: 0,
         cropHistory: [],
         current: null,
@@ -74,7 +74,7 @@ export function markRoundPlaying(game, settings, round, message) {
         current: round,
         status: "playing",
         loading: false,
-        leftSeconds: settings.roundSeconds,
+        leftSeconds: Number(settings.roundSeconds) || 60,
         message,
     });
     return game;

@@ -6,14 +6,14 @@ export function applyGameCommand(game, settings, command, payload = {}, context)
         case "next":
             game.status = "loading";
             game.loading = true;
-            game.leftSeconds = settings.roundSeconds;
+            game.leftSeconds = Number(settings.roundSeconds) || 60;
             game.recrops = 0;
             game.cropHistory = [];
             game.current = null;
             game.message = context.messages.loading;
             return { handled: true };
         case "recrop":
-            if (!game.current || game.status !== "playing" || game.loading || !settings.allowRecrop || game.recrops >= settings.maxRecrops) {
+            if (!game.current || game.status !== "playing" || game.loading || !settings.allowRecrop || game.recrops >= (Number(settings.maxRecrops) || 0)) {
                 return { handled: true };
             }
             game.recrops += 1;
@@ -53,12 +53,17 @@ export function applySelfGuess(game, settings, guess, context) {
         game.message = context.messages.emptyGuess;
         return { handled: true };
     }
-    const match = game.current.acceptedAnswers.some((accepted) => accepted.toLowerCase() === answer.toLowerCase());
+    const accepted = Array.isArray(game.current.acceptedAnswers) ? game.current.acceptedAnswers : [];
+    const match = accepted.some((acc) => typeof acc === 'string' && acc.toLowerCase() === answer.toLowerCase());
     const result = match ? "correct" : "wrong";
     applyRoundResult(game, settings, result, context.now, context.messages);
     return { handled: true, result };
 }
 export function normalizeAnswer(value) {
-    return String(value || "").trim();
+    if (typeof value === "string")
+        return value.trim();
+    if (typeof value === "number")
+        return String(value);
+    return "";
 }
 //# sourceMappingURL=reducer.js.map

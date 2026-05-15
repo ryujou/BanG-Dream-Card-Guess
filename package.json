@@ -7,6 +7,7 @@
   "main": "server.mjs",
   "scripts": {
     "typecheck": "vue-tsc --noEmit",
+    "check:types": "vue-tsc --noEmit && tsc -p tsconfig.server.json --noEmit",
     "dev": "vite --host 127.0.0.1",
     "build:server": "tsc -p tsconfig.server.json",
     "build:scripts": "tsc -p tsconfig.scripts.json",

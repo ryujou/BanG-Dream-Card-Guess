@@ -13,8 +13,8 @@ export const noteShooterScoresStorePath = path.join(dataDir, "note-shooter-score
 const REQUEST_BODY_LIMIT = 1024 * 1024;
 const scoreRateLimits = new Map();
 
-export const queueScoreStreams = new Set<any>();
-export const noteShooterScoreStreams = new Set<any>();
+export const queueScoreStreams = new Set<unknown>();
+export const noteShooterScoreStreams = new Set<unknown>();
 
 export function readQueueScores() {
   try {
@@ -24,7 +24,7 @@ export function readQueueScores() {
   }
 }
 
-export async function writeQueueScores(scores) {
+export async function writeQueueScores(scores: any[]) {
   await mkdir(dataDir, { recursive: true });
   await writeFile(queueScoresStorePath, `${JSON.stringify(scores.slice(0, 1000))}\n`);
 }
@@ -37,12 +37,12 @@ export function readNoteShooterScores() {
   }
 }
 
-export async function writeNoteShooterScores(scores) {
+export async function writeNoteShooterScores(scores: any[]) {
   await mkdir(dataDir, { recursive: true });
   await writeFile(noteShooterScoresStorePath, `${JSON.stringify(scores.map(normalizeNoteShooterScore).filter(Boolean), null, 2)}\n`);
 }
 
-export function handleQueueScoreEvents(req, res) {
+export function handleQueueScoreEvents(req: any, res: any) {
   res.writeHead(200, {
     "Content-Type": "text/event-stream; charset=utf-8",
     "Cache-Control": "no-cache, no-transform",
@@ -54,14 +54,14 @@ export function handleQueueScoreEvents(req, res) {
   req.on("close", () => queueScoreStreams.delete(res));
 }
 
-export function broadcastQueueScores(state = queueScoreState()) {
+export function broadcastQueueScores(state: any = queueScoreState()) {
   const payload = `data: ${JSON.stringify(state)}\n\n`;
   for (const stream of queueScoreStreams) {
-    try { stream.write(payload); } catch { queueScoreStreams.delete(stream); }
+    try { (stream as any).write(payload); } catch { queueScoreStreams.delete(stream); }
   }
 }
 
-export function handleNoteShooterScoreEvents(req, res) {
+export function handleNoteShooterScoreEvents(req: any, res: any) {
   res.writeHead(200, {
     "Content-Type": "text/event-stream; charset=utf-8",
     "Cache-Control": "no-cache, no-transform",
@@ -73,14 +73,14 @@ export function handleNoteShooterScoreEvents(req, res) {
   req.on("close", () => noteShooterScoreStreams.delete(res));
 }
 
-export function broadcastNoteShooterScores(state = noteShooterScoreState()) {
+export function broadcastNoteShooterScores(state: any = noteShooterScoreState()) {
   const payload = `event: scores\ndata: ${JSON.stringify(state)}\n\n`;
   for (const stream of noteShooterScoreStreams) {
-    try { stream.write(payload); } catch { noteShooterScoreStreams.delete(stream); }
+    try { (stream as any).write(payload); } catch { noteShooterScoreStreams.delete(stream); }
   }
 }
 
-export async function handleNoteShooterApi(url, req, res) {
+export async function handleNoteShooterApi(url: URL, req: any, res: any) {
   const endpoint = url.pathname.replace(/^\/note-shooter-api\/?/, "");
   if (endpoint === "openStat" && req.method === "POST") {
     if (!checkScoreRateLimit(req, `${endpoint}`, 20, 60_000)) { sendJson(res, { ok: false, message: "请求过于频繁" }, 429); return; }
@@ -117,7 +117,7 @@ export async function handleNoteShooterApi(url, req, res) {
   sendJson(res, { ok: false, message: "Not found" }, 404);
 }
 
-export function parseRequestPayload(req, body) {
+export function parseRequestPayload(req: any, body: string) {
   const contentType = String(req.headers["content-type"] || "");
   if (contentType.includes("application/json")) {
     try { return JSON.parse(body); } catch { return {}; }
@@ -125,11 +125,11 @@ export function parseRequestPayload(req, body) {
   return Object.fromEntries(new URLSearchParams(body));
 }
 
-export function readRequestBody(req) {
+export function readRequestBody(req: any): Promise<string> {
   return new Promise((resolve, reject) => {
     let body = "";
     let size = 0;
-    req.on("data", (chunk) => {
+    req.on("data", (chunk: any) => {
       size += chunk.length;
       if (size > REQUEST_BODY_LIMIT) {
         reject(Object.assign(new Error("请求体过大"), { statusCode: 413 }));
@@ -143,9 +143,9 @@ export function readRequestBody(req) {
   });
 }
 
-export function queueScoreState(scores = readQueueScores()) {
+export function queueScoreState(scores: any[] = readQueueScores()) {
   const normalized = scores.map(normalizeQueueScore).filter(Boolean);
-  const sorted = normalized.slice().sort((a, b) => b.score - a.score);
+  const sorted = normalized.slice().sort((a: any, b: any) => b.score - a.score);
   return { total: normalized.length, top: sorted.slice(0, 20), recent: sorted.slice(0, 20) };
 }
 
@@ -158,7 +158,7 @@ export function noteShooterScoreState(scores = readNoteShooterScores()) {
       bestByPlayer.set(entry.player_id, entry);
     }
   }
-  const toScoreItem = (entry) => ({
+  const toScoreItem = (entry: any) => ({
     id: entry.id,
     username: entry.player_name || entry.player_id,
     playerId: entry.player_id,
@@ -173,22 +173,22 @@ export function noteShooterScoreState(scores = readNoteShooterScores()) {
   });
   return {
     total: normalized.length,
-    leaderboard: [...bestByPlayer.values()].sort((a, b) => b.final_score - a.final_score || a.duration - b.duration || a.at - b.at).slice(0, 20).map(toScoreItem),
-    recent: normalized.slice().sort((a, b) => b.at - a.at).slice(0, 20).map(toScoreItem),
+    leaderboard: [...bestByPlayer.values()].sort((a: any, b: any) => b.final_score - a.final_score || a.duration - b.duration || a.at - b.at).slice(0, 20).map(toScoreItem),
+    recent: normalized.slice().sort((a: any, b: any) => b.at - a.at).slice(0, 20).map(toScoreItem),
   };
 }
 
-export function noteShooterRanking({ levels, difficulty, type, playerId }) {
-  const scores = readNoteShooterScores().filter((entry) => entry.levels === levels && entry.difficulty === difficulty);
-  const ranked = scores.slice().sort((a, b) => b.final_score - a.final_score || a.duration - b.duration || a.at - b.at).map((entry, index) => ({ ...entry, user_rank: index + 1 }));
-  if (type === "recent") return scores.slice().sort((a, b) => b.at - a.at).slice(0, 30).map((entry, index) => ({ ...entry, user_rank: index + 1 }));
-  if (type === "best") return noteShooterBestByPlayer(ranked).slice(0, 30).map((entry, index) => ({ ...entry, user_rank: index + 1 }));
-  if (type === "myRank" || type === "myBest") return playerId ? ranked.filter((entry) => entry.player_id === playerId).slice(0, 30) : [];
-  if (type === "myRecent") return playerId ? scores.filter((entry) => entry.player_id === playerId).sort((a, b) => b.at - a.at).slice(0, 30).map((entry, index) => ({ ...entry, user_rank: index + 1 })) : [];
-  return ranked.slice(0, 30).map((entry, index) => ({ ...entry, user_rank: index + 1 }));
+export function noteShooterRanking({ levels, difficulty, type, playerId }: any) {
+  const scores = readNoteShooterScores().filter((entry: any) => entry.levels === levels && entry.difficulty === difficulty);
+  const ranked = scores.slice().sort((a: any, b: any) => b.final_score - a.final_score || a.duration - b.duration || a.at - b.at).map((entry: any, index: any) => ({ ...entry, user_rank: index + 1 }));
+  if (type === "recent") return scores.slice().sort((a: any, b: any) => b.at - a.at).slice(0, 30).map((entry: any, index: any) => ({ ...entry, user_rank: index + 1 }));
+  if (type === "best") return noteShooterBestByPlayer(ranked).slice(0, 30).map((entry: any, index: any) => ({ ...entry, user_rank: index + 1 }));
+  if (type === "myRank" || type === "myBest") return playerId ? ranked.filter((entry: any) => entry.player_id === playerId).slice(0, 30) : [];
+  if (type === "myRecent") return playerId ? scores.filter((entry: any) => entry.player_id === playerId).sort((a: any, b: any) => b.at - a.at).slice(0, 30).map((entry: any, index: any) => ({ ...entry, user_rank: index + 1 })) : [];
+  return ranked.slice(0, 30).map((entry: any, index: any) => ({ ...entry, user_rank: index + 1 }));
 }
 
-export function noteShooterBestByPlayer(ranked) {
+export function noteShooterBestByPlayer(ranked: any[]) {
   const best = new Map();
   for (const entry of ranked) {
     const old = best.get(entry.player_id);
@@ -196,17 +196,17 @@ export function noteShooterBestByPlayer(ranked) {
       best.set(entry.player_id, entry);
     }
   }
-  return [...best.values()].sort((a, b) => b.final_score - a.final_score || a.duration - b.duration || a.at - b.at);
+  return [...best.values()].sort((a: any, b: any) => b.final_score - a.final_score || a.duration - b.duration || a.at - b.at);
 }
 
-export function normalizeQueueScore(entry) {
+export function normalizeQueueScore(entry: any) {
   if (!entry || typeof entry !== "object") return null;
   return { username: normalizeQueueUsername(entry.username), score: Math.max(0, Number(entry.score) || 0), duration: Math.max(0, Number(entry.duration) || 0), at: Number(entry.at) || Date.now() };
 }
 
-export function normalizeQueueUsername(value) { return String(value || "").trim().slice(0, 30) || "匿名"; }
+export function normalizeQueueUsername(value: any) { return String(value || "").trim().slice(0, 30) || "匿名"; }
 
-export function normalizeNoteShooterScore(entry) {
+export function normalizeNoteShooterScore(entry: any) {
   const playerId = normalizeNoteShooterPlayerId(entry?.playerId || entry?.player_id) || `P${randomBytes(3).toString("hex").toUpperCase()}`;
   const playerName = normalizeNoteShooterPlayerName(entry?.playerName || entry?.player_name);
   const levels = normalizeNoteShooterLevel(entry?.levels);
@@ -242,27 +242,27 @@ export function normalizeNoteShooterScore(entry) {
   };
 }
 
-export function normalizeNoteShooterPlayerId(value) { return String(value || "").trim().slice(0, 64) || ""; }
-export function normalizeNoteShooterPlayerName(value) { return String(value || "").trim().slice(0, 30) || "玩家"; }
-export function normalizeNoteShooterLevel(value) { const v = String(value || "").trim(); return ["easy", "normal", "hard"].includes(v) ? v : "normal"; }
-export function normalizeNoteShooterDifficulty(value) { const n = Number(value); return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].includes(n) ? n : 1; }
-export function normalizeNoteShooterRank(value) {
+export function normalizeNoteShooterPlayerId(value: any) { return String(value || "").trim().slice(0, 64) || ""; }
+export function normalizeNoteShooterPlayerName(value: any) { return String(value || "").trim().slice(0, 30) || "玩家"; }
+export function normalizeNoteShooterLevel(value: any) { const v = String(value || "").trim(); return ["easy", "normal", "hard"].includes(v) ? v : "normal"; }
+export function normalizeNoteShooterDifficulty(value: any) { const n = Number(value); return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].includes(n) ? n : 1; }
+export function normalizeNoteShooterRank(value: any) {
   const rank = String(value || "d").toLowerCase();
   return ["sss", "ssp", "ss", "sp", "s", "ap", "a", "bp", "b", "cp", "c", "d"].includes(rank) ? rank : "d";
 }
 
-export function formatLocalDateTime(value = Date.now()) {
+export function formatLocalDateTime(value: any = Date.now()) {
   const date = new Date(Number(value) || Date.now());
-  const pad = (number) => String(number).padStart(2, "0");
+  const pad = (number: any) => String(number).padStart(2, "0");
   return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())} ${pad(date.getHours())}:${pad(date.getMinutes())}`;
 }
 
-function sendJson(res, value, status = 200) {
+function sendJson(res: any, value: any, status = 200) {
   res.writeHead(status, { "Content-Type": "application/json; charset=utf-8" });
   res.end(JSON.stringify(value));
 }
 
-function checkScoreRateLimit(req, bucket, maxRequests, windowMs) {
+function checkScoreRateLimit(req: any, bucket: string, maxRequests: number, windowMs: number) {
   const key = `${bucket}:${getClientIp(req)}`;
   const now = Date.now();
   const record = scoreRateLimits.get(key) || { count: 0, resetAt: now + windowMs };
@@ -278,7 +278,7 @@ function checkScoreRateLimit(req, bucket, maxRequests, windowMs) {
   return record.count <= maxRequests;
 }
 
-function isTrustedBrowserRequest(req) {
+function isTrustedBrowserRequest(req: any) {
   const origin = String(req.headers.origin || req.headers.referer || "").trim();
   if (!origin) return true;
   const scheme = String(req.headers["x-forwarded-proto"] || "http").toLowerCase();
@@ -286,7 +286,7 @@ function isTrustedBrowserRequest(req) {
   return origin.startsWith(`${scheme}://${host}`);
 }
 
-function getClientIp(req) {
+function getClientIp(req: any) {
   const forwarded = String(req.headers["x-forwarded-for"] || "").split(",")[0].trim();
   return forwarded || req.socket?.remoteAddress || req.headers.host || "unknown";
 }

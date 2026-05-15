@@ -54,7 +54,7 @@ export function unique<T>(values: T[]): T[] {
   return [...new Set(values.filter(Boolean))];
 }
 
-export function arraySetting(value, fallback, allowed = null) {
+export function arraySetting(value: unknown, fallback: string[], allowed: string[] | null = null): string[] {
   const items = Array.isArray(value)
     ? value
     : value === undefined || value === null || value === ""
@@ -65,7 +65,7 @@ export function arraySetting(value, fallback, allowed = null) {
   return filtered.length ? unique(filtered) : [...fallback];
 }
 
-export function numberArraySetting(value, fallback, allowed) {
+export function numberArraySetting(value: unknown, fallback: number[], allowed: number[]): number[] {
   const items = arraySetting(value, fallback.map(String), allowed.map(String));
   return items.map(Number).filter((item) => Number.isFinite(item));
 }
@@ -109,9 +109,9 @@ export function readPersistedConfig() {
   }
 }
 
-let persistTimer = null;
-export function savePersistentConfigSoon() {
-  clearTimeout(persistTimer);
+let persistTimer: NodeJS.Timeout | null = null;
+export function savePersistentConfigSoon(): void {
+  if (persistTimer) clearTimeout(persistTimer);
   persistTimer = setTimeout(async () => {
     try {
       await mkdir(dataDir, { recursive: true });
@@ -130,9 +130,9 @@ export function readFaceBoxStore() {
   }
 }
 
-export function persistedTeamName(team, fallback) {
+export function persistedTeamName(team: string, fallback: string): string {
   try {
-    const config = readPersistedConfig();
+    const config: Record<string, any> = readPersistedConfig();
     const teams = config?.teams || {};
     return String(teams[team]?.name || fallback);
   } catch {
@@ -140,7 +140,7 @@ export function persistedTeamName(team, fallback) {
   }
 }
 
-export function roundConfigKey(settings) {
+export function roundConfigKey(settings: Record<string, unknown>): string {
   return JSON.stringify({
     cropSize: settings.cropSize,
     candidateCount: settings.candidateCount,
@@ -155,8 +155,8 @@ export function roundConfigKey(settings) {
   });
 }
 
-export function effectiveFaceCropMode(settings) {
-  if (FACE_CROP_MODES.includes(settings.faceCropMode) && settings.faceCropMode !== "auto") return settings.faceCropMode;
+export function effectiveFaceCropMode(settings: Record<string, unknown>): string {
+  if (FACE_CROP_MODES.includes(settings.faceCropMode as string) && settings.faceCropMode !== "auto") return settings.faceCropMode as string;
   if (settings.difficulty === "easy") return "prefer";
   if (settings.difficulty === "hard") return "avoid";
   return "none";

@@ -2,8 +2,9 @@
 import { networkInterfaces } from "node:os";
 import { unique } from "./config.js";
 export function currentOriginFromRequest(req) {
-    const host = req.headers.host || "127.0.0.1";
-    const proto = req.headers["x-forwarded-proto"] || "http";
+    const headers = req?.headers || {};
+    const host = headers.host || "127.0.0.1";
+    const proto = headers["x-forwarded-proto"] || "http";
     return `${proto}://${host}`;
 }
 export function originList(activePort) {
@@ -39,11 +40,12 @@ export function pageUrls(origin) {
     };
 }
 export function networkState(req) {
+    const headers = req?.headers || {};
     return {
         port: Number(process.env.PORT || 5173),
         currentOrigin: currentOriginFromRequest(req),
         lanHosts: lanHosts(),
-        requestHost: req.headers.host || "",
+        requestHost: headers.host || "",
     };
 }
 //# sourceMappingURL=network.js.map

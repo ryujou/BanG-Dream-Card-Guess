@@ -1,4 +1,3 @@
-// @ts-ignore qrcode does not ship local TypeScript declarations in this project.
 import QRCode from "qrcode";
 
 export interface QRCodeService {

@@ -1,6 +1,5 @@
 import type { ServerResponse } from "node:http";
 import { securityHeaders, sendJson } from "../utils/http.js";
-// @ts-ignore
 import { BESTDORI_ORIGIN } from "../config.js";
 
 export async function proxyBestdori(url: URL, res: ServerResponse): Promise<void> {

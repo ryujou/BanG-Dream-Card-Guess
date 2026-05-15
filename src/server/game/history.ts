@@ -2,7 +2,7 @@ import type { GameState } from "./state.js";
 
 export type RoundResult = "correct" | "wrong" | "skip" | "timeout" | string;
 
-export function captureUndoState(game: GameState): Record<string, any> {
+export function captureUndoState(game: GameState): Record<string, unknown> {
   return {
     status: game.status,
     leftSeconds: game.leftSeconds,

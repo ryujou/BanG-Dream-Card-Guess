@@ -41,13 +41,13 @@ export function sanitizeSettings(current, next = {}, deps) {
     if (next.faceCropMode !== undefined)
         current.faceCropMode = deps.faceCropModes.includes(next.faceCropMode) ? next.faceCropMode : current.faceCropMode;
     if (next.roundSeconds !== undefined)
-        current.roundSeconds = Math.max(5, Math.min(600, Number(next.roundSeconds) || current.roundSeconds));
+        current.roundSeconds = Math.max(5, Math.min(600, Number(next.roundSeconds) || Number(current.roundSeconds) || 60));
     if (next.questionsPerPlayer !== undefined)
-        current.questionsPerPlayer = Math.max(1, Math.min(50, Number(next.questionsPerPlayer) || current.questionsPerPlayer));
+        current.questionsPerPlayer = Math.max(1, Math.min(50, Number(next.questionsPerPlayer) || Number(current.questionsPerPlayer) || 3));
     if (next.cropSize !== undefined)
-        current.cropSize = Math.max(60, Math.min(260, Number(next.cropSize) || current.cropSize));
+        current.cropSize = Math.max(60, Math.min(260, Number(next.cropSize) || Number(current.cropSize) || 180));
     if (next.candidateCount !== undefined)
-        current.candidateCount = Math.max(10, Math.min(500, Number(next.candidateCount) || current.candidateCount));
+        current.candidateCount = Math.max(10, Math.min(500, Number(next.candidateCount) || Number(current.candidateCount) || 120));
     if (next.maxRecrops !== undefined)
         current.maxRecrops = Math.max(0, Math.min(10, Number(next.maxRecrops) || 0));
     if (next.correctPoints !== undefined)
@@ -66,7 +66,7 @@ export function sanitizeSettings(current, next = {}, deps) {
         if (Number.isFinite(tolerance))
             current.stopwatchToleranceSeconds = Math.max(0.01, Math.min(99.99, tolerance));
     }
-    if (current.stopwatchToleranceSeconds > current.stopwatchTargetSeconds) {
+    if (Number(current.stopwatchToleranceSeconds) > Number(current.stopwatchTargetSeconds)) {
         current.stopwatchToleranceSeconds = current.stopwatchTargetSeconds;
     }
     for (const key of ["allowRecrop", "showPlayerRecrop", "soundEnabled", "streakBonus", "showTimer", "revealAfterJudge", "autoNext"]) {

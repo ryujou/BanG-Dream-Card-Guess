@@ -34,7 +34,7 @@ function faceLabel(face) {
 export async function smartCrop(image, size, settings, history = [], faceBoxes = []) {
     const cropSize = Math.max(60, Math.min(260, Math.floor(size)));
     const faceMode = effectiveFaceCropMode(settings);
-    const randomPoints = Array.from({ length: Math.max(30, settings.candidateCount) }, () => randomCropPoint(image, cropSize));
+    const randomPoints = Array.from({ length: Math.max(30, Number(settings.candidateCount) || 120) }, () => randomCropPoint(image, cropSize));
     const facePoints = faceMode === "prefer" || faceMode === "only" ? faceCropPoints(image, cropSize, faceBoxes) : [];
     const scoredCandidates = [...randomPoints, ...facePoints]
         .map((point) => ({ ...point, score: scoreCrop(image, point.x, point.y, cropSize, faceBoxes, faceMode) }))

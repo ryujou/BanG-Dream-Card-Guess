@@ -1,7 +1,7 @@
 import { isAuthenticated } from "../auth.js";
 import type { IncomingMessage, ServerResponse } from "node:http";
 
-export function sendJson(res: ServerResponse, value: any, status: number = 200): void {
+export function sendJson(res: ServerResponse, value: unknown, status: number = 200): void {
   res.writeHead(status, { ...securityHeaders(), "Content-Type": "application/json; charset=utf-8" });
   res.end(JSON.stringify(value));
 }

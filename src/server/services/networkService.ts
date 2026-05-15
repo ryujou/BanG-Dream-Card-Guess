@@ -3,7 +3,7 @@ import * as network from "../network.js";
 export interface NetworkService {
   getLocalAddresses(): string[];
   getPublicRoutes(activePort: number): unknown[];
-  networkState(req: unknown): any;
+  networkState(req: unknown): unknown;
   lanHosts(): string[];
 }
 

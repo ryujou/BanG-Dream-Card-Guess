@@ -21,7 +21,7 @@ const defaultCommunityData = {
   photos: []
 };
 
-let memoryCache = null;
+let memoryCache: Record<string, unknown> | null = null;
 
 export function readCommunityData() {
   if (memoryCache) return memoryCache;
@@ -34,7 +34,7 @@ export function readCommunityData() {
   }
 }
 
-export async function writeCommunityData(data) {
+export async function writeCommunityData(data: Record<string, unknown>) {
   memoryCache = data;
   await mkdir(dataDir, { recursive: true });
   await writeFile(communityStorePath, JSON.stringify(data, null, 2));

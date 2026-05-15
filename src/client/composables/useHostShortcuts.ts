@@ -1,6 +1,6 @@
 import { onMounted, onUnmounted } from 'vue';
 
-export function useHostShortcuts(gameStore: any) {
+export function useHostShortcuts(gameStore: { command: (cmd: string, payload?: Record<string, unknown>) => void; snapshot: any; role?: string | null }) {
   function handleGlobalShortcut(event: KeyboardEvent) {
     const target = event.target as HTMLElement;
     if (["INPUT", "TEXTAREA", "SELECT", "BUTTON"].includes(target.tagName) || target.isContentEditable) {

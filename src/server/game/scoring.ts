@@ -8,7 +8,7 @@ export interface RoundMessages {
   skip: string;
 }
 
-export function calculateStreakBonus(game: GameState, settings: Record<string, any>): number {
+export function calculateStreakBonus(game: GameState, settings: Record<string, unknown>): number {
   return settings.streakBonus ? game.streak : 0;
 }
 
@@ -17,7 +17,7 @@ export function updateTeamScore(game: GameState, team: TeamKey, points: number):
   return game;
 }
 
-export function applyCorrect(game: GameState, settings: Record<string, any>): number {
+export function applyCorrect(game: GameState, settings: Record<string, unknown>): number {
   const points = Number(settings.correctPoints || 0) + calculateStreakBonus(game, settings);
   game.score += points;
   game.streak += 1;
@@ -27,23 +27,23 @@ export function applyCorrect(game: GameState, settings: Record<string, any>): nu
   return points;
 }
 
-export function applyWrong(game: GameState, settings: Record<string, any>): GameState {
+export function applyWrong(game: GameState, settings: Record<string, unknown>): GameState {
   game.score = Math.max(0, game.score - Number(settings.wrongPenalty || 0));
   game.streak = 0;
   return game;
 }
 
-export function applySkip(game: GameState, settings: Record<string, any>): GameState {
+export function applySkip(game: GameState, settings: Record<string, unknown>): GameState {
   return applyWrong(game, settings);
 }
 
-export function applyTimeout(game: GameState, settings: Record<string, any>): GameState {
+export function applyTimeout(game: GameState, settings: Record<string, unknown>): GameState {
   return applyWrong(game, settings);
 }
 
 export function applyRoundResult(
   game: GameState,
-  settings: Record<string, any>,
+  settings: Record<string, unknown>,
   result: RoundResult,
   now: number,
   messages: RoundMessages
@@ -61,7 +61,7 @@ export function applyRoundResult(
     else applyWrong(game, settings);
     game.message = result === "wrong" ? messages.wrong : result === "timeout" ? messages.timeout : messages.skip;
   }
-  appendHistory(game, result, settings.currentTeam, now);
+  appendHistory(game, result, String(settings.currentTeam || ""), now);
   return game;
 }
 

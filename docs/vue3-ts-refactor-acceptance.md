@@ -82,3 +82,11 @@ The current branch is TypeScript-managed across the frontend, backend, shared ty
 - Frontend compiler: `vue-tsc` for `src/client` and `src/shared`.
 
 The public behavior contract remains unchanged: routes, HTTP API, WebSocket messages, game rules, AppSnapshot, settings, scores, QR behavior, and command names are expected to remain compatible.
+
+## TypeScript strictness acceptance
+
+`tsconfig.server.json` has `strict: true` enabled. The server build runs through `tsc -p tsconfig.server.json` and fails on type errors because `noEmitOnError` remains enabled.
+
+The source tree keeps `server.mjs` only as the compatibility launcher for compiled backend output. Legacy backend `.mjs` modules and script `.mjs` files have been removed or migrated. Input-facing `unknown` types are intentional at HTTP, WebSocket, diagnostics, settings, and score parsing boundaries, where guard functions narrow values before business logic runs.
+
+Known remaining type debt is limited to explicit `any` at weak library or data boundaries: image processing through Jimp-compatible objects, external card JSON payloads, score file normalization, WebSocket runtime event interop, and a small number of tests. These do not change public behavior and can be tightened incrementally.

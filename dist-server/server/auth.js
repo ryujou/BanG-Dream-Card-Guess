@@ -19,7 +19,8 @@ export function isAuthenticated(req) {
     return hasValidAuthSession(token);
 }
 export function getAuthToken(req) {
-    const cookies = parseCookies(req.headers.cookie || "");
+    const headers = req?.headers || {};
+    const cookies = parseCookies(headers.cookie || "");
     return cookies[AUTH_COOKIE] || "";
 }
 export function createAuthSession() {
@@ -53,14 +54,16 @@ export function hasValidAuthSession(token, now = Date.now()) {
     return true;
 }
 export function buildAuthCookie(token, req) {
-    const secure = String(req?.headers["x-forwarded-proto"] || "").toLowerCase() === "https";
-    const host = String(req?.headers?.host || "").split(":")[0].toLowerCase();
+    const headers = req?.headers || {};
+    const secure = String(headers["x-forwarded-proto"] || "").toLowerCase() === "https";
+    const host = String(headers.host || "").split(":")[0].toLowerCase();
     const domain = host.endsWith("xtbang.top") ? "; Domain=.xtbang.top" : "";
     return `${AUTH_COOKIE}=${token}; Path=/; HttpOnly; SameSite=Lax; Max-Age=${Math.floor(AUTH_SESSION_TTL_MS / 1000)}${domain}${secure ? "; Secure" : ""}`;
 }
 export function buildCsrfCookie(token, req) {
-    const secure = String(req?.headers["x-forwarded-proto"] || "").toLowerCase() === "https";
-    const host = String(req?.headers?.host || "").split(":")[0].toLowerCase();
+    const headers = req?.headers || {};
+    const secure = String(headers["x-forwarded-proto"] || "").toLowerCase() === "https";
+    const host = String(headers.host || "").split(":")[0].toLowerCase();
     const domain = host.endsWith("xtbang.top") ? "; Domain=.xtbang.top" : "";
     return `${CSRF_COOKIE}=${token}; Path=/; SameSite=Lax; Max-Age=${Math.floor(AUTH_SESSION_TTL_MS / 1000)}${domain}${secure ? "; Secure" : ""}`;
 }
@@ -76,7 +79,8 @@ function parseCookies(header) {
     return result;
 }
 export function getCookie(req, name) {
-    const cookies = parseCookies(req.headers.cookie || "");
+    const headers = req?.headers || {};
+    const cookies = parseCookies(headers.cookie || "");
     return cookies[name] || "";
 }
 export function verifyPassword(password) {

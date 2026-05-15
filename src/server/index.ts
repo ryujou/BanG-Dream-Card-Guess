@@ -1,5 +1,5 @@
-﻿// BanG Dream! Card Guess - HTTP/WebSocket server
-import { createServer } from "node:http";
+// BanG Dream! Card Guess - HTTP/WebSocket server
+import { createServer, type IncomingMessage } from "node:http";
 import { readFileSync } from "node:fs";
 import { mkdir, stat, writeFile } from "node:fs/promises";
 import path from "node:path";
@@ -9,6 +9,7 @@ import { WebSocketServer } from "ws";
 
 import { sendJson, securityHeaders, requestIp, isMutatingMethod, requiresCsrfCheck } from "./utils/http.js";
 import { logger } from "./utils/logger.js";
+import { isClientMessage, isCommandMessage, isHelloMessage } from "./utils/guards.js";
 import { proxyBestdori } from "./http/bestdoriProxy.js";
 import { serveStatic, streamFile } from "./app/static.js";
 import {
@@ -74,21 +75,21 @@ const cardPool = cardProvider.cardPool;
 // --- Settings ---
 const persistedConfig = readPersistedConfig();
 const settings = { ...defaultSettings, ...(persistedConfig.settings || {}) };
-const persistLock = { timer: null };
+const persistLock: { timer: NodeJS.Timeout | null } = { timer: null };
 
 // --- Game state ---
 const GAME_MESSAGES = {
-  correct: "回答正确",
-  wrong: "回答错误",
-  timeout: "时间到",
-  skip: "已跳过",
-  loading: "加载下一题",
-  recropDone: "已重切",
-  reveal: "答案揭晓",
-  hideAnswer: "答案已隐藏",
-  reset: "已重置",
-  stop: "游戏已停止",
-  emptyGuess: "请输入角色名或昵称",
+  correct: "�ش���ȷ",
+  wrong: "�ش����",
+  timeout: "ʱ�䵽",
+  skip: "������",
+  loading: "������һ��",
+  recropDone: "������",
+  reveal: "�𰸽���",
+  hideAnswer: "��������",
+  reset: "������",
+  stop: "��Ϸ��ֹͣ",
+  emptyGuess: "�������ɫ�����ǳ�",
 };
 const SETTINGS_DEPS = {
   defaultSettings,
@@ -104,13 +105,13 @@ const SETTINGS_DEPS = {
 };
 function currentTeamNames() {
   return {
-    A: persistedTeamName?.("A", "A 队") || "A 队",
-    B: persistedTeamName?.("B", "B 队") || "B 队",
+    A: persistedTeamName?.("A", "A ��") || "A ��",
+    B: persistedTeamName?.("B", "B ��") || "B ��",
   };
 }
 const game = createInitialGameState(settings, currentTeamNames());
 let roundToken = 0;
-let preparedRound = null;
+let preparedRound: Promise<Record<string, unknown> | null> | null = null;
 let preparedRoundKey = "";
 const clients = new Map();
 const loginAttempts = new Map();
@@ -157,7 +158,7 @@ const server = createServer(async (req, res) => {
       await writeCommunityData(data);
       return sendJson(res, { ok: true });
     } catch (err) {
-      return sendJson(res, { error: err.message }, 500);
+      return sendJson(res, { error: err instanceof Error ? err.message : String(err) }, 500);
     }
   }
   if (url.pathname === "/api/upload" && req.method === "POST") {
@@ -179,7 +180,7 @@ const server = createServer(async (req, res) => {
       }
       return sendJson(res, { error: "Invalid image format" }, 400);
     } catch (err) {
-      return sendJson(res, { error: err.message }, 500);
+      return sendJson(res, { error: err instanceof Error ? err.message : String(err) }, 500);
     }
   }
 
@@ -190,7 +191,7 @@ const server = createServer(async (req, res) => {
     const username = normalizeQueueUsername(body.username);
     const score = Math.max(0, Math.min(999999, Math.floor(Number(body.score))));
     const duration = Math.max(0, Math.min(3600, Math.floor(Number(body.duration || 0))));
-    if (!username || !Number.isFinite(score)) return sendJson(res, { ok: false, message: "用户名或分数无效" }, 400);
+    if (!username || !Number.isFinite(score)) return sendJson(res, { ok: false, message: "�û����������Ч" }, 400);
     const scores = scoreStore.readQueueScores();
     scores.unshift({ id: randomBytes(8).toString("hex"), username, score, duration, at: Date.now() });
     try {
@@ -200,7 +201,7 @@ const server = createServer(async (req, res) => {
       logger.error(error, { event: "queue_scores_write_failed" });
       throw error;
     }
-    return sendJson(res, { ok: true, ...scoreStore.queueScoreState(scores) });
+    return sendJson(res, { ok: true, ...(scoreStore.queueScoreState(scores) as object) });
   }
   if (url.pathname.startsWith("/note-shooter-api/")) return scoreStore.handleNoteShooterApi(url, req, res);
   if (url.pathname === "/api/note-shooter-scores" && req.method === "GET") return sendJson(res, scoreStore.noteShooterScoreState());
@@ -212,10 +213,10 @@ const server = createServer(async (req, res) => {
     const playerId = normalizeNoteShooterPlayerId(body.playerId);
     const scope = String(body.scope || "");
 
-    if (!isAuthenticated(req) && !verifyPassword(password)) return sendJson(res, { ok: false, message: "权限不足" }, 401);
-    if (!id && !playerId) return sendJson(res, { ok: false, message: "缺少成绩 ID" }, 400);
+    if (!isAuthenticated(req) && !verifyPassword(password)) return sendJson(res, { ok: false, message: "Ȩ�޲���" }, 401);
+    if (!id && !playerId) return sendJson(res, { ok: false, message: "ȱ�ٳɼ� ID" }, 400);
 
-    const scores = scoreStore.readNoteShooterScores();
+    const scores = scoreStore.readNoteShooterScores() as Record<string, unknown>[];
     const nextScores = scope === "player" && playerId
       ? scores.filter((entry) => entry.player_id !== playerId)
       : scores.filter((entry) => entry.id !== id);
@@ -261,7 +262,7 @@ const server = createServer(async (req, res) => {
       const svg = await qrcodeService.createQrImage(qrcodeService.createQrPayload(text), { type: "svg", width: 320, margin: 1, color: { dark: "#334462", light: "#FFFFFFFF" } });
       res.writeHead(200, { ...securityHeaders(), "Content-Type": "image/svg+xml; charset=utf-8", "Cache-Control": "no-cache" });
       return res.end(svg);
-    } catch { return sendJson(res, { error: "生成失败" }, 500); }
+    } catch { return sendJson(res, { error: "����ʧ��" }, 500); }
   }
 
   // Bestdori proxy
@@ -276,25 +277,25 @@ const server = createServer(async (req, res) => {
   }
 
   // Static files (public/ or dist/)
-  return serveStatic(req.url, res, publicDir, distDir);
+  return serveStatic((req as { url?: string })?.url || "/", res, publicDir, distDir);
 });
 
 // --- WebSocket ---
 const wss = new WebSocketServer({ server, path: "/ws" });
-wss.on("connection", (ws, req) => {
+wss.on("connection", (ws: WebSocket, req: IncomingMessage) => {
   if (!isTrustedWebSocketOrigin(req)) {
-    logger.warn("Rejected WebSocket connection with invalid origin", { origin: req.headers.origin || "" });
+    logger.warn("Rejected WebSocket connection with invalid origin", { origin: (req as { headers?: Record<string, string> })?.headers?.origin || "" });
     ws.close(1008, "Invalid origin");
     return;
   }
   logger.info("WebSocket connected", { ip: requestIp(req), clients: clients.size + 1 });
   let authenticated = isAuthenticated(req);
 
-  ws.on("message", async (raw) => {
+  (ws as any).on("message", async (raw: unknown) => {
     try {
-      const message = JSON.parse(String(raw));
-      if (message.type === "hello") {
-        const requestedRole = message.role || "player";
+      const message: unknown = JSON.parse(String(raw));
+      if (isClientMessage(message) && message.type === "hello") {
+        const requestedRole = isHelloMessage(message) ? message.role : "player";
         if (requestedRole === "self" && APP_MODE === "solo") {
           clients.set(ws, { role: "self", authenticated: false });
         } else if (["host", "settings"].includes(requestedRole) && !authenticated) {
@@ -307,23 +308,23 @@ wss.on("connection", (ws, req) => {
         sendState(ws);
         return;
       }
-      if (message.type === "auth") {
-        authenticated = verifyPassword(message.password || "");
+      if (isClientMessage(message) && message.type === "auth") {
+        authenticated = verifyPassword(String(message.password || ""));
         const role = clients.get(ws)?.role || "player";
         clients.set(ws, { role, authenticated });
         ws.send(JSON.stringify({ type: "authResult", ok: authenticated }));
         if (authenticated) sendState(ws);
         return;
       }
-      if (message.type === "command") {
+      if (isCommandMessage(message)) {
         await handleCommand(ws, message.command, message.payload || {});
       }
     } catch (error) {
       logger.error(error, { event: "websocket_message_error" });
-      ws.send(JSON.stringify({ type: "error", message: error instanceof Error ? error.message : "操作失败" }));
+      ws.send(JSON.stringify({ type: "error", message: error instanceof Error ? error.message : "����ʧ��" }));
     }
   });
-  ws.on("close", () => {
+  (ws as any).on("close", () => {
     clients.delete(ws);
     logger.info("WebSocket disconnected", { clients: clients.size });
   });
@@ -331,11 +332,11 @@ wss.on("connection", (ws, req) => {
 });
 
 // --- Command handler ---
-async function handleCommand(ws, command, payload) {
+async function handleCommand(ws: WebSocket, command: string, payload: unknown) {
   const client = clients.get(ws);
   const soloAllowed = APP_MODE === "solo" && client?.role === "self" && isSoloAllowedCommand(command);
   const playerAllowed = APP_MODE === "booth" && client?.role === "player" && isPlayerAllowedCommand(command);
-  if (!client?.authenticated && !soloAllowed && !playerAllowed) throw new Error("请先登录主持端");
+  if (!client?.authenticated && !soloAllowed && !playerAllowed) throw new Error("���ȵ�¼���ֶ�");
   const safePayload = validateCommandPayload(command, payload);
 
   switch (command) {
@@ -348,19 +349,19 @@ async function handleCommand(ws, command, payload) {
     case "undo": undoLastJudgement(); break;
     case "stop": stopGame(); break;
     case "reveal": clearAutoNext(); stopTimer(); applyPureCommand(command, safePayload); break;
-    case "selfGuess": judgeSelfGuess(safePayload.guess); break;
+    case "selfGuess": judgeSelfGuess((safePayload as Record<string, unknown>).guess); break;
     case "hideAnswer": applyPureCommand(command, safePayload); break;
     case "reset": resetGame(); break;
-    case "settings": updateSettings(payload); await saveSettings(); break;
-    case "importSettings": updateSettings(payload); await saveSettings(); break;
+    case "settings": updateSettings(payload as Record<string, unknown>); await saveSettings(); break;
+    case "importSettings": updateSettings(payload as Record<string, unknown>); await saveSettings(); break;
     default:
       logger.warn("Unknown WebSocket command", { command, role: client?.role || "unknown" });
-      throw new Error(`未知命令: ${command}`);
+      throw new Error(`δ֪����: ${command}`);
   }
 }
 
-function applyPureCommand(command, payload = {}) {
-  const result = applyGameCommand(game, settings, command, payload, {
+function applyPureCommand(command: string, payload: unknown = {}) {
+  const result = applyGameCommand(game, settings, command, payload as Record<string, unknown>, {
     appMode: APP_MODE,
     now: Date.now(),
     teamNames: currentTeamNames(),
@@ -374,26 +375,26 @@ function applyPureCommand(command, payload = {}) {
 async function recrop() {
   if (!game.current || game.status !== "playing" || game.loading || !settings.allowRecrop || game.recrops >= settings.maxRecrops) return;
   game.loading = true;
-  game.message = "重新裁剪中";
+  game.message = "���²ü���";
   broadcast();
   let crop;
   try {
-    crop = await cropService.recropCard(game.current, settings, game.cropHistory);
+    crop = await cropService.recropCard(game.current as any, settings, game.cropHistory);
   } catch (error) {
     logger.error(error, { event: "crop_failed", cardId: game.current?.cardId });
     game.loading = false;
     broadcast();
     throw error;
   }
-  rememberCrop(crop);
+  rememberCrop(crop as Record<string, unknown>);
   game.current.crop = crop;
   game.recrops += 1;
   game.loading = false;
-  game.message = "已重切";
+  game.message = "������";
   broadcast();
 }
 
-function finishRound(result) {
+function finishRound(result: string) {
   if (!game.current || game.status !== "playing") return;
   clearAutoNext();
   stopTimer();
@@ -422,7 +423,7 @@ function stopGame() {
   applyPureCommand("stop");
 }
 
-function judgeSelfGuess(guess) {
+function judgeSelfGuess(guess: unknown) {
   const beforeStatus = game.status;
   clearAutoNext();
   const result = applyGameCommand(game, settings, "selfGuess", { guess }, {
@@ -450,21 +451,22 @@ function resetGame() {
   applyPureCommand("reset");
 }
 
-async function updateSettings(next) {
+async function updateSettings(next: Record<string, unknown>) {
   if (next.teams) {
-    if (next.teams.A?.name !== undefined) game.teams.A.name = String(next.teams.A.name).trim().slice(0, 20) || "A 队";
-    if (next.teams.B?.name !== undefined) game.teams.B.name = String(next.teams.B.name).trim().slice(0, 20) || "B 队";
+    const nextTeams = next.teams as Record<string, any>;
+    if (nextTeams.A?.name !== undefined) game.teams.A.name = String(nextTeams.A.name).trim().slice(0, 20) || "A ";
+    if (nextTeams.B?.name !== undefined) game.teams.B.name = String(nextTeams.B.name).trim().slice(0, 20) || "B ";
   }
-  const { difficultyChanged, modeChanged } = sanitizeSettings(settings, next, SETTINGS_DEPS);
+  const { difficultyChanged, modeChanged } = sanitizeSettings(settings, next, SETTINGS_DEPS as any);
 
   broadcast();
 
-  if (difficultyChanged || modeChanged) { preparedRound = null; stopTimer(); clearAutoNext(); game.status = "idle"; game.current = null; game.message = "配置已更新，题目已重置"; broadcast(); }
+  if (difficultyChanged || modeChanged) { preparedRound = null; stopTimer(); clearAutoNext(); game.status = "idle"; game.current = null; game.message = "�����Ѹ��£���Ŀ������"; broadcast(); }
 }
 
 async function saveSettings() {
   // write settings + team names to disk
-  clearTimeout(persistLock.timer);
+  if (persistLock.timer) clearTimeout(persistLock.timer);
   persistLock.timer = setTimeout(async () => {
     try {
       await mkdir(dataDir, { recursive: true });
@@ -478,14 +480,14 @@ function filteredCardPool() {
   return cardProvider.filteredCardPool(settings);
 }
 
-function rememberRound(round) {
+function rememberRound(round: Record<string, unknown>) {
   game.recentCards.unshift(String(round.cardId));
   game.recentCharacters.unshift(Number(round.characterId));
   game.recentCards = unique(game.recentCards).slice(0, Math.max(4, settings.avoidRecentCards + 8));
   game.recentCharacters = unique(game.recentCharacters).slice(0, Math.max(4, settings.avoidRecentCharacters + 4));
 }
 
-function rememberCrop(crop) {
+function rememberCrop(crop: Record<string, unknown>) {
   game.cropHistory.push({ x: crop.x, y: crop.y });
   game.cropHistory = game.cropHistory.slice(-8);
 }
@@ -524,7 +526,7 @@ async function startRound() {
   clearAutoNext();
   stopTimer();
 
-  markRoundLoading(game, settings, "加载下一题");
+  markRoundLoading(game, settings, "������һ��");
   broadcast();
 
   let round = null;
@@ -533,16 +535,16 @@ async function startRound() {
   } catch (error) {
     logger.error(error, { event: "card_load_failed" });
     if (token === roundToken) {
-      markRoundLoadFailed(game, error instanceof Error ? error.message : "题目加载失败");
+      markRoundLoadFailed(game, error instanceof Error ? error.message : "��Ŀ����ʧ��");
       broadcast();
     }
     throw error;
   }
   if (token !== roundToken) return;
 
-  rememberRound(round);
-  rememberCrop(round.crop);
-  markRoundPlaying(game, settings, round, "答题中");
+  rememberRound(round as Record<string, unknown>);
+  rememberCrop((round as any).crop as Record<string, unknown>);
+  markRoundPlaying(game, settings, round as Record<string, unknown>, "������");
   broadcast();
   startTimer();
   prepareNextRound();
@@ -573,7 +575,7 @@ function stopTimer() { timerService.stopRoundTimer(); }
 function healthSnapshot() {
   const faceImages = Object.keys(faceBoxStore.images || {}).length;
   const cacheInfo = cardProvider.getCacheInfo();
-  const roleCounts = { player: 0, host: 0, settings: 0, self: 0 };
+  const roleCounts: Record<string, number> = { player: 0, host: 0, settings: 0, self: 0 };
   for (const { role } of clients.values()) { if (roleCounts[role] !== undefined) roleCounts[role] += 1; }
   const recentErrors = logger.recentErrors();
   const routes = networkService.getPublicRoutes(port);
@@ -650,8 +652,8 @@ function scoreSummary() {
   const queue = scoreStore.queueScoreState();
   const noteShooter = scoreStore.noteShooterScoreState();
   return {
-    queue: { total: queue.total || 0, topCount: queue.top?.length || 0, recentCount: queue.recent?.length || 0 },
-    noteShooter: { total: noteShooter.total || 0, leaderboardCount: noteShooter.leaderboard?.length || 0, recentCount: noteShooter.recent?.length || 0 },
+    queue: { total: (queue as any).total || 0, topCount: (queue as any).top?.length || 0, recentCount: (queue as any).recent?.length || 0 },
+    noteShooter: { total: (noteShooter as any).total || 0, leaderboardCount: (noteShooter as any).leaderboard?.length || 0, recentCount: (noteShooter as any).recent?.length || 0 },
   };
 }
 
@@ -662,9 +664,9 @@ function websocketSummary() {
   };
 }
 
-function diagnosticsSnapshot(req, options: { exportMode?: boolean } = {}) {
+function diagnosticsSnapshot(req: unknown, options: { exportMode?: boolean } = {}) {
   const health = publicHealthSnapshot();
-  const network = networkService.networkState(req);
+  const network = networkService.networkState(req) as Record<string, unknown>;
   return {
     ok: true,
     exportMode: !!options.exportMode,
@@ -696,7 +698,7 @@ function diagnosticsSnapshot(req, options: { exportMode?: boolean } = {}) {
  * @param {string} role 
  * @returns {AppSnapshot}
  */
-function publicState(role) {
+function publicState(role: string) {
   return createPublicSnapshot({
     appMode: APP_MODE,
     role,
@@ -707,7 +709,7 @@ function publicState(role) {
   });
 }
 
-function sendState(ws) {
+function sendState(ws: WebSocket) {
   const role = clients.get(ws)?.role || "player";
   ws.send(JSON.stringify({ type: "state", state: publicState(role) }));
 }
@@ -733,7 +735,7 @@ function broadcast() {
 
 
 
-function isTrustedOrigin(req) {
+function isTrustedOrigin(req: IncomingMessage) {
   const origin = req.headers.origin;
   if (!origin) return true;
   try {
@@ -745,7 +747,7 @@ function isTrustedOrigin(req) {
   }
 }
 
-function isTrustedWebSocketOrigin(req) {
+function isTrustedWebSocketOrigin(req: IncomingMessage) {
   const origin = req.headers.origin;
   if (!origin) return true;
   try {
@@ -758,7 +760,7 @@ function isTrustedWebSocketOrigin(req) {
 
 
 
-function checkLoginRateLimit(ip) {
+function checkLoginRateLimit(ip: string) {
   const now = Date.now();
   const entry = loginAttempts.get(ip);
   if (!entry || now - entry.firstAt > LOGIN_RATE_LIMIT_WINDOW_MS) {
@@ -770,13 +772,13 @@ function checkLoginRateLimit(ip) {
   return true;
 }
 
-function clearLoginRateLimit(ip) {
+function clearLoginRateLimit(ip: string) {
   loginAttempts.delete(ip);
 }
 
 
 
-function hasValidCsrf(req) {
+function hasValidCsrf(req: IncomingMessage) {
   const cookieToken = getCookie(req, CSRF_COOKIE);
   const headerToken = String(req.headers["x-csrf-token"] || "");
   if (!cookieToken || !headerToken) return false;
@@ -803,7 +805,7 @@ server.listen(port, "0.0.0.0", () => {
       solo: `${origin}/solo`,
       qr: `${origin}/qr`,
     };
-    return labels.map(([label, key]) => `${label.padEnd(10)} ${pages[key]}`);
+    return labels.map(([label, key]) => `${label.padEnd(10)} ${(pages as Record<string, string>)[key]}`);
   });
   logger.info(`BangBangCai ${APP_MODE} server running:\n${lines.join("\n")}`);
   if (!process.env.HOST_PASSWORD) {

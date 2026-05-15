@@ -33,10 +33,10 @@
       <div class="solo-controls">
         <button class="primary" @click="command('start')">{{ current ? '下一题' : '开始' }}</button>
         <button 
-          :disabled="!canPlay || !settings?.allowRecrop || (game?.recrops || 0) >= (settings?.maxRecrops || 0)" 
+          :disabled="game?.status !== 'playing' || !settings?.allowRecrop || Number(game?.recrops || 0) >= Number(settings?.maxRecrops || 0)" 
           @click="command('recrop')"
         >
-          重切 {{ Math.max(0, (settings?.maxRecrops || 0) - (game?.recrops || 0)) }}
+          重切 {{ Math.max(0, Number(settings?.maxRecrops || 0) - Number(game?.recrops || 0)) }}
         </button>
         <button :disabled="!current || game?.status === 'idle'" @click="command('reveal')">揭晓</button>
         <button class="danger" :disabled="game?.status === 'idle'" @click="command('stop')">停止游戏</button>

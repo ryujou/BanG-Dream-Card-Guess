@@ -55,10 +55,10 @@ const showRecropButton = computed(() => settings.value?.showPlayerRecrop !== fal
 const canRecrop = computed(() => 
   game.value?.status === "playing" && 
   settings.value?.allowRecrop && 
-  (game.value?.recrops || 0) < (settings.value?.maxRecrops || 0)
+  Number(game.value?.recrops || 0) < Number(settings.value?.maxRecrops || 0)
 );
 const recropsLeft = computed(() => 
-  Math.max(0, (settings.value?.maxRecrops || 0) - (game.value?.recrops || 0))
+  Math.max(0, Number(settings.value?.maxRecrops || 0) - Number(game.value?.recrops || 0))
 );
 
 function handleRecrop() {

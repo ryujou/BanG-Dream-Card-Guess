@@ -45,7 +45,7 @@ export function applyRoundResult(game, settings, result, now, messages) {
             applyWrong(game, settings);
         game.message = result === "wrong" ? messages.wrong : result === "timeout" ? messages.timeout : messages.skip;
     }
-    appendHistory(game, result, settings.currentTeam, now);
+    appendHistory(game, result, String(settings.currentTeam || ""), now);
     return game;
 }
 //# sourceMappingURL=scoring.js.map

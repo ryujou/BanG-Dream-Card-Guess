@@ -112,3 +112,9 @@ The local release contains TypeScript source for the frontend, backend, shared t
 - `npm run package:local` compiles the packaging script, then writes `artifacts/bang-dream-card-guess-local.tar.gz`.
 
 No git push or GitHub PR is required for local delivery.
+
+## TypeScript strictness
+
+The backend compiler is now configured with `strict: true` in `tsconfig.server.json`, including `noImplicitAny`, `strictNullChecks`, `strictFunctionTypes`, `strictBindCallApply`, `noImplicitThis`, and `alwaysStrict`.
+
+Only `server.mjs` remains as a Node compatibility entry. The old backend `.mjs` modules were replaced by TypeScript source and compiled JavaScript output. Remaining explicit `any` usage is tracked as type debt at weak external boundaries such as Jimp image objects, Bestdori card payloads, score persistence normalization, and selected tests.

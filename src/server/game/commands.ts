@@ -17,8 +17,8 @@ export const HOST_COMMANDS = [
 
 export type GameCommand = typeof HOST_COMMANDS[number] | string;
 
-export function validateCommandPayload(command: GameCommand, payload: any = {}): any {
-  if (command === "selfGuess") return { guess: payload?.guess };
+export function validateCommandPayload(command: GameCommand, payload: unknown = {}): unknown {
+  if (command === "selfGuess") return { guess: (payload as Record<string, unknown>)?.guess };
   return payload || {};
 }
 

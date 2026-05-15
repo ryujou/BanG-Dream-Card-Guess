@@ -7,12 +7,12 @@ import type { RandomService } from "./randomService.js";
 
 export interface CardProvider {
   loadCards(): void;
-  getRandomCard(settings: Record<string, any>, recentCards?: string[], recentCharacters?: number[]): any;
-  resolveCardImage(card: any, settings: Record<string, any>): Promise<any>;
-  createRound(settings: Record<string, any>, recentCards?: string[], recentCharacters?: number[]): Promise<any>;
-  filteredCardPool(settings: Record<string, any>): any[];
+  getRandomCard(settings: Record<string, unknown>, recentCards?: string[], recentCharacters?: number[]): unknown;
+  resolveCardImage(card: any, settings: Record<string, unknown>): Promise<unknown>;
+  createRound(settings: Record<string, unknown>, recentCards?: string[], recentCharacters?: number[]): Promise<Record<string, unknown> | null>;
+  filteredCardPool(settings: Record<string, unknown>): any[];
   getCacheInfo(): { cachedSets: number; cachePercent: number };
-  faceBoxStore: Record<string, any>;
+  faceBoxStore: Record<string, unknown>;
   cardPool: any[];
 }
 
@@ -22,15 +22,15 @@ export interface CardProviderOptions {
   cardCache: CardCache;
   cropService: CropService;
   randomService: RandomService;
-  faceBoxStore?: Record<string, any>;
+  faceBoxStore?: Record<string, unknown>;
   fetchImpl?: typeof fetch;
 }
 
 export function createCardProvider(options: CardProviderOptions): CardProvider {
   const fetchImpl = options.fetchImpl || fetch;
   const faceBoxStore = options.faceBoxStore || readFaceBoxStore();
-  let cards: Record<string, any> = {};
-  let nicknames: Record<string, any[]> = {};
+  let cards: Record<string, unknown> = {};
+  let nicknames: Record<string, unknown[]> = {};
   let cardPool: any[] = [];
 
   const provider: CardProvider = {
@@ -42,14 +42,14 @@ export function createCardProvider(options: CardProviderOptions): CardProvider {
       cards = JSON.parse(readFileSync(options.cardsPath, "utf-8"));
       nicknames = JSON.parse(readFileSync(options.nicknamesPath, "utf-8"));
       cardPool = Object.entries(cards)
-        .map(([id, card]): any => ({ ...(card as Record<string, any>), id }))
-        .filter((card) => card?.resourceSetName && nicknames[String(card.characterId)]?.length);
+        .map(([id, card]): unknown => ({ ...(card as Record<string, unknown>), id }))
+        .filter((card: any) => card?.resourceSetName && nicknames[String(card.characterId)]?.length);
     },
-    filteredCardPool(settings) {
-      const bandSet = new Set(settings.cardBands || []);
-      const raritySet = new Set((settings.cardRarities || []).map(Number));
-      const attributeSet = new Set(settings.cardAttributes || []);
-      const filtered = cardPool.filter((card) => {
+    filteredCardPool(settings: any): any[] {
+      const bandSet = new Set((settings.cardBands as unknown[]) || []);
+      const raritySet = new Set(((settings.cardRarities as number[]) || []).map(Number));
+      const attributeSet = new Set((settings.cardAttributes as unknown[]) || []);
+      const filtered = cardPool.filter((card: any) => {
         const band = BAND_BY_CHARACTER.get(Number(card.characterId));
         if (bandSet.size && !bandSet.has(band)) return false;
         if (raritySet.size && !raritySet.has(Number(card.rarity))) return false;
@@ -79,9 +79,9 @@ export function createCardProvider(options: CardProviderOptions): CardProvider {
       return filtered.length ? filtered : cardPool;
     },
     getRandomCard(settings, recentCards = [], recentCharacters = []) {
-      const pool = provider.filteredCardPool(settings);
-      const recentCardSet = new Set(recentCards.slice(0, settings.avoidRecentCards));
-      const recentCharacterSet = new Set(recentCharacters.slice(0, settings.avoidRecentCharacters));
+      const pool = provider.filteredCardPool(settings as Record<string, unknown>);
+      const recentCardSet = new Set(recentCards.slice(0, (settings.avoidRecentCards as number)));
+      const recentCharacterSet = new Set(recentCharacters.slice(0, (settings.avoidRecentCharacters as number)));
       const passes = [
         (card: any) => !recentCardSet.has(String(card.id)) && !recentCharacterSet.has(Number(card.characterId)),
         (card: any) => !recentCardSet.has(String(card.id)),
@@ -93,7 +93,7 @@ export function createCardProvider(options: CardProviderOptions): CardProvider {
       }
       return options.randomService.pickOne(pool);
     },
-    async resolveCardImage(card, settings) {
+    async resolveCardImage(card: any, settings: any) {
       const allowedVariants = settings.cardVariants || ["normal", "trained"];
       let variants: string[] = [];
       if (allowedVariants.includes("normal")) variants.push("card_normal.png");
@@ -157,11 +157,11 @@ export function createCardProvider(options: CardProviderOptions): CardProvider {
       }
       throw new Error("下载卡面失败");
     },
-    async createRound(settings, recentCards = [], recentCharacters = []) {
-      const card = provider.getRandomCard(settings, recentCards, recentCharacters);
+    async createRound(settings, recentCards = [], recentCharacters = []): Promise<Record<string, unknown> | null> {
+      const card: any = provider.getRandomCard(settings, recentCards, recentCharacters);
       if (!card) throw new Error("题库为空");
       const names = nicknames[String(card.characterId)];
-      const { buffer, imageUrl, variant, cacheRelativePath } = await provider.resolveCardImage(card, settings);
+      const { buffer, imageUrl, variant, cacheRelativePath } = await provider.resolveCardImage(card, settings) as any;
       const faceBoxes = faceBoxesFor(faceBoxStore, cacheRelativePath);
       const { image, crop } = await options.cropService.cropCard(buffer, settings, faceBoxes);
       return {
@@ -176,8 +176,8 @@ export function createCardProvider(options: CardProviderOptions): CardProvider {
         band: BAND_BY_CHARACTER.get(Number(card.characterId)) || "",
         faceBoxes,
         faceCropMode: effectiveFaceCropMode(settings),
-        imageWidth: image.bitmap.width,
-        imageHeight: image.bitmap.height,
+        imageWidth: (image as any).bitmap.width,
+        imageHeight: (image as any).bitmap.height,
         sourceBuffer: buffer,
         crop,
       };

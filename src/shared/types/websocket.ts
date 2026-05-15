@@ -8,7 +8,7 @@ export interface HelloMessage {
 export interface CommandMessage {
   type: 'command';
   command: string;
-  payload?: any;
+  payload?: unknown;
 }
 
 export interface AuthRequiredMessage {
@@ -28,29 +28,36 @@ export interface StateMessage {
 export type ServerMessage = AuthRequiredMessage | ErrorMessage | StateMessage;
 
 export interface GameSettings {
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 export interface CurrentCard {
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 export interface GameHistoryItem {
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 export interface GameState {
   status: 'idle' | 'playing' | 'revealed' | 'ended' | 'loading' | string;
-  [key: string]: any;
+  teams?: Record<string, { name: string; score: number }>;
+  current?: Record<string, unknown> | null;
+  history?: Record<string, unknown>[];
+  recrops?: number;
+  canUndo?: boolean;
+  leftSeconds?: number;
+  [key: string]: unknown;
 }
 
 export interface GameMeta {
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 export interface AppSnapshot {
   game?: GameState;
   settings?: GameSettings;
   meta?: GameMeta;
-  [key: string]: any;
+  health?: Record<string, unknown>;
+  [key: string]: unknown;
 }

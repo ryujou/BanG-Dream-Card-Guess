@@ -1,16 +1,16 @@
 import * as scores from "../scores.js";
 
 export interface ScoreStore {
-  readQueueScores(): any[];
-  writeQueueScores(scores: any[]): Promise<void>;
-  queueScoreState(scores?: any[]): any;
+  readQueueScores(): unknown[];
+  writeQueueScores(scores: unknown[]): Promise<void>;
+  queueScoreState(scores?: unknown[]): unknown;
   handleQueueScoreEvents(req: unknown, res: unknown): void;
-  broadcastQueueScores(state?: any): void;
-  readNoteShooterScores(): any[];
-  writeNoteShooterScores(scores: any[]): Promise<void>;
-  noteShooterScoreState(scores?: any[]): any;
+  broadcastQueueScores(state?: unknown): void;
+  readNoteShooterScores(): unknown[];
+  writeNoteShooterScores(scores: unknown[]): Promise<void>;
+  noteShooterScoreState(scores?: unknown[]): unknown;
   handleNoteShooterScoreEvents(req: unknown, res: unknown): void;
-  broadcastNoteShooterScores(state?: any): void;
+  broadcastNoteShooterScores(state?: unknown): void;
   handleNoteShooterApi(url: URL, req: unknown, res: unknown): Promise<void>;
 }
 

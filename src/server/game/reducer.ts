@@ -14,9 +14,9 @@ export interface ReducerMessages extends RoundMessages {
 
 export function applyGameCommand(
   game: GameState,
-  settings: Record<string, any>,
+  settings: Record<string, unknown>,
   command: string,
-  payload: Record<string, any> = {},
+  payload: Record<string, unknown> = {},
   context: { appMode: string; now: number; teamNames: TeamNames; messages: ReducerMessages }
 ): { handled: boolean; result?: string } {
   switch (command) {
@@ -24,14 +24,14 @@ export function applyGameCommand(
     case "next":
       game.status = "loading";
       game.loading = true;
-      game.leftSeconds = settings.roundSeconds;
+      game.leftSeconds = Number(settings.roundSeconds) || 60;
       game.recrops = 0;
       game.cropHistory = [];
       game.current = null;
       game.message = context.messages.loading;
       return { handled: true };
     case "recrop":
-      if (!game.current || game.status !== "playing" || game.loading || !settings.allowRecrop || game.recrops >= settings.maxRecrops) {
+      if (!game.current || game.status !== "playing" || game.loading || !settings.allowRecrop || game.recrops >= (Number(settings.maxRecrops) || 0)) {
         return { handled: true };
       }
       game.recrops += 1;
@@ -65,8 +65,8 @@ export function applyGameCommand(
 
 export function applySelfGuess(
   game: GameState,
-  settings: Record<string, any>,
-  guess: any,
+  settings: Record<string, unknown>,
+  guess: unknown,
   context: { appMode: string; now: number; messages: ReducerMessages }
 ): { handled: boolean; result?: string } {
   if (context.appMode !== "solo" || !game.current || game.status !== "playing") return { handled: true };
@@ -75,12 +75,15 @@ export function applySelfGuess(
     game.message = context.messages.emptyGuess;
     return { handled: true };
   }
-  const match = game.current.acceptedAnswers.some((accepted: string) => accepted.toLowerCase() === answer.toLowerCase());
+  const accepted = Array.isArray(game.current.acceptedAnswers) ? game.current.acceptedAnswers : [];
+  const match = accepted.some((acc: unknown) => typeof acc === 'string' && acc.toLowerCase() === answer.toLowerCase());
   const result = match ? "correct" : "wrong";
   applyRoundResult(game, settings, result, context.now, context.messages);
   return { handled: true, result };
 }
 
-export function normalizeAnswer(value: any): string {
-  return String(value || "").trim();
+export function normalizeAnswer(value: unknown): string {
+  if (typeof value === "string") return value.trim();
+  if (typeof value === "number") return String(value);
+  return "";
 }

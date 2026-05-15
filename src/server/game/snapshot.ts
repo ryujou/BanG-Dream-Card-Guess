@@ -4,10 +4,10 @@ export function createPublicSnapshot(input: {
   appMode: string;
   role: string;
   game: GameState;
-  settings: Record<string, any>;
-  meta: Record<string, any>;
-  health: Record<string, any>;
-}): Record<string, any> {
+  settings: Record<string, unknown>;
+  meta: Record<string, unknown>;
+  health: Record<string, unknown>;
+}): Record<string, unknown> {
   const { appMode, role, game, settings, meta, health } = input;
   const current = createPublicCurrent(game, role);
   return {
@@ -28,11 +28,11 @@ export function createPublicSnapshot(input: {
   };
 }
 
-export function createRoleSnapshot(input: Parameters<typeof createPublicSnapshot>[0]): Record<string, any> {
+export function createRoleSnapshot(input: Parameters<typeof createPublicSnapshot>[0]): Record<string, unknown> {
   return createPublicSnapshot(input);
 }
 
-export function createPublicCurrent(game: GameState, role: string): Record<string, any> | null {
+export function createPublicCurrent(game: GameState, role: string): Record<string, unknown> | null {
   if (!game.current) return null;
   return {
     displayName: ["player", "self"].includes(role) && game.status === "playing" ? "" : game.current.displayName,

@@ -11,10 +11,10 @@
       <div class="host-controls">
         <button class="primary" :disabled="false" @click="command('start')">开始/下一题</button>
         <button 
-          :disabled="!canPlay || !settings?.allowRecrop || (game?.recrops || 0) >= (settings?.maxRecrops || 0)" 
+          :disabled="!canPlay || !settings?.allowRecrop || Number(game?.recrops || 0) >= Number(settings?.maxRecrops || 0)" 
           @click="command('recrop')"
         >
-          重切 {{ Math.max(0, (settings?.maxRecrops || 0) - (game?.recrops || 0)) }}
+          重切 {{ Math.max(0, Number(settings?.maxRecrops || 0) - Number(game?.recrops || 0)) }}
         </button>
         <button :disabled="!canReveal" @click="command('reveal')">揭晓</button>
         <button class="success" :disabled="!canPlay" @click="command('correct')">答对</button>
@@ -69,7 +69,7 @@
         <div class="answer-list">
           <span>正确答案</span>
           <strong>{{ current?.displayName || "未开始" }}</strong>
-          <small>{{ current?.acceptedAnswers?.slice(0, 10).join(" / ") || "" }}</small>
+          <small>{{ (current?.acceptedAnswers as string[] | undefined)?.slice(0, 10).join(" / ") || "" }}</small>
         </div>
         
         <form id="hostStopwatchSettingsForm" class="host-mini-settings" @submit.prevent="saveStopwatchSettings">
@@ -91,7 +91,7 @@
         
         <div v-if="!game?.history?.length" class="muted">暂无记录</div>
         <div v-else class="history">
-          <div v-for="(item, i) in game.history" :key="i" class="history-item" :class="item.result">
+          <div v-for="(item, i) in game.history" :key="i" class="history-item" :class="item.result as string">
             <span>{{ item.result === 'correct' ? '?' : '!' }}</span>
             <strong>{{ item.name }}</strong>
           </div>
@@ -140,7 +140,7 @@ watch(() => settings.value, (newSettings: any) => {
   }
 }, { immediate: true });
 
-function command(cmd: string, payload: any = {}) {
+function command(cmd: string, payload: Record<string, unknown> = {}) {
   gameStore.command(cmd, payload);
 }
 

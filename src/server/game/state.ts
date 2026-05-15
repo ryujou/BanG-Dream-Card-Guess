@@ -18,16 +18,16 @@ export interface GameState {
   streak: number;
   total: number;
   recrops: number;
-  cropHistory: Array<Record<string, any>>;
+  cropHistory: Array<Record<string, unknown>>;
   recentCards: Array<string>;
   recentCharacters: Array<number>;
-  undoStack: Array<Record<string, any>>;
-  current: any;
-  history: Array<Record<string, any>>;
+  undoStack: Array<Record<string, unknown>>;
+  current: Record<string, unknown> | null;
+  history: Array<Record<string, unknown>>;
   teams: GameTeams;
   roundKey: string;
   message?: string;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 export interface TeamNames {
@@ -42,10 +42,10 @@ export function createInitialTeams(teamNames: TeamNames): GameTeams {
   };
 }
 
-export function createInitialGameState(settings: Record<string, any>, teamNames: TeamNames): GameState {
+export function createInitialGameState(settings: Record<string, unknown>, teamNames: TeamNames): GameState {
   return {
     status: "idle",
-    leftSeconds: settings.roundSeconds,
+    leftSeconds: Number(settings.roundSeconds) || 60,
     loading: false,
     score: 0,
     streak: 0,
@@ -62,17 +62,17 @@ export function createInitialGameState(settings: Record<string, any>, teamNames:
   };
 }
 
-export function createInitialAppState(settings: Record<string, any>, teamNames: TeamNames): { game: GameState; settings: Record<string, any> } {
+export function createInitialAppState(settings: Record<string, unknown>, teamNames: TeamNames): { game: GameState; settings: Record<string, unknown> } {
   return {
     game: createInitialGameState(settings, teamNames),
     settings,
   };
 }
 
-export function resetGameState(game: GameState, settings: Record<string, any>, teamNames: TeamNames, message: string): GameState {
+export function resetGameState(game: GameState, settings: Record<string, unknown>, teamNames: TeamNames, message: string): GameState {
   Object.assign(game, {
     status: "idle",
-    leftSeconds: settings.roundSeconds,
+    leftSeconds: Number(settings.roundSeconds) || 60,
     loading: false,
     score: 0,
     streak: 0,
@@ -90,11 +90,11 @@ export function resetGameState(game: GameState, settings: Record<string, any>, t
   return game;
 }
 
-export function markRoundLoading(game: GameState, settings: Record<string, any>, message: string): GameState {
+export function markRoundLoading(game: GameState, settings: Record<string, unknown>, message: string): GameState {
   Object.assign(game, {
     status: "loading",
     loading: true,
-    leftSeconds: settings.roundSeconds,
+    leftSeconds: Number(settings.roundSeconds) || 60,
     recrops: 0,
     cropHistory: [],
     current: null,
@@ -112,12 +112,12 @@ export function markRoundLoadFailed(game: GameState, message: string): GameState
   return game;
 }
 
-export function markRoundPlaying(game: GameState, settings: Record<string, any>, round: any, message: string): GameState {
+export function markRoundPlaying(game: GameState, settings: Record<string, unknown>, round: Record<string, unknown>, message: string): GameState {
   Object.assign(game, {
     current: round,
     status: "playing",
     loading: false,
-    leftSeconds: settings.roundSeconds,
+    leftSeconds: Number(settings.roundSeconds) || 60,
     message,
   });
   return game;
