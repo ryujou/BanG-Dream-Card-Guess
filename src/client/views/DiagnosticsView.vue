@@ -80,7 +80,7 @@ async function loadDiagnostics() {
       diagnostics.value = { health: health.value };
       return;
     }
-    if (!response.ok) throw new Error('诊断信息获取失败');
+    if (!response.ok || !isJsonResponse(response)) throw new Error('诊断信息获取失败');
     diagnostics.value = await response.json();
     health.value = diagnostics.value.health || {};
   } catch (err: any) {
@@ -91,7 +91,11 @@ async function loadDiagnostics() {
 
 async function loadHealth() {
   const response = await fetch('/api/health');
-  if (response.ok) health.value = await response.json();
+  if (response.ok && isJsonResponse(response)) health.value = await response.json();
+}
+
+function isJsonResponse(response: Response) {
+  return (response.headers.get('content-type') || '').includes('application/json');
 }
 
 async function copyDiagnostics() {
