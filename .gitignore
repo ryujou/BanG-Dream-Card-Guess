@@ -15,6 +15,14 @@ weight/*
 screenshots/*.tmp.*
 
 node_modules
+artifacts/
+*.tar.gz
+*.tgz
+*.zip
+test-results/
+playwright-report/
+coverage/
+.server-build/
 __pycache__/
 *.pyc
 npm-debug.log

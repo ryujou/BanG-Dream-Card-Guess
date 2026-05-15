@@ -17,7 +17,9 @@
     "cache-cards": "node scripts/cache-cards.mjs",
     "detect-faces": "python scripts/detect-faces.py",
     "test": "vitest run",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "verify": "npm run typecheck && npm run build && npm test && npm run test:e2e",
+    "package:local": "node scripts/package-local.mjs"
   },
   "license": "MIT",
   "contributors": [

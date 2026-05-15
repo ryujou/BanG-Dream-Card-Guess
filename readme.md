@@ -365,3 +365,57 @@ A: 使用 `scripts/deploy-now.mjs` 通过 rsync + ssh 同步，服务器用 pm2 
 ---
 
 > 欢迎加入湘潭 BanG Dream! 同好会：[点击链接加入群聊](https://qm.qq.com/q/6ytGE7qIWQ)
+
+---
+
+## 本地交付与诊断
+
+本项目支持本地交付、离线运行和现场诊断。完整说明见：
+
+- `docs/local-release.md`
+- `docs/diagnostics.md`
+- `docs/vue3-ts-refactor-acceptance.md`
+
+常用命令：
+
+```sh
+npm install
+npm run dev
+npm run build
+npm run booth
+npm run solo
+npm run typecheck
+npm test
+npm run test:e2e
+npm run verify
+npm run package:local
+```
+
+诊断入口：
+
+- `/api/health`
+- `/api/diagnostics`
+- `/api/diagnostics/export`
+- `/diagnostics`
+
+现场排错重点：
+
+- 手机无法访问二维码：确认同一 Wi-Fi，使用 `/qr` 中的局域网地址，必要时查看 `/diagnostics` 的 network 信息。
+- WebSocket 断线：查看 `/diagnostics` 的 websocket 连接数和角色统计。
+- 题库缓存异常：查看 `/api/health` 的 cache 摘要，离线前执行 `npm run cache-cards`。
+- scores 写入失败：查看 `/diagnostics` 的 scores 摘要和 recentErrors，确认 `data` 目录可写。
+- 导出诊断信息：主持登录后打开 `/diagnostics` 点击复制，或访问 `/api/diagnostics/export`。
+
+本地发布包：
+
+```sh
+npm run package:local
+```
+
+输出路径：
+
+```text
+artifacts/bang-dream-card-guess-local.tar.gz
+```
+
+所有改动仅本地保存，不需要 `git push`，不需要创建 GitHub PR。

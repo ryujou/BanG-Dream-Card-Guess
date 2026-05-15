@@ -1,5 +1,6 @@
 // BanG Dream! Card Guess - HTTP/WebSocket server
 import { createServer } from "node:http";
+import { readFileSync } from "node:fs";
 import { mkdir, stat, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -45,7 +46,16 @@ const publicDir = path.join(__dirname, "public");
 const cardCacheDir = path.join(publicDir, "cards");
 const resourceDir = path.join(__dirname, "resource");
 const APP_MODE = process.env.APP_MODE === "solo" || process.argv.includes("--solo") ? "solo" : "booth";
-const APP_VERSION = process.env.npm_package_version || "1.5.1";
+const APP_VERSION = process.env.npm_package_version || readPackageVersion();
+
+function readPackageVersion() {
+  try {
+    const pkg = JSON.parse(readFileSync(path.join(__dirname, "package.json"), "utf8"));
+    return typeof pkg.version === "string" && pkg.version ? pkg.version : "0.0.0";
+  } catch {
+    return "0.0.0";
+  }
+}
 
 // --- Services ---
 const services = createProductionServices({ resourceDir, cardCacheDir });
