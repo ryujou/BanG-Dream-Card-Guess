@@ -29,8 +29,8 @@ export default defineConfig({
   webServer: {
     command: 'npm run dev',
     url: baseURL,
-    // Always boot an isolated server for e2e to avoid attaching to stale local dev processes.
-    reuseExistingServer: false,
+    // Default to isolated startup, with an explicit escape hatch for shared-port environments.
+    reuseExistingServer: process.env.PLAYWRIGHT_REUSE_EXISTING_SERVER === '1',
     timeout: 60000,
   },
 });
