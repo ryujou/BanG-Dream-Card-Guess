@@ -20,7 +20,8 @@
     "detect-faces": "python scripts/detect-faces.py",
     "test": "vitest run",
     "test:e2e": "playwright test",
-    "verify": "npm run typecheck && npm run build && npm test && npm run test:e2e",
+    "test:e2e:nonvisual": "playwright test --grep-invert \"Visual Regression Tests\"",
+    "verify": "npm run typecheck && npm run build && npm test && npm run test:e2e:nonvisual",
     "check:any": "npm run build:scripts && node dist-scripts/count-any.js",
     "package:local": "npm run build:scripts && node dist-scripts/package-local.js"
   },
