@@ -55,6 +55,7 @@
         <h2>成员介绍</h2>
         <div class="linktree-members">
           <a v-for="(m, i) in data.members" :key="i" class="member-pill" :href="safeUrl(m.url)" target="_blank" rel="noreferrer">
+            <img v-if="m.avatar" class="member-avatar" :src="safeUrl(m.avatar)" :alt="`${m.name || '成员'} 头像`" loading="lazy" />
             <strong>{{ m.name }}</strong>
             <span>{{ m.desc }}</span>
           </a>

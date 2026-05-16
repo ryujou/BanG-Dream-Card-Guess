@@ -2430,6 +2430,16 @@ select:focus {
   color: var(--color-text-dim);
 }
 
+.member-avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 0.6rem;
+  border: 2px solid rgba(255, 255, 255, 0.85);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+}
+
 .linktree-events {
   display: flex;
   flex-direction: column;

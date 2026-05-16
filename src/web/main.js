@@ -217,6 +217,7 @@ async function renderHome() {
           <div class="linktree-members">
             ${data.members.map(m => `
               <a class="member-pill" href="${safeUrl(m.url)}" target="_blank" rel="noreferrer">
+                ${m.avatar ? `<img class="member-avatar" src="${safeUrl(m.avatar)}" alt="${escapeHtml(m.name || "成员")} 头像" loading="lazy" />` : ``}
                 <strong>${escapeHtml(m.name)}</strong>
                 <span>${escapeHtml(m.desc)}</span>
               </a>
@@ -1778,7 +1779,6 @@ function safeUrl(value) {
     return "#";
   }
 }
-
 
 
 
