@@ -220,12 +220,11 @@ const server = createServer(async (req, res) => {
   if (url.pathname === "/api/note-shooter-scores" && req.method === "DELETE") {
     const body = parseRequestPayload(req, await readRequestBody(req));
     if (!isRecord(body)) return sendJson(res, { ok: false, message: "Invalid payload" }, 400);
-    const password = String(body.password || "");
     const id = String(body.id || "").trim();
     const playerId = normalizeNoteShooterPlayerId(body.playerId);
     const scope = String(body.scope || "");
 
-    if (!isAuthenticated(req) && !verifyPassword(password)) return sendJson(res, { ok: false, message: "权锟睫诧拷锟斤拷" }, 401);
+    if (!isAuthenticated(req)) return sendJson(res, { ok: false, message: "Unauthorized" }, 401);
     if (!id && !playerId) return sendJson(res, { ok: false, message: "缺锟劫成硷拷 ID" }, 400);
 
     const scores = scoreStore.readNoteShooterScores() as Record<string, unknown>[];

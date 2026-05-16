@@ -1,4 +1,3 @@
-import { isAuthenticated } from "../auth.js";
 import type { IncomingMessage, ServerResponse } from "node:http";
 
 export function sendJson(res: ServerResponse, value: unknown, status: number = 200): void {
@@ -37,8 +36,7 @@ export function isMutatingMethod(method: string | undefined): boolean {
 }
 
 export function requiresCsrfCheck(req: IncomingMessage, pathname: string): boolean {
+  void req;
   if (pathname === "/api/login") return false;
-  if (pathname === "/api/queue-scores") return false;
-  if (pathname.startsWith("/note-shooter-api/")) return false;
-  return isAuthenticated(req);
+  return true;
 }
