@@ -1,22 +1,31 @@
-import { readFileSync, existsSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
+interface CacheCard {
+  resourceSetName?: string;
+}
+
+interface CacheJob {
+  resourceSetName: string;
+  file: string;
+}
+
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const rootDir = path.resolve(__dirname, "..");
-const cards = JSON.parse(readFileSync(path.join(rootDir, "resource", "all5_2.json"), "utf-8")) as Record<string, any>;
+const cards = JSON.parse(readFileSync(path.join(rootDir, "resource", "all5_2.json"), "utf-8")) as Record<string, CacheCard>;
 const cardCacheDir = path.join(rootDir, "public", "cards");
 const BESTDORI_BASE = "https://bestdori.com/assets/jp/characters/resourceset";
 const concurrency = Number(process.env.CONCURRENCY || 8);
 
-const seen = new Set();
+const seen = new Set<string>();
 const jobs = Object.values(cards)
-  .filter((card) => card?.resourceSetName)
+  .filter((card): card is Required<CacheCard> => !!card.resourceSetName)
   .flatMap((card) => ["card_normal.png", "card_after_training.png"].map((file) => ({
-      resourceSetName: card.resourceSetName,
-      file,
-    })))
+    resourceSetName: card.resourceSetName,
+    file,
+  })))
   .filter((job) => {
     const key = `${job.resourceSetName}/${job.file}`;
     if (seen.has(key)) return false;
@@ -33,7 +42,7 @@ let cursor = 0;
 await mkdir(cardCacheDir, { recursive: true });
 await Promise.all(Array.from({ length: concurrency }, worker));
 
-console.log(`完成：已缓存 ${saved}，已存在 ${skipped}，失�?不存�?${failed}，总任�?${jobs.length}`);
+console.log(`Done: saved=${saved} skipped=${skipped} failed=${failed} total=${jobs.length}`);
 
 async function worker() {
   while (cursor < jobs.length) {
@@ -46,7 +55,7 @@ async function worker() {
   }
 }
 
-async function download({ resourceSetName, file }) {
+async function download({ resourceSetName, file }: CacheJob) {
   const relativePath = path.join(`${resourceSetName}_rip`, file);
   const targetPath = path.join(cardCacheDir, relativePath);
 

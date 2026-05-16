@@ -32,10 +32,11 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
+import type { ClientCurrentCard, ClientGameState } from '../../types/ui';
 
 const props = defineProps<{
-  current: any;
-  game?: any;
+  current: ClientCurrentCard | null | undefined;
+  game?: Partial<ClientGameState>;
 }>();
 
 const badge = computed(() => props.game?.message || "答案揭晓");

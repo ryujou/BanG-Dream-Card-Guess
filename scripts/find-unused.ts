@@ -18,7 +18,7 @@ for (const cls of classNames) {
   try {
     // Search in src/ and public/
     // exclude the css files themselves
-    execSync(`git grep -q "\\b${cls}\\b" -- "src/*" "public/*" ":!src/client/styles/*" ":!src/web/styles.css" ":!src/web/main.legacy.js"`);
+    execSync(`git grep -q "\\b${cls}\\b" -- "src/*" "public/*" ":!src/client/styles/*"`);
   } catch (e) {
     unused.push(cls);
   }

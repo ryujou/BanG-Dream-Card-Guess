@@ -34,11 +34,13 @@
 </template>
 
 <script setup lang="ts">
+import type { ClientGameSettings, ClientGameState } from '../../types/ui';
+
 const COMMUNITY_URL = "https://qm.qq.com/q/6ytGE7qIWQ";
 
 const props = defineProps<{
-  game?: any;
-  settings?: any;
+  game?: ClientGameState;
+  settings?: ClientGameSettings;
   connected?: boolean;
   showCommunityLink?: boolean;
 }>();

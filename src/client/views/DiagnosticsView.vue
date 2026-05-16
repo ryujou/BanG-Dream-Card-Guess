@@ -61,9 +61,10 @@
 
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue';
+import type { ClientDiagnostics, ClientHealth } from '../types/ui';
 
-const diagnostics = ref<any>(null);
-const health = ref<any>({});
+const diagnostics = ref<ClientDiagnostics | null>(null);
+const health = ref<ClientHealth>({});
 const error = ref('');
 const unauthorized = ref(false);
 
@@ -81,10 +82,11 @@ async function loadDiagnostics() {
       return;
     }
     if (!response.ok || !isJsonResponse(response)) throw new Error('诊断信息获取失败');
-    diagnostics.value = await response.json();
-    health.value = diagnostics.value.health || {};
-  } catch (err: any) {
-    error.value = err.message || '诊断信息获取失败';
+    const value = await response.json() as ClientDiagnostics;
+    diagnostics.value = value;
+    health.value = value.health || {};
+  } catch (err: unknown) {
+    error.value = err instanceof Error ? err.message : '诊断信息获取失败';
     await loadHealth();
   }
 }

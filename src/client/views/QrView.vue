@@ -62,8 +62,9 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
 import { loadWifiQr, saveWifiQr, wifiQrText } from '../utils/storage';
+import type { NetworkEntry, NetworkInfo, NetworkPages } from '../types/ui';
 
-const qrInfo = ref<any>(null);
+const qrInfo = ref<NetworkInfo | null>(null);
 const qrLoading = ref(false);
 const qrError = ref("");
 
@@ -91,15 +92,15 @@ const fallbackPages = computed(() => ({
   qr: `${window.location.origin}/qr`,
 }));
 
-const primaryEntry = computed(() => {
+const primaryEntry = computed<NetworkEntry>(() => {
   const entries = qrInfo.value?.entries || [];
-  return entries.find((e: any) => !e.local) || {
+  return entries.find((entry) => !entry.local) || {
     origin: qrInfo.value?.currentOrigin || window.location.origin,
     pages: qrInfo.value?.pages || fallbackPages.value,
   };
 });
 
-const pages = computed(() => primaryEntry.value.pages || fallbackPages.value);
+const pages = computed<NetworkPages>(() => ({ ...fallbackPages.value, ...(primaryEntry.value.pages || {}) }));
 
 const qrCards = computed(() => {
   return appMode.value === "solo"
@@ -117,7 +118,7 @@ const qrCards = computed(() => {
 });
 
 const lanEntries = computed(() => {
-  return (qrInfo.value?.entries || []).filter((e: any) => !e.local);
+  return (qrInfo.value?.entries || []).filter((entry) => !entry.local);
 });
 
 async function loadQrInfo() {
@@ -126,8 +127,8 @@ async function loadQrInfo() {
     const response = await fetch("/api/network");
     if (!response.ok) throw new Error("获取网络地址失败");
     qrInfo.value = await response.json();
-  } catch (error: any) {
-    qrError.value = error.message || "获取网络地址失败";
+  } catch (error: unknown) {
+    qrError.value = error instanceof Error ? error.message : "获取网络地址失败";
   } finally {
     qrLoading.value = false;
   }

@@ -17,7 +17,6 @@ const container = ref<HTMLElement | null>(null);
 
 onMounted(async () => {
   try {
-    // @ts-ignore
     const mod = await import('../../web/stopwatch-challenge.js');
     if (container.value) {
       mod.mountStopwatchChallenge(container.value);

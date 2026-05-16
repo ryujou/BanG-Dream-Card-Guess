@@ -1,6 +1,7 @@
 import { onMounted, onUnmounted } from 'vue';
+import type { AppSnapshot } from '../../shared/types/websocket';
 
-export function useHostShortcuts(gameStore: { command: (cmd: string, payload?: Record<string, unknown>) => void; snapshot: any; role?: string | null }) {
+export function useHostShortcuts(gameStore: { command: (cmd: string, payload?: Record<string, unknown>) => void; snapshot: AppSnapshot | null; role?: string | null }) {
   function handleGlobalShortcut(event: KeyboardEvent) {
     const target = event.target as HTMLElement;
     if (["INPUT", "TEXTAREA", "SELECT", "BUTTON"].includes(target.tagName) || target.isContentEditable) {

@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, type Page } from '@playwright/test';
 
 test.describe('Visual Regression Tests', () => {
   // Common style to hide/mask dynamic elements (timers, scores, variable content)
@@ -20,7 +20,7 @@ test.describe('Visual Regression Tests', () => {
     '.live-dot' // Mask the blinking dot to prevent subtle diffs
   ];
 
-  const screenshotOptions = (page: any) => ({
+  const screenshotOptions = (page: Page) => ({
     mask: maskSelectors.map(s => page.locator(s)),
     maxDiffPixelRatio: 0.05,
     animations: 'disabled' as const

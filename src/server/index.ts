@@ -1,4 +1,4 @@
-// BanG Dream! Card Guess - HTTP/WebSocket server
+﻿// BanG Dream! Card Guess - HTTP/WebSocket server
 import { createServer, type IncomingMessage } from "node:http";
 import { readFileSync } from "node:fs";
 import { mkdir, stat, writeFile } from "node:fs/promises";
@@ -36,10 +36,18 @@ import {
 } from "./game/state.js";
 import { undoHistory } from "./game/history.js";
 import { applyRoundResult } from "./game/scoring.js";
-import { sanitizeSettings } from "./game/settings.js";
+import { sanitizeSettings, type SettingsDeps } from "./game/settings.js";
 import { isPlayerAllowedCommand, isSoloAllowedCommand, validateCommandPayload } from "./game/commands.js";
 import { applyGameCommand } from "./game/reducer.js";
 import { createPublicSnapshot } from "./game/snapshot.js";
+import type { NoteShooterScoreState, QueueScoreState } from "../shared/types/scores.js";
+
+interface WebSocketLike {
+  on(event: "message", listener: (raw: unknown) => void | Promise<void>): void;
+  on(event: "close", listener: () => void): void;
+  send(data: string): void;
+  close(code?: number, reason?: string): void;
+}
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const rootDir = path.resolve(__dirname, "..", "..");
@@ -79,17 +87,17 @@ const persistLock: { timer: NodeJS.Timeout | null } = { timer: null };
 
 // --- Game state ---
 const GAME_MESSAGES = {
-  correct: "�ش���ȷ",
-  wrong: "�ش����",
-  timeout: "ʱ�䵽",
-  skip: "������",
-  loading: "������һ��",
-  recropDone: "������",
-  reveal: "�𰸽���",
-  hideAnswer: "��������",
-  reset: "������",
-  stop: "��Ϸ��ֹͣ",
-  emptyGuess: "�������ɫ�����ǳ�",
+  correct: "锟截达拷锟斤拷确",
+  wrong: "回答错误",
+  timeout: "时锟戒到",
+  skip: "锟斤拷锟斤拷锟斤拷",
+  loading: "锟斤拷锟斤拷锟斤拷一锟斤拷",
+  recropDone: "锟斤拷锟斤拷锟斤拷",
+  reveal: "锟金案斤拷锟斤拷",
+  hideAnswer: "锟斤拷锟斤拷锟斤拷锟斤拷",
+  reset: "锟斤拷锟斤拷锟斤拷",
+  stop: "锟斤拷戏锟斤拷停止",
+  emptyGuess: "请输入答案",
 };
 const SETTINGS_DEPS = {
   defaultSettings,
@@ -105,8 +113,8 @@ const SETTINGS_DEPS = {
 };
 function currentTeamNames() {
   return {
-    A: persistedTeamName?.("A", "A ��") || "A ��",
-    B: persistedTeamName?.("B", "B ��") || "B ��",
+    A: persistedTeamName?.("A", "A 锟斤拷") || "A 锟斤拷",
+    B: persistedTeamName?.("B", "B 锟斤拷") || "B 锟斤拷",
   };
 }
 const game = createInitialGameState(settings, currentTeamNames());
@@ -194,7 +202,7 @@ const server = createServer(async (req, res) => {
     const username = normalizeQueueUsername(body.username);
     const score = Math.max(0, Math.min(999999, Math.floor(Number(body.score))));
     const duration = Math.max(0, Math.min(3600, Math.floor(Number(body.duration || 0))));
-    if (!username || !Number.isFinite(score)) return sendJson(res, { ok: false, message: "�û����������Ч" }, 400);
+    if (!username || !Number.isFinite(score)) return sendJson(res, { ok: false, message: "成绩无效" }, 400);
     const scores = scoreStore.readQueueScores();
     scores.unshift({ id: randomBytes(8).toString("hex"), username, score, duration, at: Date.now() });
     try {
@@ -217,8 +225,8 @@ const server = createServer(async (req, res) => {
     const playerId = normalizeNoteShooterPlayerId(body.playerId);
     const scope = String(body.scope || "");
 
-    if (!isAuthenticated(req) && !verifyPassword(password)) return sendJson(res, { ok: false, message: "Ȩ�޲���" }, 401);
-    if (!id && !playerId) return sendJson(res, { ok: false, message: "ȱ�ٳɼ� ID" }, 400);
+    if (!isAuthenticated(req) && !verifyPassword(password)) return sendJson(res, { ok: false, message: "权锟睫诧拷锟斤拷" }, 401);
+    if (!id && !playerId) return sendJson(res, { ok: false, message: "缺锟劫成硷拷 ID" }, 400);
 
     const scores = scoreStore.readNoteShooterScores() as Record<string, unknown>[];
     const nextScores = scope === "player" && playerId
@@ -266,7 +274,7 @@ const server = createServer(async (req, res) => {
       const svg = await qrcodeService.createQrImage(qrcodeService.createQrPayload(text), { type: "svg", width: 320, margin: 1, color: { dark: "#334462", light: "#FFFFFFFF" } });
       res.writeHead(200, { ...securityHeaders(), "Content-Type": "image/svg+xml; charset=utf-8", "Cache-Control": "no-cache" });
       return res.end(svg);
-    } catch { return sendJson(res, { error: "����ʧ��" }, 500); }
+    } catch { return sendJson(res, { error: "锟斤拷锟斤拷失锟斤拷" }, 500); }
   }
 
   // Bestdori proxy
@@ -287,15 +295,16 @@ const server = createServer(async (req, res) => {
 // --- WebSocket ---
 const wss = new WebSocketServer({ server, path: "/ws" });
 wss.on("connection", (ws: WebSocket, req: IncomingMessage) => {
+  const socket = ws as unknown as WebSocketLike;
   if (!isTrustedWebSocketOrigin(req)) {
     logger.warn("Rejected WebSocket connection with invalid origin", { origin: (req as { headers?: Record<string, string> })?.headers?.origin || "" });
-    ws.close(1008, "Invalid origin");
+    socket.close(1008, "Invalid origin");
     return;
   }
   logger.info("WebSocket connected", { ip: requestIp(req), clients: clients.size + 1 });
   let authenticated = isAuthenticated(req);
 
-  (ws as any).on("message", async (raw: unknown) => {
+  socket.on("message", async (raw: unknown) => {
     try {
       const message: unknown = JSON.parse(String(raw));
       if (isClientMessage(message) && message.type === "hello") {
@@ -305,7 +314,7 @@ wss.on("connection", (ws: WebSocket, req: IncomingMessage) => {
         } else if (["host", "settings"].includes(requestedRole) && !authenticated) {
           clients.set(ws, { role: "player", authenticated: false });
           logger.warn("WebSocket auth required", { requestedRole });
-          ws.send(JSON.stringify({ type: "authRequired" }));
+          socket.send(JSON.stringify({ type: "authRequired" }));
         } else {
           clients.set(ws, { role: requestedRole, authenticated });
         }
@@ -316,7 +325,7 @@ wss.on("connection", (ws: WebSocket, req: IncomingMessage) => {
         authenticated = verifyPassword(String(message.password || ""));
         const role = clients.get(ws)?.role || "player";
         clients.set(ws, { role, authenticated });
-        ws.send(JSON.stringify({ type: "authResult", ok: authenticated }));
+        socket.send(JSON.stringify({ type: "authResult", ok: authenticated }));
         if (authenticated) sendState(ws);
         return;
       }
@@ -325,10 +334,10 @@ wss.on("connection", (ws: WebSocket, req: IncomingMessage) => {
       }
     } catch (error) {
       logger.error(error, { event: "websocket_message_error" });
-      ws.send(JSON.stringify({ type: "error", message: error instanceof Error ? error.message : "����ʧ��" }));
+      socket.send(JSON.stringify({ type: "error", message: error instanceof Error ? error.message : "锟斤拷锟斤拷失锟斤拷" }));
     }
   });
-  (ws as any).on("close", () => {
+  socket.on("close", () => {
     clients.delete(ws);
     logger.info("WebSocket disconnected", { clients: clients.size });
   });
@@ -340,7 +349,7 @@ async function handleCommand(ws: WebSocket, command: string, payload: unknown) {
   const client = clients.get(ws);
   const soloAllowed = APP_MODE === "solo" && client?.role === "self" && isSoloAllowedCommand(command);
   const playerAllowed = APP_MODE === "booth" && client?.role === "player" && isPlayerAllowedCommand(command);
-  if (!client?.authenticated && !soloAllowed && !playerAllowed) throw new Error("���ȵ�¼���ֶ�");
+  if (!client?.authenticated && !soloAllowed && !playerAllowed) throw new Error("锟斤拷锟饺碉拷录锟斤拷锟街讹拷");
   const safePayload = validateCommandPayload(command, payload);
 
   switch (command) {
@@ -360,7 +369,7 @@ async function handleCommand(ws: WebSocket, command: string, payload: unknown) {
     case "importSettings": updateSettings(payload as Record<string, unknown>); await saveSettings(); break;
     default:
       logger.warn("Unknown WebSocket command", { command, role: client?.role || "unknown" });
-      throw new Error(`δ֪����: ${command}`);
+      throw new Error(`未知锟斤拷锟斤拷: ${command}`);
   }
 }
 
@@ -379,7 +388,7 @@ function applyPureCommand(command: string, payload: unknown = {}) {
 async function recrop() {
   if (!game.current || game.status !== "playing" || game.loading || !settings.allowRecrop || game.recrops >= settings.maxRecrops) return;
   game.loading = true;
-  game.message = "���²ü���";
+  game.message = "锟斤拷锟铰裁硷拷锟斤拷";
   broadcast();
   let crop;
   try {
@@ -394,7 +403,7 @@ async function recrop() {
   game.current.crop = crop;
   game.recrops += 1;
   game.loading = false;
-  game.message = "������";
+  game.message = "锟斤拷锟斤拷锟斤拷";
   broadcast();
 }
 
@@ -457,15 +466,17 @@ function resetGame() {
 
 async function updateSettings(next: Record<string, unknown>) {
   if (next.teams) {
-    const nextTeams = next.teams as Record<string, any>;
-    if (nextTeams.A?.name !== undefined) game.teams.A.name = String(nextTeams.A.name).trim().slice(0, 20) || "A ";
-    if (nextTeams.B?.name !== undefined) game.teams.B.name = String(nextTeams.B.name).trim().slice(0, 20) || "B ";
+    const nextTeams = isRecord(next.teams) ? next.teams : {};
+    const teamA = isRecord(nextTeams.A) ? nextTeams.A : {};
+    const teamB = isRecord(nextTeams.B) ? nextTeams.B : {};
+    if (teamA.name !== undefined) game.teams.A.name = String(teamA.name).trim().slice(0, 20) || "A ";
+    if (teamB.name !== undefined) game.teams.B.name = String(teamB.name).trim().slice(0, 20) || "B ";
   }
-  const { difficultyChanged, modeChanged } = sanitizeSettings(settings, next, SETTINGS_DEPS as any);
+  const { difficultyChanged, modeChanged } = sanitizeSettings(settings, next, SETTINGS_DEPS as SettingsDeps);
 
   broadcast();
 
-  if (difficultyChanged || modeChanged) { preparedRound = null; stopTimer(); clearAutoNext(); game.status = "idle"; game.current = null; game.message = "�����Ѹ��£���Ŀ������"; broadcast(); }
+  if (difficultyChanged || modeChanged) { preparedRound = null; stopTimer(); clearAutoNext(); game.status = "idle"; game.current = null; game.message = "锟斤拷锟斤拷锟窖革拷锟铰ｏ拷锟斤拷目锟斤拷锟斤拷锟斤拷"; broadcast(); }
 }
 
 async function saveSettings() {
@@ -530,7 +541,7 @@ async function startRound() {
   clearAutoNext();
   stopTimer();
 
-  markRoundLoading(game, settings, "������һ��");
+  markRoundLoading(game, settings, "锟斤拷锟斤拷锟斤拷一锟斤拷");
   broadcast();
 
   let round = null;
@@ -539,16 +550,17 @@ async function startRound() {
   } catch (error) {
     logger.error(error, { event: "card_load_failed" });
     if (token === roundToken) {
-      markRoundLoadFailed(game, error instanceof Error ? error.message : "��Ŀ����ʧ��");
+      markRoundLoadFailed(game, error instanceof Error ? error.message : "锟斤拷目锟斤拷锟斤拷失锟斤拷");
       broadcast();
     }
     throw error;
   }
   if (token !== roundToken) return;
+  if (!round) return;
 
   rememberRound(round as Record<string, unknown>);
-  rememberCrop((round as any).crop as Record<string, unknown>);
-  markRoundPlaying(game, settings, round as Record<string, unknown>, "������");
+  rememberCrop(round.crop as Record<string, unknown>);
+  markRoundPlaying(game, settings, round as Record<string, unknown>, "锟斤拷锟斤拷锟斤拷");
   broadcast();
   startTimer();
   prepareNextRound();
@@ -655,9 +667,29 @@ function publicHealthSnapshot() {
 function scoreSummary() {
   const queue = scoreStore.queueScoreState();
   const noteShooter = scoreStore.noteShooterScoreState();
+  const queueState = asQueueScoreState(queue);
+  const noteShooterState = asNoteShooterScoreState(noteShooter);
   return {
-    queue: { total: (queue as any).total || 0, topCount: (queue as any).top?.length || 0, recentCount: (queue as any).recent?.length || 0 },
-    noteShooter: { total: (noteShooter as any).total || 0, leaderboardCount: (noteShooter as any).leaderboard?.length || 0, recentCount: (noteShooter as any).recent?.length || 0 },
+    queue: { total: queueState.total || 0, topCount: queueState.top?.length || 0, recentCount: queueState.recent?.length || 0 },
+    noteShooter: { total: noteShooterState.total || 0, leaderboardCount: noteShooterState.leaderboard?.length || 0, recentCount: noteShooterState.recent?.length || 0 },
+  };
+}
+
+function asQueueScoreState(value: unknown): QueueScoreState {
+  if (!isRecord(value)) return { total: 0, top: [], recent: [] };
+  return {
+    total: Number(value.total) || 0,
+    top: Array.isArray(value.top) ? value.top as QueueScoreState["top"] : [],
+    recent: Array.isArray(value.recent) ? value.recent as QueueScoreState["recent"] : [],
+  };
+}
+
+function asNoteShooterScoreState(value: unknown): NoteShooterScoreState {
+  if (!isRecord(value)) return { total: 0, leaderboard: [], recent: [] };
+  return {
+    total: Number(value.total) || 0,
+    leaderboard: Array.isArray(value.leaderboard) ? value.leaderboard as NoteShooterScoreState["leaderboard"] : [],
+    recent: Array.isArray(value.recent) ? value.recent as NoteShooterScoreState["recent"] : [],
   };
 }
 
@@ -827,3 +859,4 @@ process.on("unhandledRejection", (reason) => {
     throw reason instanceof Error ? reason : new Error(String(reason));
   });
 });
+

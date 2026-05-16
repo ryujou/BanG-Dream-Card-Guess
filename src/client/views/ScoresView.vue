@@ -29,7 +29,7 @@
           <div v-if="queueScoresLoading && !leaderboard.length" class="muted">读取中...</div>
           <div v-else-if="!leaderboard.length" class="muted">暂无成绩</div>
           <ol v-else class="score-rank-list">
-            <li v-for="(item, index) in (leaderboard as any[])" :key="item.id" :class="{ 'is-top': index < 3 }">
+            <li v-for="(item, index) in leaderboard" :key="item.id" :class="{ 'is-top': index < 3 }">
               <span>{{ index + 1 }}</span>
               <strong>{{ item.username }}</strong>
               <b>{{ Number(item.score) || 0 }}</b>
@@ -76,10 +76,11 @@ import { ref, computed, onMounted, onUnmounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { apiFetch } from '../api/http';
 import { formatQueueDuration, formatQueueTime } from '../utils/format';
+import type { ScoreDeletePayload, ScoresSnapshot } from '../types/ui';
 
 const router = useRouter();
 
-const queueScores = ref<any>(null);
+const queueScores = ref<ScoresSnapshot | null>(null);
 const queueScoresLoading = ref(false);
 const queueScoreError = ref("");
 const queueScoresUpdatedAt = ref(0);
@@ -98,8 +99,8 @@ async function loadQueueScores(force = false) {
     const response = await fetch(`/api/note-shooter-scores?t=${Date.now()}`, { cache: "no-store" });
     if (!response.ok) throw new Error("读取排行榜失败");
     queueScores.value = await response.json();
-  } catch (error: any) {
-    queueScoreError.value = error.message || "读取排行榜失败";
+  } catch (error: unknown) {
+    queueScoreError.value = error instanceof Error ? error.message : "读取排行榜失败";
   } finally {
     queueScoresLoading.value = false;
   }
@@ -129,13 +130,13 @@ function stopQueueScoreStream() {
   }
 }
 
-async function deleteNoteShooterScore({ id, playerId = "", scope = "" }: any) {
+async function deleteNoteShooterScore({ id, playerId = "", scope = "" }: ScoreDeletePayload) {
   if (!id && !playerId) return;
   try {
     const response = await apiFetch("/api/note-shooter-scores", {
       method: "DELETE",
       headers: { "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8" },
-      body: new URLSearchParams({ id, playerId, scope }),
+      body: new URLSearchParams({ id: id || "", playerId, scope }),
     });
     const result = await response.json().catch(() => ({}));
     if (!response.ok || result.ok === false) {
@@ -149,8 +150,8 @@ async function deleteNoteShooterScore({ id, playerId = "", scope = "" }: any) {
     queueScoresUpdatedAt.value = Date.now();
     queueScoreError.value = "";
     await loadQueueScores(true);
-  } catch (error: any) {
-    queueScoreError.value = error.message || "删除失败";
+  } catch (error: unknown) {
+    queueScoreError.value = error instanceof Error ? error.message : "删除失败";
   }
 }
 

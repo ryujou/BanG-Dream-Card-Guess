@@ -17,7 +17,7 @@ const deps = {
   defaultSettings: serverDefaultSettings,
   difficultyPresets: DIFFICULTY_PRESETS,
   faceCropModes: FACE_CROP_MODES,
-  bandIds: BAND_OPTIONS.map((band: any) => band.id),
+  bandIds: BAND_OPTIONS.map((band) => band.id),
   rarities: RARITY_OPTIONS,
   attributes: ATTRIBUTE_OPTIONS,
   cardCharacterLimits: CARD_CHARACTER_LIMITS,
@@ -83,4 +83,3 @@ describe("game settings", () => {
     expect(payload).toEqual({ settings: { mode: "single" }, teams: { A: { name: "Team A" }, B: { name: "Team B" } } });
   });
 });
-

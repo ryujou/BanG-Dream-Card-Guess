@@ -133,7 +133,7 @@ const stopwatchForm = reactive({
 
 const stopwatchError = ref("");
 
-watch(() => settings.value, (newSettings: any) => {
+watch(() => settings.value, (newSettings) => {
   if (newSettings) {
     stopwatchForm.targetSeconds = Number(newSettings.stopwatchTargetSeconds) || STOPWATCH_DEFAULT_SETTINGS.targetSeconds;
     stopwatchForm.toleranceSeconds = Number(newSettings.stopwatchToleranceSeconds) || STOPWATCH_DEFAULT_SETTINGS.toleranceSeconds;

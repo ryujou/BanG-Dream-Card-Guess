@@ -1,9 +1,10 @@
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { spawn } from 'child_process';
+import { spawn, type ChildProcess } from 'child_process';
 import WebSocket from 'ws';
+import type { DiagnosticsSnapshot, HealthSnapshot } from '../../src/shared/types/diagnostics';
 
 describe('runtime diagnostics API', () => {
-  let serverProcess: any;
+  let serverProcess: ChildProcess | null = null;
   const PORT = 18000 + Math.floor(Math.random() * 1000);
   const BASE_URL = `http://127.0.0.1:${PORT}`;
   const WS_URL = `ws://127.0.0.1:${PORT}/ws`;
@@ -22,7 +23,7 @@ describe('runtime diagnostics API', () => {
   it('/api/health keeps old fields and appends stable diagnostics fields', async () => {
     const response = await fetch(`${BASE_URL}/api/health`);
     expect(response.status).toBe(200);
-    const json: any = await response.json();
+    const json = await response.json() as HealthSnapshot;
     expect(json).toHaveProperty('totalCards');
     expect(json).toHaveProperty('filteredCards');
     expect(json).toHaveProperty('cachedSets');
@@ -33,11 +34,11 @@ describe('runtime diagnostics API', () => {
     expect(json).toMatchObject({
       ok: true,
       appMode: 'booth',
-      cache: expect.any(Object),
-      game: expect.any(Object),
-      services: expect.any(Object),
-      network: expect.any(Object),
-      errors: expect.any(Object),
+      cache: expect.objectContaining({}),
+      game: expect.objectContaining({}),
+      services: expect.objectContaining({}),
+      network: expect.objectContaining({}),
+      errors: expect.objectContaining({}),
     });
     expect(typeof json.uptimeMs).toBe('number');
     expect(typeof json.connectedClients).toBe('number');
@@ -50,7 +51,7 @@ describe('runtime diagnostics API', () => {
     const cookie = await loginCookie();
     const response = await fetch(`${BASE_URL}/api/diagnostics`, { headers: { cookie } });
     expect(response.status).toBe(200);
-    const json: any = await response.json();
+    const json = await response.json() as DiagnosticsSnapshot;
     expect(json).toHaveProperty('health');
     expect(json).toHaveProperty('network');
     expect(json).toHaveProperty('websocket');
@@ -76,7 +77,7 @@ describe('runtime diagnostics API', () => {
     await waitForMessage(ws, 'state');
 
     const response = await fetch(`${BASE_URL}/api/diagnostics`, { headers: { cookie } });
-    const json: any = await response.json();
+    const json = await response.json() as DiagnosticsSnapshot;
     expect(json.websocket.connectedClients).toBeGreaterThanOrEqual(1);
     expect(json.websocket.roles.player).toBeGreaterThanOrEqual(1);
     ws.close();
@@ -86,9 +87,9 @@ describe('runtime diagnostics API', () => {
     const cookie = await loginCookie();
     const response = await fetch(`${BASE_URL}/api/diagnostics/export`, { headers: { cookie } });
     expect(response.status).toBe(200);
-    const json: any = await response.json();
+    const json = await response.json() as DiagnosticsSnapshot & { exportMode?: boolean };
     expect(json.exportMode).toBe(true);
-    expect(json.recentErrors).toEqual(expect.any(Array));
+    expect(Array.isArray(json.recentErrors)).toBe(true);
   });
 
   async function loginCookie() {

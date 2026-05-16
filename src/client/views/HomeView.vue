@@ -95,7 +95,15 @@ import { safeUrl } from '../utils/image';
 
 const COMMUNITY_URL = "https://qm.qq.com/q/6ytGE7qIWQ";
 
-const data = ref<any>({ aboutUs: "", members: [], events: [], socialLinks: [], photos: [] });
+interface CommunityHomeData {
+  aboutUs: string;
+  members: Array<{ name?: string; desc?: string; url?: string; avatar?: string }>;
+  events: Array<{ title?: string; date?: string; location?: string; desc?: string }>;
+  socialLinks: Array<{ title?: string; url?: string }>;
+  photos: string[];
+}
+
+const data = ref<CommunityHomeData>({ aboutUs: "", members: [], events: [], socialLinks: [], photos: [] });
 
 onMounted(async () => {
   try {

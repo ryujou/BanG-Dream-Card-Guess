@@ -48,12 +48,11 @@ const settings = computed(() => snapshot.value?.settings);
 const editorContainer = ref<HTMLElement | null>(null);
 const uploadStatus = ref('');
 const saveStatus = ref('');
-let editorInstance: any = null;
+let editorInstance: { getValue(): unknown; destroy(): void } | null = null;
 
 onMounted(async () => {
   try {
     // dynamically import the JSON editor to avoid heavy initial load
-    // @ts-ignore
     const { JSONEditor } = await import('@json-editor/json-editor');
     
     let initialData = { aboutUs: "", members: [], events: [], socialLinks: [], photos: [] };

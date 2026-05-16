@@ -71,6 +71,6 @@ describe('Type Guards', () => {
 
   it('isGameCommand validates command string', () => {
     expect(isGameCommand('start')).toBe(true);
-    expect(isGameCommand(123 as any)).toBe(false);
+    expect(isGameCommand(123 as unknown as string)).toBe(false);
   });
 });

@@ -148,6 +148,7 @@ import { useRouter } from 'vue-router';
 import { storeToRefs } from 'pinia';
 import { useGameStore } from '../stores/game';
 import { apiFetch } from '../api/http';
+import type { BandOption } from '../types/ui';
 
 const router = useRouter();
 const gameStore = useGameStore();
@@ -203,7 +204,7 @@ const defaultDraft = () => ({
 
 const draft = ref(defaultDraft());
 
-const bands = computed(() => (snapshot.value?.meta?.bands as any[]) || []);
+const bands = computed<BandOption[]>(() => Array.isArray(snapshot.value?.meta?.bands) ? snapshot.value.meta.bands as BandOption[] : []);
 const rarities = computed(() => snapshot.value?.meta?.rarities || [1, 2, 3, 4, 5]);
 const attributes = computed(() => snapshot.value?.meta?.attributes || ["cool", "happy", "powerful", "pure"]);
 
@@ -216,19 +217,22 @@ watch(() => snapshot.value, (newSnapshot) => {
   }
   
   if (newSnapshot?.settings) {
-    const s: any = newSnapshot.settings;
-    const g: any = newSnapshot.game;
+    const s = newSnapshot.settings as Record<string, unknown>;
+    const g = newSnapshot.game as Record<string, unknown> | undefined;
+    const teams = isRecord(g?.teams) ? g.teams : {};
+    const teamA = isRecord(teams.A) ? teams.A : {};
+    const teamB = isRecord(teams.B) ? teams.B : {};
     
     draft.value = {
       ...defaultDraft(),
       ...s,
-      cardVariants: s.cardVariants || [],
-      cardCharacterLimits: s.cardCharacterLimits || [],
-      cardBands: (s.cardBands || []).map(String),
-      cardRarities: (s.cardRarities || []).map(String),
-      cardAttributes: s.cardAttributes || [],
-      teamAName: g?.teams?.A?.name || s.teamAName || "A 队",
-      teamBName: g?.teams?.B?.name || s.teamBName || "B 队",
+      cardVariants: toStringArray(s.cardVariants),
+      cardCharacterLimits: toStringArray(s.cardCharacterLimits),
+      cardBands: toStringArray(s.cardBands),
+      cardRarities: toStringArray(s.cardRarities),
+      cardAttributes: toStringArray(s.cardAttributes),
+      teamAName: String(teamA.name || s.teamAName || "A 队"),
+      teamBName: String(teamB.name || s.teamBName || "B 队"),
     };
   }
 }, { immediate: true });
@@ -246,7 +250,7 @@ function applyDifficultyPreset() {
   }
 }
 
-function command(cmd: string, payload: any = {}) {
+function command(cmd: string, payload: Record<string, unknown> = {}) {
   gameStore.command(cmd, payload);
 }
 
@@ -300,5 +304,13 @@ async function logout() {
   } catch (e) {
     console.error(e);
   }
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+function toStringArray(value: unknown): string[] {
+  return Array.isArray(value) ? value.map(String) : [];
 }
 </script>

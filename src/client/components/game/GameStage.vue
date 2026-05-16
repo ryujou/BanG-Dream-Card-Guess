@@ -23,9 +23,10 @@
 <script setup lang="ts">
 import { computed, watch, ref } from 'vue';
 import { statusText as getStatusText } from '../../utils/stateText';
+import type { GameWithCurrent } from '../../types/ui';
 
 const props = defineProps<{
-  game?: any;
+  game?: GameWithCurrent;
 }>();
 
 const cropKey = computed(() => {
