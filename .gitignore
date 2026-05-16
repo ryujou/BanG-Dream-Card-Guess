@@ -6,6 +6,16 @@ public/cards/
 data/*
 !data/face-boxes.json
 /Server/
+Server/
+\Server/
+*.pem
+*.key
+id_rsa
+id_ed25519
+.env
+.env.*
+*.secret
+*.credentials
 deploy.sh
 deploy.tar.gz
 deploy_tmp/

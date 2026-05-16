@@ -29,7 +29,8 @@ export default defineConfig({
   webServer: {
     command: 'npm run dev',
     url: baseURL,
-    reuseExistingServer: !process.env.CI,
+    // Always boot an isolated server for e2e to avoid attaching to stale local dev processes.
+    reuseExistingServer: false,
     timeout: 60000,
   },
 });
