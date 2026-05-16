@@ -1765,14 +1765,19 @@ function safeUrl(value) {
   const raw = String(value || "").trim();
   if (!raw) return "#";
   try {
-    const url = new URL(raw, location.origin);
+    let normalized = raw;
+    if (/^\/\//.test(normalized)) {
+      normalized = `https:${normalized}`;
+    } else if (!/^[a-zA-Z][a-zA-Z\d+\-.]*:/.test(normalized) && /^[^/\s]+\.[^/\s]+(?:[/?#]|$)/.test(normalized)) {
+      normalized = `https://${normalized}`;
+    }
+    const url = new URL(normalized, location.origin);
     if (!["http:", "https:"].includes(url.protocol)) return "#";
     return escapeAttr(url.href);
   } catch {
     return "#";
   }
 }
-
 
 
 

@@ -21,6 +21,8 @@ describe('Image Utils', () => {
   it('safeUrl avoids javascript protocol', () => {
     expect(safeUrl('javascript:alert(1)')).toBe('#');
     expect(safeUrl('http://example.com')).toBe('http://example.com/');
+    expect(safeUrl('i0.hdslb.com/bfs/test.png')).toBe('https://i0.hdslb.com/bfs/test.png');
+    expect(safeUrl('//i0.hdslb.com/bfs/test.png')).toBe('https://i0.hdslb.com/bfs/test.png');
   });
 });
 
