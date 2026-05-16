@@ -1,19 +1,23 @@
 import { effectiveFaceCropMode, FACE_LABELS_BY_CLASS } from "./config.js";
 export function faceBoxesFor(faceBoxStore, relativePath) {
-    const entry = faceBoxStore.images?.[relativePath.replaceAll("\\", "/")];
-    if (!entry?.faces?.length)
+    const images = isRecord(faceBoxStore.images) ? faceBoxStore.images : {};
+    const entry = normalizeFaceBoxImage(images[relativePath.replaceAll("\\", "/")]);
+    if (!entry.faces.length)
         return [];
     const imageArea = Math.max(1, Number(entry.width || 0) * Number(entry.height || 0));
     return entry.faces
-        .map((face) => ({
-        x: Number(face.x),
-        y: Number(face.y),
-        w: Number(face.w),
-        h: Number(face.h),
-        conf: Number(face.conf || 0),
-        cls: Number.isFinite(Number(face.cls)) ? Number(face.cls) : null,
-        label: faceLabel(face),
-    }))
+        .map((face) => {
+        const raw = isRecord(face) ? face : {};
+        return {
+            x: Number(raw.x),
+            y: Number(raw.y),
+            w: Number(raw.w),
+            h: Number(raw.h),
+            conf: Number(raw.conf || 0),
+            cls: Number.isFinite(Number(raw.cls)) ? Number(raw.cls) : null,
+            label: faceLabel(raw),
+        };
+    })
         .filter((face) => {
         if (!Number.isFinite(face.x) || !Number.isFinite(face.y) || face.w <= 0 || face.h <= 0)
             return false;
@@ -187,5 +191,17 @@ export async function cropToDataUrl(image, x, y, size) {
     const cropped = image.clone().crop({ x, y, w: size, h: size });
     const buffer = await cropped.getBuffer("image/jpeg");
     return `data:image/jpeg;base64,${buffer.toString("base64")}`;
+}
+function isRecord(value) {
+    return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+function normalizeFaceBoxImage(value) {
+    if (!isRecord(value))
+        return { width: 0, height: 0, faces: [] };
+    return {
+        width: value.width,
+        height: value.height,
+        faces: Array.isArray(value.faces) ? value.faces : [],
+    };
 }
 //# sourceMappingURL=crop.js.map

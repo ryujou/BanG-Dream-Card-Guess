@@ -1,19 +1,22 @@
 import { readFileSync } from "node:fs";
 import { BAND_BY_CHARACTER, BESTDORI_BASE, effectiveFaceCropMode, readFaceBoxStore } from "../config.js";
 import { faceBoxesFor } from "../crop.js";
+import type { CardImageInfo, CardRound, NormalizedCard } from "../types/card.js";
+import { normalizeBestdoriCard } from "../types/card.js";
+import type { JimpLikeImage } from "../types/crop.js";
 import type { CardCache } from "./cardCache.js";
 import type { CropService } from "./cropService.js";
 import type { RandomService } from "./randomService.js";
 
 export interface CardProvider {
   loadCards(): void;
-  getRandomCard(settings: Record<string, unknown>, recentCards?: string[], recentCharacters?: number[]): unknown;
-  resolveCardImage(card: any, settings: Record<string, unknown>): Promise<unknown>;
-  createRound(settings: Record<string, unknown>, recentCards?: string[], recentCharacters?: number[]): Promise<Record<string, unknown> | null>;
-  filteredCardPool(settings: Record<string, unknown>): any[];
+  getRandomCard(settings: Record<string, unknown>, recentCards?: string[], recentCharacters?: number[]): NormalizedCard | undefined;
+  resolveCardImage(card: NormalizedCard, settings: Record<string, unknown>): Promise<CardImageInfo>;
+  createRound(settings: Record<string, unknown>, recentCards?: string[], recentCharacters?: number[]): Promise<CardRound | null>;
+  filteredCardPool(settings: Record<string, unknown>): NormalizedCard[];
   getCacheInfo(): { cachedSets: number; cachePercent: number };
   faceBoxStore: Record<string, unknown>;
-  cardPool: any[];
+  cardPool: NormalizedCard[];
 }
 
 export interface CardProviderOptions {
@@ -30,8 +33,8 @@ export function createCardProvider(options: CardProviderOptions): CardProvider {
   const fetchImpl = options.fetchImpl || fetch;
   const faceBoxStore = options.faceBoxStore || readFaceBoxStore();
   let cards: Record<string, unknown> = {};
-  let nicknames: Record<string, unknown[]> = {};
-  let cardPool: any[] = [];
+  let nicknames: Record<string, string[]> = {};
+  let cardPool: NormalizedCard[] = [];
 
   const provider: CardProvider = {
     faceBoxStore,
@@ -40,21 +43,21 @@ export function createCardProvider(options: CardProviderOptions): CardProvider {
     },
     loadCards() {
       cards = JSON.parse(readFileSync(options.cardsPath, "utf-8"));
-      nicknames = JSON.parse(readFileSync(options.nicknamesPath, "utf-8"));
+      nicknames = normalizeNicknames(JSON.parse(readFileSync(options.nicknamesPath, "utf-8")));
       cardPool = Object.entries(cards)
-        .map(([id, card]): unknown => ({ ...(card as Record<string, unknown>), id }))
-        .filter((card: any) => card?.resourceSetName && nicknames[String(card.characterId)]?.length);
+        .map(([id, card]) => normalizeBestdoriCard(id, card, nicknames))
+        .filter((card): card is NormalizedCard => card !== null);
     },
-    filteredCardPool(settings: any): any[] {
+    filteredCardPool(settings: Record<string, unknown>): NormalizedCard[] {
       const bandSet = new Set((settings.cardBands as unknown[]) || []);
       const raritySet = new Set(((settings.cardRarities as number[]) || []).map(Number));
       const attributeSet = new Set((settings.cardAttributes as unknown[]) || []);
-      const filtered = cardPool.filter((card: any) => {
+      const filtered = cardPool.filter((card) => {
         const band = BAND_BY_CHARACTER.get(Number(card.characterId));
         if (bandSet.size && !bandSet.has(band)) return false;
         if (raritySet.size && !raritySet.has(Number(card.rarity))) return false;
         if (attributeSet.size && !attributeSet.has(card.attribute)) return false;
-        const allowedVariants = settings.cardVariants || ["normal", "trained"];
+        const allowedVariants = stringArray(settings.cardVariants, ["normal", "trained"]);
         if (allowedVariants.length === 1 && allowedVariants[0] === "trained" && !card.stat?.training) return false;
 
         const variants: string[] = [];
@@ -62,13 +65,13 @@ export function createCardProvider(options: CardProviderOptions): CardProvider {
         if (allowedVariants.includes("trained") && card.stat?.training) variants.push("card_after_training.png");
         if (!variants.length) return false;
 
-        const allowedLimits = settings.cardCharacterLimits || ["single", "multiple"];
+        const allowedLimits = stringArray(settings.cardCharacterLimits, ["single", "multiple"]);
         if (allowedLimits.length < 2) {
           let match = false;
           for (const file of variants) {
             const cacheRelativePath = `${card.resourceSetName}_rip/${file}`;
             const faces = faceBoxesFor(faceBoxStore, cacheRelativePath);
-            const personCount = faces.filter((face: any) => face.label === "face").length;
+            const personCount = faces.filter((face) => face.label === "face").length;
             if (allowedLimits.includes("single") && personCount === 1) match = true;
             if (allowedLimits.includes("multiple") && personCount > 1) match = true;
           }
@@ -83,8 +86,8 @@ export function createCardProvider(options: CardProviderOptions): CardProvider {
       const recentCardSet = new Set(recentCards.slice(0, (settings.avoidRecentCards as number)));
       const recentCharacterSet = new Set(recentCharacters.slice(0, (settings.avoidRecentCharacters as number)));
       const passes = [
-        (card: any) => !recentCardSet.has(String(card.id)) && !recentCharacterSet.has(Number(card.characterId)),
-        (card: any) => !recentCardSet.has(String(card.id)),
+        (card: NormalizedCard) => !recentCardSet.has(String(card.id)) && !recentCharacterSet.has(Number(card.characterId)),
+        (card: NormalizedCard) => !recentCardSet.has(String(card.id)),
         () => true,
       ];
       for (const pass of passes) {
@@ -93,18 +96,18 @@ export function createCardProvider(options: CardProviderOptions): CardProvider {
       }
       return options.randomService.pickOne(pool);
     },
-    async resolveCardImage(card: any, settings: any) {
-      const allowedVariants = settings.cardVariants || ["normal", "trained"];
+    async resolveCardImage(card: NormalizedCard, settings: Record<string, unknown>) {
+      const allowedVariants = stringArray(settings.cardVariants, ["normal", "trained"]);
       let variants: string[] = [];
       if (allowedVariants.includes("normal")) variants.push("card_normal.png");
       if (allowedVariants.includes("trained") && card.stat?.training) variants.push("card_after_training.png");
 
-      const allowedLimits = settings.cardCharacterLimits || ["single", "multiple"];
+      const allowedLimits = stringArray(settings.cardCharacterLimits, ["single", "multiple"]);
       if (allowedLimits.length < 2) {
         variants = variants.filter((file) => {
           const cacheRelativePath = `${card.resourceSetName}_rip/${file}`;
           const faces = faceBoxesFor(faceBoxStore, cacheRelativePath);
-          const personCount = faces.filter((face: any) => face.label === "face").length;
+          const personCount = faces.filter((face) => face.label === "face").length;
           if (allowedLimits.includes("single") && personCount === 1) return true;
           if (allowedLimits.includes("multiple") && personCount > 1) return true;
           return false;
@@ -157,13 +160,14 @@ export function createCardProvider(options: CardProviderOptions): CardProvider {
       }
       throw new Error("下载卡面失败");
     },
-    async createRound(settings, recentCards = [], recentCharacters = []): Promise<Record<string, unknown> | null> {
-      const card: any = provider.getRandomCard(settings, recentCards, recentCharacters);
+    async createRound(settings, recentCards = [], recentCharacters = []): Promise<CardRound | null> {
+      const card = provider.getRandomCard(settings, recentCards, recentCharacters);
       if (!card) throw new Error("题库为空");
       const names = nicknames[String(card.characterId)];
-      const { buffer, imageUrl, variant, cacheRelativePath } = await provider.resolveCardImage(card, settings) as any;
+      const { buffer, imageUrl, variant, cacheRelativePath } = await provider.resolveCardImage(card, settings);
       const faceBoxes = faceBoxesFor(faceBoxStore, cacheRelativePath);
       const { image, crop } = await options.cropService.cropCard(buffer, settings, faceBoxes);
+      const bitmap = (image as JimpLikeImage).bitmap;
       return {
         cardId: card.id,
         characterId: card.characterId,
@@ -176,8 +180,8 @@ export function createCardProvider(options: CardProviderOptions): CardProvider {
         band: BAND_BY_CHARACTER.get(Number(card.characterId)) || "",
         faceBoxes,
         faceCropMode: effectiveFaceCropMode(settings),
-        imageWidth: (image as any).bitmap.width,
-        imageHeight: (image as any).bitmap.height,
+        imageWidth: bitmap.width,
+        imageHeight: bitmap.height,
         sourceBuffer: buffer,
         crop,
       };
@@ -191,15 +195,16 @@ export function createCardProvider(options: CardProviderOptions): CardProvider {
   return provider;
 }
 
-export function createFakeCardProvider(rounds: any[] = []): CardProvider {
+export function createFakeCardProvider(rounds: CardRound[] = []): CardProvider {
   let index = 0;
   const faceBoxStore = { images: {} };
+  const pool = rounds as unknown as NormalizedCard[];
   return {
     faceBoxStore,
-    cardPool: rounds,
+    cardPool: pool,
     loadCards() {},
     getRandomCard() {
-      return rounds[index % Math.max(1, rounds.length)];
+      return pool[index % Math.max(1, pool.length)];
     },
     async resolveCardImage() {
       return { buffer: Buffer.from("fake"), imageUrl: "/cards/fake.png", cacheRelativePath: "fake.png", variant: "normal" };
@@ -211,10 +216,23 @@ export function createFakeCardProvider(rounds: any[] = []): CardProvider {
       return round;
     },
     filteredCardPool() {
-      return rounds;
+      return pool;
     },
     getCacheInfo() {
       return { cachedSets: 0, cachePercent: 0 };
     },
   };
+}
+
+function normalizeNicknames(value: unknown): Record<string, string[]> {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return {};
+  const result: Record<string, string[]> = {};
+  for (const [key, item] of Object.entries(value)) {
+    if (Array.isArray(item)) result[key] = item.map((name) => String(name));
+  }
+  return result;
+}
+
+function stringArray(value: unknown, fallback: string[]): string[] {
+  return Array.isArray(value) ? value.map(String) : fallback;
 }

@@ -8,7 +8,7 @@ import { randomBytes } from "node:crypto";
 import { WebSocketServer } from "ws";
 import { sendJson, securityHeaders, requestIp, isMutatingMethod, requiresCsrfCheck } from "./utils/http.js";
 import { logger } from "./utils/logger.js";
-import { isClientMessage, isCommandMessage, isHelloMessage } from "./utils/guards.js";
+import { isClientMessage, isCommandMessage, isHelloMessage, isRecord } from "./utils/guards.js";
 import { proxyBestdori } from "./http/bestdoriProxy.js";
 import { serveStatic, streamFile } from "./app/static.js";
 import { dataDir, settingsStorePath, faceBoxesStorePath, BAND_OPTIONS, RARITY_OPTIONS, ATTRIBUTE_OPTIONS, DIFFICULTY_PRESETS, FACE_CROP_MODES, CARD_CHARACTER_LIMITS, CARD_VARIANTS, unique, defaultSettings, readPersistedConfig, arraySetting, numberArraySetting, persistedTeamName, roundConfigKey, effectiveFaceCropMode, } from "./config.js";
@@ -129,6 +129,8 @@ const server = createServer(async (req, res) => {
         try {
             const body = await readRequestBody(req);
             const data = parseRequestPayload(req, body);
+            if (!isRecord(data))
+                return sendJson(res, { error: "Invalid payload" }, 400);
             await writeCommunityData(data);
             return sendJson(res, { ok: true });
         }
@@ -142,8 +144,10 @@ const server = createServer(async (req, res) => {
         try {
             const body = await readRequestBody(req);
             const data = parseRequestPayload(req, body);
+            if (!isRecord(data))
+                return sendJson(res, { error: "Invalid image format" }, 400);
             if (data.image) {
-                const match = data.image.match(/^data:image\/([a-zA-Z0-9]+);base64,(.+)$/);
+                const match = String(data.image).match(/^data:image\/([a-zA-Z0-9]+);base64,(.+)$/);
                 if (match) {
                     const ext = match[1] === "jpeg" ? "jpg" : match[1];
                     const buffer = Buffer.from(match[2], "base64");
@@ -166,6 +170,8 @@ const server = createServer(async (req, res) => {
         return scoreStore.handleQueueScoreEvents(req, res);
     if (url.pathname === "/api/queue-scores" && req.method === "POST") {
         const body = parseRequestPayload(req, await readRequestBody(req));
+        if (!isRecord(body))
+            return sendJson(res, { ok: false, message: "Invalid payload" }, 400);
         const username = normalizeQueueUsername(body.username);
         const score = Math.max(0, Math.min(999999, Math.floor(Number(body.score))));
         const duration = Math.max(0, Math.min(3600, Math.floor(Number(body.duration || 0))));
@@ -191,6 +197,8 @@ const server = createServer(async (req, res) => {
         return scoreStore.handleNoteShooterScoreEvents(req, res);
     if (url.pathname === "/api/note-shooter-scores" && req.method === "DELETE") {
         const body = parseRequestPayload(req, await readRequestBody(req));
+        if (!isRecord(body))
+            return sendJson(res, { ok: false, message: "Invalid payload" }, 400);
         const password = String(body.password || "");
         const id = String(body.id || "").trim();
         const playerId = normalizeNoteShooterPlayerId(body.playerId);
@@ -219,7 +227,7 @@ const server = createServer(async (req, res) => {
             return sendJson(res, { ok: false, message: "Too many attempts" }, 429);
         }
         const body = parseRequestPayload(req, await readRequestBody(req));
-        if (verifyPassword(body.password)) {
+        if (isRecord(body) && verifyPassword(String(body.password || ""))) {
             clearLoginRateLimit(loginIp);
             const token = createAuthSession();
             const csrfToken = createCsrfToken();

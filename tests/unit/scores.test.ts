@@ -41,6 +41,15 @@ describe("scores.ts", () => {
       const result = normalizeQueueScore({ username: "test", score: -50 });
       expect(result.score).toBe(0);
     });
+
+    it("keeps legacy queue score shape after normalization", () => {
+      expect(normalizeQueueScore({ username: "player", score: "12", duration: "3", at: 100 })).toEqual({
+        username: "player",
+        score: 12,
+        duration: 3,
+        at: 100,
+      });
+    });
   });
 
   describe("normalizeNoteShooterPlayerId", () => {
@@ -139,6 +148,11 @@ describe("scores.ts", () => {
       const entry = { playerId: "P1", finalScore: 999999999 };
       const result = normalizeNoteShooterScore(entry);
       expect(result.final_score).toBe(99999999);
+    });
+
+    it("accepts old snake_case score file entries", () => {
+      const result = normalizeNoteShooterScore({ player_id: "P2", player_name: "Old", final_score: 12345, max_combo: 8, kuma_live: 0 });
+      expect(result).toMatchObject({ player_id: "P2", player_name: "Old", final_score: 12345, max_combo: 8 });
     });
   });
 

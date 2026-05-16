@@ -90,3 +90,9 @@ The public behavior contract remains unchanged: routes, HTTP API, WebSocket mess
 The source tree keeps `server.mjs` only as the compatibility launcher for compiled backend output. Legacy backend `.mjs` modules and script `.mjs` files have been removed or migrated. Input-facing `unknown` types are intentional at HTTP, WebSocket, diagnostics, settings, and score parsing boundaries, where guard functions narrow values before business logic runs.
 
 Known remaining type debt is limited to explicit `any` at weak library or data boundaries: image processing through Jimp-compatible objects, external card JSON payloads, score file normalization, WebSocket runtime event interop, and a small number of tests. These do not change public behavior and can be tightened incrementally.
+
+## Phase 12 any debt acceptance
+
+The explicit `any` count is tracked with `npm run check:any`. Phase 12 moved external Bestdori card JSON through minimal card normalization, moved scores through shared score types and `unknown` input narrowing, and typed crop geometry with `Point`, `Rect`, `FaceBox`, and `CropResult`.
+
+Remaining `unknown` usage is expected at external data boundaries: HTTP body parsing, WebSocket payloads, diagnostics snapshots, imported settings, score files, and external card/cache data. The next tightening target is `src/server/index.ts`, where old WebSocket and AppSnapshot compatibility still requires a few bridge casts.

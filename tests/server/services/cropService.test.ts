@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { faceBoxesFor } from "../../../src/server/crop";
 import { createFakeCropService } from "../../../src/server/services/cropService";
 
 describe("crop service", () => {
@@ -16,5 +17,12 @@ describe("crop service", () => {
     const next = await service.recropCard(current, { cropSize: 100 }, []);
     expect(next).toEqual(crop);
     expect(current.crop).toEqual({ x: 9, y: 9 });
+  });
+
+  it("normalizes invalid face boxes without changing fallback behavior", () => {
+    const faces = faceBoxesFor({ images: { "card.png": { width: 100, height: 100, faces: [{ x: 1, y: 2, w: 10, h: 12, label: "face" }, { x: 0, y: 0, w: 0, h: 1 }] } } }, "card.png");
+    expect(faces).toHaveLength(1);
+    expect(faces[0]).toMatchObject({ x: 1, y: 2, w: 10, h: 12, label: "face" });
+    expect(faceBoxesFor({ images: {} }, "missing.png")).toEqual([]);
   });
 });

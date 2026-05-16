@@ -125,8 +125,13 @@ export function readFaceBoxStore() {
 export function persistedTeamName(team, fallback) {
     try {
         const config = readPersistedConfig();
-        const teams = config?.teams || {};
-        return String(teams[team]?.name || fallback);
+        const teams = typeof config.teams === "object" && config.teams !== null && !Array.isArray(config.teams)
+            ? config.teams
+            : {};
+        const selected = typeof teams[team] === "object" && teams[team] !== null && !Array.isArray(teams[team])
+            ? teams[team]
+            : {};
+        return String(selected.name || fallback);
     }
     catch {
         return fallback;

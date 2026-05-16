@@ -118,3 +118,7 @@ No git push or GitHub PR is required for local delivery.
 The backend compiler is now configured with `strict: true` in `tsconfig.server.json`, including `noImplicitAny`, `strictNullChecks`, `strictFunctionTypes`, `strictBindCallApply`, `noImplicitThis`, and `alwaysStrict`.
 
 Only `server.mjs` remains as a Node compatibility entry. The old backend `.mjs` modules were replaced by TypeScript source and compiled JavaScript output. Remaining explicit `any` usage is tracked as type debt at weak external boundaries such as Jimp image objects, Bestdori card payloads, score persistence normalization, and selected tests.
+
+## Explicit any tracking
+
+`npm run check:any` reports the current explicit `any` baseline for `src`, `scripts`, and `tests`, excluding build outputs and artifacts. Phase 12 reduced the baseline from 98 to 22 by typing Bestdori card data, score normalization, crop geometry, and crop services. Remaining `any` is concentrated in legacy server compatibility code, tests, and one cache helper script with legacy file encoding.

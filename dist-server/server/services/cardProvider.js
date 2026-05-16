@@ -1,6 +1,7 @@
 import { readFileSync } from "node:fs";
 import { BAND_BY_CHARACTER, BESTDORI_BASE, effectiveFaceCropMode, readFaceBoxStore } from "../config.js";
 import { faceBoxesFor } from "../crop.js";
+import { normalizeBestdoriCard } from "../types/card.js";
 export function createCardProvider(options) {
     const fetchImpl = options.fetchImpl || fetch;
     const faceBoxStore = options.faceBoxStore || readFaceBoxStore();
@@ -14,10 +15,10 @@ export function createCardProvider(options) {
         },
         loadCards() {
             cards = JSON.parse(readFileSync(options.cardsPath, "utf-8"));
-            nicknames = JSON.parse(readFileSync(options.nicknamesPath, "utf-8"));
+            nicknames = normalizeNicknames(JSON.parse(readFileSync(options.nicknamesPath, "utf-8")));
             cardPool = Object.entries(cards)
-                .map(([id, card]) => ({ ...card, id }))
-                .filter((card) => card?.resourceSetName && nicknames[String(card.characterId)]?.length);
+                .map(([id, card]) => normalizeBestdoriCard(id, card, nicknames))
+                .filter((card) => card !== null);
         },
         filteredCardPool(settings) {
             const bandSet = new Set(settings.cardBands || []);
@@ -31,7 +32,7 @@ export function createCardProvider(options) {
                     return false;
                 if (attributeSet.size && !attributeSet.has(card.attribute))
                     return false;
-                const allowedVariants = settings.cardVariants || ["normal", "trained"];
+                const allowedVariants = stringArray(settings.cardVariants, ["normal", "trained"]);
                 if (allowedVariants.length === 1 && allowedVariants[0] === "trained" && !card.stat?.training)
                     return false;
                 const variants = [];
@@ -41,7 +42,7 @@ export function createCardProvider(options) {
                     variants.push("card_after_training.png");
                 if (!variants.length)
                     return false;
-                const allowedLimits = settings.cardCharacterLimits || ["single", "multiple"];
+                const allowedLimits = stringArray(settings.cardCharacterLimits, ["single", "multiple"]);
                 if (allowedLimits.length < 2) {
                     let match = false;
                     for (const file of variants) {
@@ -77,13 +78,13 @@ export function createCardProvider(options) {
             return options.randomService.pickOne(pool);
         },
         async resolveCardImage(card, settings) {
-            const allowedVariants = settings.cardVariants || ["normal", "trained"];
+            const allowedVariants = stringArray(settings.cardVariants, ["normal", "trained"]);
             let variants = [];
             if (allowedVariants.includes("normal"))
                 variants.push("card_normal.png");
             if (allowedVariants.includes("trained") && card.stat?.training)
                 variants.push("card_after_training.png");
-            const allowedLimits = settings.cardCharacterLimits || ["single", "multiple"];
+            const allowedLimits = stringArray(settings.cardCharacterLimits, ["single", "multiple"]);
             if (allowedLimits.length < 2) {
                 variants = variants.filter((file) => {
                     const cacheRelativePath = `${card.resourceSetName}_rip/${file}`;
@@ -152,6 +153,7 @@ export function createCardProvider(options) {
             const { buffer, imageUrl, variant, cacheRelativePath } = await provider.resolveCardImage(card, settings);
             const faceBoxes = faceBoxesFor(faceBoxStore, cacheRelativePath);
             const { image, crop } = await options.cropService.cropCard(buffer, settings, faceBoxes);
+            const bitmap = image.bitmap;
             return {
                 cardId: card.id,
                 characterId: card.characterId,
@@ -164,8 +166,8 @@ export function createCardProvider(options) {
                 band: BAND_BY_CHARACTER.get(Number(card.characterId)) || "",
                 faceBoxes,
                 faceCropMode: effectiveFaceCropMode(settings),
-                imageWidth: image.bitmap.width,
-                imageHeight: image.bitmap.height,
+                imageWidth: bitmap.width,
+                imageHeight: bitmap.height,
                 sourceBuffer: buffer,
                 crop,
             };
@@ -180,12 +182,13 @@ export function createCardProvider(options) {
 export function createFakeCardProvider(rounds = []) {
     let index = 0;
     const faceBoxStore = { images: {} };
+    const pool = rounds;
     return {
         faceBoxStore,
-        cardPool: rounds,
+        cardPool: pool,
         loadCards() { },
         getRandomCard() {
-            return rounds[index % Math.max(1, rounds.length)];
+            return pool[index % Math.max(1, pool.length)];
         },
         async resolveCardImage() {
             return { buffer: Buffer.from("fake"), imageUrl: "/cards/fake.png", cacheRelativePath: "fake.png", variant: "normal" };
@@ -198,11 +201,24 @@ export function createFakeCardProvider(rounds = []) {
             return round;
         },
         filteredCardPool() {
-            return rounds;
+            return pool;
         },
         getCacheInfo() {
             return { cachedSets: 0, cachePercent: 0 };
         },
     };
+}
+function normalizeNicknames(value) {
+    if (!value || typeof value !== "object" || Array.isArray(value))
+        return {};
+    const result = {};
+    for (const [key, item] of Object.entries(value)) {
+        if (Array.isArray(item))
+            result[key] = item.map((name) => String(name));
+    }
+    return result;
+}
+function stringArray(value, fallback) {
+    return Array.isArray(value) ? value.map(String) : fallback;
 }
 //# sourceMappingURL=cardProvider.js.map

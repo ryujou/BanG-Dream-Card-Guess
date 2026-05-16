@@ -132,9 +132,14 @@ export function readFaceBoxStore() {
 
 export function persistedTeamName(team: string, fallback: string): string {
   try {
-    const config: Record<string, any> = readPersistedConfig();
-    const teams = config?.teams || {};
-    return String(teams[team]?.name || fallback);
+    const config = readPersistedConfig() as Record<string, unknown>;
+    const teams = typeof config.teams === "object" && config.teams !== null && !Array.isArray(config.teams)
+      ? config.teams as Record<string, unknown>
+      : {};
+    const selected = typeof teams[team] === "object" && teams[team] !== null && !Array.isArray(teams[team])
+      ? teams[team] as Record<string, unknown>
+      : {};
+    return String(selected.name || fallback);
   } catch {
     return fallback;
   }

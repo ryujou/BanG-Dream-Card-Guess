@@ -1,29 +1,34 @@
 ﻿// 卡面裁剪、智能评分、人脸感知
 import { Jimp } from "jimp";
 import { effectiveFaceCropMode, FACE_LABELS_BY_CLASS } from "./config.js";
+import type { CropResult, FaceBox, JimpLikeImage, Point, Rect, ScoredCrop } from "./types/crop.js";
 
-export function faceBoxesFor(faceBoxStore: Record<string, any>, relativePath: string): Record<string, unknown>[] {
-  const entry = faceBoxStore.images?.[relativePath.replaceAll("\\", "/")];
-  if (!entry?.faces?.length) return [];
+export function faceBoxesFor(faceBoxStore: Record<string, unknown>, relativePath: string): FaceBox[] {
+  const images = isRecord(faceBoxStore.images) ? faceBoxStore.images : {};
+  const entry = normalizeFaceBoxImage(images[relativePath.replaceAll("\\", "/")]);
+  if (!entry.faces.length) return [];
   const imageArea = Math.max(1, Number(entry.width || 0) * Number(entry.height || 0));
   return entry.faces
-    .map((face: any) => ({
-      x: Number(face.x),
-      y: Number(face.y),
-      w: Number(face.w),
-      h: Number(face.h),
-      conf: Number(face.conf || 0),
-      cls: Number.isFinite(Number(face.cls)) ? Number(face.cls) : null,
-      label: faceLabel(face),
-    }))
-    .filter((face: any) => {
+    .map((face): FaceBox => {
+      const raw = isRecord(face) ? face : {};
+      return {
+        x: Number(raw.x),
+        y: Number(raw.y),
+        w: Number(raw.w),
+        h: Number(raw.h),
+        conf: Number(raw.conf || 0),
+        cls: Number.isFinite(Number(raw.cls)) ? Number(raw.cls) : null,
+        label: faceLabel(raw),
+      };
+    })
+    .filter((face) => {
       if (!Number.isFinite(face.x) || !Number.isFinite(face.y) || face.w <= 0 || face.h <= 0) return false;
       const areaRatio = (face.w * face.h) / imageArea;
       return !(face.label === "face" && areaRatio > 0.22 && face.conf < 0.9);
     });
 }
 
-function faceLabel(face: any): string {
+function faceLabel(face: Record<string, unknown>): string {
   const value = String(face.label || FACE_LABELS_BY_CLASS[Number(face.cls) as keyof typeof FACE_LABELS_BY_CLASS] || "").toLowerCase();
   if (value.includes("eye")) return "eyes";
   if (value.includes("mouth")) return "mouth";
@@ -31,7 +36,7 @@ function faceLabel(face: any): string {
   return "face";
 }
 
-export async function smartCrop(image: any, size: number, settings: Record<string, unknown>, history: any[] = [], faceBoxes: any[] = []) {
+export async function smartCrop(image: JimpLikeImage, size: number, settings: Record<string, unknown>, history: Point[] = [], faceBoxes: FaceBox[] = []): Promise<CropResult> {
   const cropSize = Math.max(60, Math.min(260, Math.floor(size)));
   const faceMode = effectiveFaceCropMode(settings);
   const randomPoints = Array.from({ length: Math.max(30, Number(settings.candidateCount) || 120) }, () => randomCropPoint(image, cropSize));
@@ -46,7 +51,7 @@ export async function smartCrop(image: any, size: number, settings: Record<strin
   return { x: crop.x, y: crop.y, size: cropSize, image: dataUrl };
 }
 
-export function randomCropPoint(image: any, size: number) {
+export function randomCropPoint(image: JimpLikeImage, size: number): Point {
   const maxX = Math.max(0, image.bitmap.width - size);
   const maxY = Math.max(0, image.bitmap.height - size);
   const marginX = Math.min(maxX, Math.floor(image.bitmap.width * 0.08));
@@ -59,7 +64,7 @@ export function randomCropPoint(image: any, size: number) {
   };
 }
 
-export function faceCropPoints(image: any, size: number, faceBoxes: any[]) {
+export function faceCropPoints(image: JimpLikeImage, size: number, faceBoxes: FaceBox[]): Point[] {
   if (!faceBoxes.length) return [];
   const maxX = Math.max(0, image.bitmap.width - size);
   const maxY = Math.max(0, image.bitmap.height - size);
@@ -78,7 +83,7 @@ export function faceCropPoints(image: any, size: number, faceBoxes: any[]) {
   return points;
 }
 
-export function pickCrop(candidates: any[], size: number, history: any[] = []) {
+export function pickCrop(candidates: ScoredCrop[], size: number, history: Point[] = []): ScoredCrop | undefined {
   const passes = [size * 1.85, size * 1.2, 0];
   for (const minDistance of passes) {
     const crop = candidates.find((candidate) => {
@@ -89,7 +94,7 @@ export function pickCrop(candidates: any[], size: number, history: any[] = []) {
   return candidates[0];
 }
 
-export function scoreCrop(image: any, x: number, y: number, size: number, faceBoxes: any[] = [], faceMode = "none") {
+export function scoreCrop(image: JimpLikeImage, x: number, y: number, size: number, faceBoxes: FaceBox[] = [], faceMode = "none"): number {
   const { width, height } = image.bitmap;
   if (x < 0 || y < 0 || x + size > width || y + size > height) return 0;
 
@@ -142,7 +147,7 @@ export function scoreCrop(image: any, x: number, y: number, size: number, faceBo
   return score;
 }
 
-export function scoreFacePolicy(crop: any, faceBoxes: any[], mode: string) {
+export function scoreFacePolicy(crop: Rect, faceBoxes: FaceBox[], mode: string): number {
   let score = 0;
   for (const face of faceBoxes) {
     const zone = expandedFaceZone(face);
@@ -157,8 +162,8 @@ export function scoreFacePolicy(crop: any, faceBoxes: any[], mode: string) {
   return score;
 }
 
-export function expandedFaceZone(face: any) {
-  const label = face.label || faceLabel(face);
+export function expandedFaceZone(face: FaceBox): Rect {
+  const label = face.label || faceLabel(face as unknown as Record<string, unknown>);
   const config =
     label === "eyes"
       ? { scaleX: 4.6, scaleY: 5.4, offsetY: 1.25 }
@@ -173,7 +178,7 @@ export function expandedFaceZone(face: any) {
   return { x: cx - w / 2, y: cy - h / 2, w, h };
 }
 
-export function overlapArea(a: any, b: any) {
+export function overlapArea(a: Rect, b: Rect): number {
   const left = Math.max(a.x, b.x);
   const right = Math.min(a.x + a.w, b.x + b.w);
   const top = Math.max(a.y, b.y);
@@ -189,8 +194,21 @@ function pixel(data: Buffer, width: number, x: number, y: number) {
   return { r, g, b, luma: 0.299 * r + 0.587 * g + 0.114 * b };
 }
 
-export async function cropToDataUrl(image: any, x: number, y: number, size: number) {
+export async function cropToDataUrl(image: JimpLikeImage, x: number, y: number, size: number): Promise<string> {
   const cropped = image.clone().crop({ x, y, w: size, h: size });
   const buffer = await cropped.getBuffer("image/jpeg");
   return `data:image/jpeg;base64,${buffer.toString("base64")}`;
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+function normalizeFaceBoxImage(value: unknown): { width: unknown; height: unknown; faces: unknown[] } {
+  if (!isRecord(value)) return { width: 0, height: 0, faces: [] };
+  return {
+    width: value.width,
+    height: value.height,
+    faces: Array.isArray(value.faces) ? value.faces : [],
+  };
 }

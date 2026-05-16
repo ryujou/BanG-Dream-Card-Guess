@@ -6,6 +6,7 @@ import { createMemoryCardCache } from "../../../src/server/services/cardCache";
 import { createCardProvider } from "../../../src/server/services/cardProvider";
 import { createFakeCropService } from "../../../src/server/services/cropService";
 import { createFakeRandomService } from "../../../src/server/services/randomService";
+import { normalizeBestdoriCard } from "../../../src/server/types/card";
 
 async function makeProviderFiles() {
   const dir = await mkdtemp(path.join(os.tmpdir(), "bbc-card-provider-"));
@@ -60,5 +61,18 @@ describe("card provider service", () => {
     } finally {
       await rm(files.dir, { recursive: true, force: true });
     }
+  });
+
+  it("normalizes valid Bestdori card JSON and skips incomplete cards", () => {
+    const nicknames = { "1": ["Kasumi"] };
+    expect(normalizeBestdoriCard("1", { resourceSetName: "res001", characterId: 1, rarity: 4, attribute: "cool", stat: { training: true } }, nicknames)).toMatchObject({
+      id: "1",
+      resourceSetName: "res001",
+      characterId: 1,
+      rarity: 4,
+      attribute: "cool",
+    });
+    expect(normalizeBestdoriCard("2", { characterId: 1 }, nicknames)).toBeNull();
+    expect(normalizeBestdoriCard("3", { resourceSetName: "res003", characterId: 99 }, nicknames)).toBeNull();
   });
 });
