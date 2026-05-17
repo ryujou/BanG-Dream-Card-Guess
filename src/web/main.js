@@ -33,6 +33,7 @@ let audioContext = null;
 let communityData = null;
 let communityAdminRendering = false;
 let stopwatchLoader = null;
+let homeGalleryTimer = null;
 
 const DIFFICULTY_PRESETS = {
   easy: { label: "简单", cropSize: 230, candidateCount: 90 },
@@ -125,6 +126,7 @@ function command(command, payload = {}) {
 }
 
 function render() {
+  if (route !== "home") clearHomeGalleryCarousel();
   if (route === "home") renderHome();
   else if (route === "login") renderLogin();
   else if (route === "qr") renderQr();
@@ -249,10 +251,11 @@ async function renderHome() {
         ${(data.photos && data.photos.length) || bilibiliPlayerUrl ? `
         <section class="linktree-section">
           <h2>活动回顾</h2>
-          ${data.photos && data.photos.length ? `<div class="linktree-gallery">
-            ${data.photos.map(p => `
-              <img src="${versionedUrl(p, data.updatedAt)}" alt="活动照片" loading="lazy" />
-            `).join('')}
+          ${data.photos && data.photos.length ? `<div class="linktree-gallery-carousel" data-gallery-size="${data.photos.length}">
+              <img id="homeGalleryImage" src="${versionedUrl(data.photos[0], data.updatedAt)}" alt="活动照片" loading="lazy" />
+              ${data.photos.length > 1 ? `<div class="linktree-gallery-dots">
+                ${data.photos.map((_, i) => `<button class="dot${i === 0 ? " active" : ""}" data-gallery-dot="${i}" aria-label="查看第 ${i + 1} 张活动照片"></button>`).join("")}
+              </div>` : ``}
           </div>` : ``}
           ${bilibiliPlayerUrl ? `<div class="linktree-video-wrap">
             <iframe class="linktree-video-frame" src="${bilibiliPlayerUrl}" title="Bilibili Video Player" frameborder="0" allowfullscreen scrolling="no"></iframe>
@@ -267,6 +270,47 @@ async function renderHome() {
       </div>
     </main>
   `;
+  initHomeGalleryCarousel(data);
+}
+
+function initHomeGalleryCarousel(data) {
+  clearHomeGalleryCarousel();
+  const photos = Array.isArray(data?.photos) ? data.photos : [];
+  if (photos.length <= 1) return;
+  const img = document.getElementById("homeGalleryImage");
+  const dots = Array.from(document.querySelectorAll("[data-gallery-dot]"));
+  if (!img || !dots.length) return;
+  let index = 0;
+  const render = (animated = false) => {
+    const nextSrc = versionedUrl(photos[index], data.updatedAt);
+    if (animated) {
+      img.classList.add("is-fading");
+      setTimeout(() => {
+        img.src = nextSrc;
+        img.classList.remove("is-fading");
+      }, 180);
+    } else {
+      img.src = nextSrc;
+    }
+    dots.forEach((dot, i) => dot.classList.toggle("active", i === index));
+  };
+  dots.forEach((dot, i) => {
+    dot.addEventListener("click", () => {
+      index = i;
+      render(true);
+    });
+  });
+  homeGalleryTimer = setInterval(() => {
+    index = (index + 1) % photos.length;
+    render(true);
+  }, 3500);
+}
+
+function clearHomeGalleryCarousel() {
+  if (homeGalleryTimer) {
+    clearInterval(homeGalleryTimer);
+    homeGalleryTimer = null;
+  }
 }
 
 function renderQr() {

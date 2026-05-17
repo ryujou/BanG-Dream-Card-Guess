@@ -78,8 +78,20 @@
 
       <section v-if="(data.photos && data.photos.length) || bilibiliPlayerUrl" class="linktree-section">
         <h2>活动回顾</h2>
-        <div v-if="data.photos && data.photos.length" class="linktree-gallery">
-          <img v-for="(p, i) in data.photos" :key="i" :src="versionedUrl(p)" alt="活动照片" loading="lazy" />
+        <div v-if="versionedPhotos.length" class="linktree-gallery-carousel">
+          <transition name="carousel-fade" mode="out-in">
+            <img :key="versionedPhotos[photoIndex]" :src="versionedPhotos[photoIndex]" alt="活动照片" loading="lazy" />
+          </transition>
+          <div v-if="versionedPhotos.length > 1" class="linktree-gallery-dots">
+            <button
+              v-for="(_, i) in versionedPhotos"
+              :key="i"
+              type="button"
+              :class="['dot', { active: i === photoIndex }]"
+              :aria-label="`查看第 ${i + 1} 张活动照片`"
+              @click="photoIndex = i"
+            />
+          </div>
         </div>
         <div v-if="bilibiliPlayerUrl" class="linktree-video-wrap">
           <iframe
@@ -105,7 +117,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue';
+import { ref, onMounted, onBeforeUnmount, computed, watch } from 'vue';
 import { safeUrl } from '../utils/image';
 
 const COMMUNITY_URL = "https://qm.qq.com/q/6ytGE7qIWQ";
@@ -123,16 +135,31 @@ interface CommunityHomeData {
 const data = ref<CommunityHomeData>({ aboutUs: "", members: [], events: [], socialLinks: [], photos: [], bilibiliBvid: "" });
 const bilibiliPlayerUrl = computed(() => buildBilibiliPlayerUrl(data.value.bilibiliBvid));
 const bilibiliVideoUrl = computed(() => buildBilibiliVideoUrl(data.value.bilibiliBvid));
+const versionedPhotos = computed(() => (data.value.photos || []).map((p) => versionedUrl(p)).filter(Boolean));
+const photoIndex = ref(0);
+let photoTimer: number | null = null;
 
 onMounted(async () => {
   try {
     const response = await fetch("/api/community", { cache: "no-store" });
     if (response.ok) {
       data.value = await response.json();
+      startPhotoCarousel();
     }
   } catch (e) {
     console.error("Failed to load community data", e);
   }
+});
+
+onBeforeUnmount(() => {
+  stopPhotoCarousel();
+});
+
+watch(versionedPhotos, () => {
+  if (photoIndex.value >= versionedPhotos.value.length) {
+    photoIndex.value = 0;
+  }
+  startPhotoCarousel();
 });
 
 function normalizeBvid(value: unknown): string {
@@ -162,5 +189,20 @@ function versionedUrl(raw: string | undefined): string {
   if (!Number.isFinite(token) || token <= 0) return base;
   const separator = base.includes("?") ? "&" : "?";
   return `${base}${separator}v=${token}`;
+}
+
+function startPhotoCarousel(): void {
+  stopPhotoCarousel();
+  if (versionedPhotos.value.length <= 1) return;
+  photoTimer = window.setInterval(() => {
+    photoIndex.value = (photoIndex.value + 1) % versionedPhotos.value.length;
+  }, 3500);
+}
+
+function stopPhotoCarousel(): void {
+  if (photoTimer !== null) {
+    window.clearInterval(photoTimer);
+    photoTimer = null;
+  }
 }
 </script>

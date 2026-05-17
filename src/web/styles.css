@@ -2491,23 +2491,56 @@ select:focus {
   line-height: 1.5;
 }
 
-.linktree-gallery {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 1rem;
+.linktree-gallery-carousel {
+  position: relative;
+  width: 100%;
+  margin-top: 1rem;
 }
 
-.linktree-gallery img {
+.linktree-gallery-carousel img {
   width: 100%;
-  aspect-ratio: 1;
+  aspect-ratio: 16 / 9;
   object-fit: cover;
   border-radius: 16px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-  transition: transform 0.3s;
+  display: block;
+  transition:
+    opacity 0.6s cubic-bezier(0.42, 0, 0.58, 1),
+    transform 0.6s cubic-bezier(0.42, 0, 0.58, 1);
 }
 
-.linktree-gallery img:hover {
-  transform: scale(1.02);
+.linktree-gallery-carousel img.is-fading {
+  opacity: 0.08;
+  transform: translateY(8px) scale(0.985);
+}
+
+.linktree-gallery-dots {
+  display: flex;
+  justify-content: center;
+  gap: 0.4rem;
+  margin-top: 0.6rem;
+}
+
+.linktree-gallery-dots .dot {
+  appearance: none;
+  -webkit-appearance: none;
+  display: inline-block;
+  flex: 0 0 8px;
+  width: 8px;
+  height: 8px;
+  min-width: 8px;
+  min-height: 8px;
+  line-height: 0;
+  border-radius: 999px;
+  border: 0;
+  background: rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  padding: 0;
+  margin: 0;
+}
+
+.linktree-gallery-dots .dot.active {
+  background: var(--color-primary);
 }
 
 .linktree-video-wrap {
