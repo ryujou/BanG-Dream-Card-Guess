@@ -16,7 +16,8 @@ const defaultCommunityData = {
     events: [
         { title: "下次活动预告", date: "2026-10-01", location: "湘潭某漫展", desc: "届时我们将开设猜卡面摊位，欢迎大家来玩！" }
     ],
-    photos: []
+    photos: [],
+    bilibiliBvid: ""
 };
 let memoryCache = null;
 export function readCommunityData() {

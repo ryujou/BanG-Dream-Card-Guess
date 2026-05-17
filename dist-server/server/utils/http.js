@@ -1,4 +1,3 @@
-import { isAuthenticated } from "../auth.js";
 export function sendJson(res, value, status = 200) {
     res.writeHead(status, { ...securityHeaders(), "Content-Type": "application/json; charset=utf-8" });
     res.end(JSON.stringify(value));
@@ -12,6 +11,7 @@ export function securityHeaders() {
             "script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net",
             "connect-src 'self' ws: wss:",
             "font-src 'self' data: https:",
+            "frame-src 'self' https://player.bilibili.com",
             "frame-ancestors 'self'",
             "base-uri 'self'",
             "object-src 'none'",
@@ -31,12 +31,9 @@ export function isMutatingMethod(method) {
     return ["POST", "PUT", "PATCH", "DELETE"].includes(String(method || "").toUpperCase());
 }
 export function requiresCsrfCheck(req, pathname) {
+    void req;
     if (pathname === "/api/login")
         return false;
-    if (pathname === "/api/queue-scores")
-        return false;
-    if (pathname.startsWith("/note-shooter-api/"))
-        return false;
-    return isAuthenticated(req);
+    return true;
 }
 //# sourceMappingURL=http.js.map

@@ -11,7 +11,7 @@
     "dev": "vite --host 127.0.0.1",
     "build:server": "tsc -p tsconfig.server.json",
     "build:scripts": "tsc -p tsconfig.scripts.json",
-    "build": "vue-tsc --noEmit || exit 0 && vite build && npm run build:server",
+    "build": "vue-tsc --noEmit && vite build && npm run build:server",
     "preview": "vite preview --host 127.0.0.1",
     "start": "npm run build:server && node server.mjs --booth",
     "booth": "npm run build && node server.mjs --booth",

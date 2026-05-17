@@ -76,22 +76,32 @@
         </div>
       </section>
 
-      <section v-if="data.photos && data.photos.length" class="linktree-section">
+      <section v-if="(data.photos && data.photos.length) || bilibiliPlayerUrl" class="linktree-section">
         <h2>活动回顾</h2>
-        <div class="linktree-gallery">
+        <div v-if="data.photos && data.photos.length" class="linktree-gallery">
           <img v-for="(p, i) in data.photos" :key="i" :src="safeUrl(p)" alt="活动照片" loading="lazy" />
+        </div>
+        <div v-if="bilibiliPlayerUrl" class="linktree-video-wrap">
+          <iframe
+            class="linktree-video-frame"
+            :src="bilibiliPlayerUrl"
+            title="Bilibili Video Player"
+            frameborder="0"
+            allowfullscreen
+            scrolling="no"
+          />
         </div>
       </section>
 
       <footer class="linktree-footer">
-        <p>BanG Dream! Card Guess / 湘潭同好会现场互动大屏</p>
+        <p>BanG Dream! Card Guess</p>
       </footer>
     </div>
   </main>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import { safeUrl } from '../utils/image';
 
 const COMMUNITY_URL = "https://qm.qq.com/q/6ytGE7qIWQ";
@@ -102,9 +112,11 @@ interface CommunityHomeData {
   events: Array<{ title?: string; date?: string; location?: string; desc?: string }>;
   socialLinks: Array<{ title?: string; url?: string }>;
   photos: string[];
+  bilibiliBvid?: string;
 }
 
-const data = ref<CommunityHomeData>({ aboutUs: "", members: [], events: [], socialLinks: [], photos: [] });
+const data = ref<CommunityHomeData>({ aboutUs: "", members: [], events: [], socialLinks: [], photos: [], bilibiliBvid: "" });
+const bilibiliPlayerUrl = computed(() => buildBilibiliPlayerUrl(data.value.bilibiliBvid));
 
 onMounted(async () => {
   try {
@@ -116,4 +128,18 @@ onMounted(async () => {
     console.error("Failed to load community data", e);
   }
 });
+
+function normalizeBvid(value: unknown): string {
+  const raw = String(value || "").trim().replace(/\s+/g, "");
+  if (!raw) return "";
+  const withPrefix = /^BV/i.test(raw) ? raw : `BV${raw}`;
+  const normalized = withPrefix.slice(0, 12);
+  return /^BV[0-9A-Za-z]{10}$/.test(normalized) ? normalized : "";
+}
+
+function buildBilibiliPlayerUrl(value: unknown): string {
+  const bvid = normalizeBvid(value);
+  if (!bvid) return "";
+  return `https://player.bilibili.com/player.html?isOutside=true&autoplay=0&bvid=${encodeURIComponent(bvid)}&p=1`;
+}
 </script>

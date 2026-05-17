@@ -2247,6 +2247,8 @@ select:focus {
 
 /* --- Linktree Style Homepage --- */
 .linktree-shell {
+  position: relative;
+  z-index: 1;
   width: 100%;
   min-height: 100vh;
   display: flex;
@@ -2508,6 +2510,25 @@ select:focus {
   transform: scale(1.02);
 }
 
+.linktree-video-wrap {
+  position: relative;
+  z-index: 2;
+  margin-top: 1rem;
+  isolation: isolate;
+}
+
+.linktree-video-frame {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border: 0;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  background: #000;
+}
+
 .linktree-footer {
   text-align: center;
   margin-top: 2rem;
@@ -2626,6 +2647,28 @@ select:focus {
   min-height: 36px;
   margin: 0;
 }
+
+.community-bvid-row {
+  margin-top: -0.5rem;
+  margin-bottom: 1.5rem;
+  display: grid;
+  gap: 8px;
+}
+
+.community-bvid-row label {
+  font-weight: 700;
+}
+
+.community-bvid-row input {
+  width: 100%;
+  max-width: 320px;
+  height: 40px;
+  padding: 0 12px;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  background: #fff;
+}
+
 .admin-actions {
   display: flex;
   flex-direction: column;

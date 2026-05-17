@@ -149,7 +149,8 @@ async function renderHome() {
     }
   }
 
-  const data = communityData || { aboutUs: "", members: [], events: [], socialLinks: [], photos: [] };
+  const data = communityData || { aboutUs: "", members: [], events: [], socialLinks: [], photos: [], bilibiliBvid: "" };
+  const bilibiliPlayerUrl = buildBilibiliPlayerUrl(data.bilibiliBvid);
   
   app.innerHTML = `
     <main class="linktree-shell">
@@ -244,14 +245,17 @@ async function renderHome() {
         </section>` : ''}
 
         <!-- Photos -->
-        ${data.photos && data.photos.length ? `
+        ${(data.photos && data.photos.length) || bilibiliPlayerUrl ? `
         <section class="linktree-section">
           <h2>活动回顾</h2>
-          <div class="linktree-gallery">
+          ${data.photos && data.photos.length ? `<div class="linktree-gallery">
             ${data.photos.map(p => `
               <img src="${safeUrl(p)}" alt="活动照片" loading="lazy" />
             `).join('')}
-          </div>
+          </div>` : ``}
+          ${bilibiliPlayerUrl ? `<div class="linktree-video-wrap">
+            <iframe class="linktree-video-frame" src="${bilibiliPlayerUrl}" title="Bilibili Video Player" frameborder="0" allowfullscreen scrolling="no"></iframe>
+          </div>` : ``}
         </section>` : ''}
 
         <footer class="linktree-footer">
@@ -1556,7 +1560,7 @@ async function renderCommunityAdmin() {
     }
   }
   
-  const data = communityData || { aboutUs: "", members: [], events: [], socialLinks: [], photos: [] };
+  const data = communityData || { aboutUs: "", members: [], events: [], socialLinks: [], photos: [], bilibiliBvid: "" };
 
   app.innerHTML = `
     <main class="settings-shell">
@@ -1569,6 +1573,10 @@ async function renderCommunityAdmin() {
         </div>
 
         <div id="jsonEditorContainer" class="json-editor-container"></div>
+        <div class="community-bvid-row">
+          <label for="bilibiliBvidInput">Bilibili BV ID</label>
+          <input id="bilibiliBvidInput" type="text" placeholder="BV1GJ411x7h7" value="${escapeAttr(data.bilibiliBvid || "")}" />
+        </div>
         
         <div class="admin-actions">
           <div class="upload-group">
@@ -1692,6 +1700,11 @@ async function renderCommunityAdmin() {
             title: "图片 URL",
             format: "url"
           }
+        },
+        bilibiliBvid: {
+          type: "string",
+          title: "B 站视频 BV 号",
+          description: "例如 BV1GJ411x7h7，仅填写 BV 号"
         }
       }
     },
@@ -1740,6 +1753,8 @@ async function renderCommunityAdmin() {
 
     try {
       const parsed = editor.getValue();
+      const bvidInput = document.getElementById("bilibiliBvidInput");
+      if (bvidInput) parsed.bilibiliBvid = normalizeBvid(bvidInput.value);
       const res = await apiFetch("/api/community", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -1780,5 +1795,16 @@ function safeUrl(value) {
   }
 }
 
+function normalizeBvid(value) {
+  const raw = String(value || "").trim().replace(/\s+/g, "");
+  if (!raw) return "";
+  const withPrefix = /^BV/i.test(raw) ? raw : `BV${raw}`;
+  const normalized = withPrefix.slice(0, 12);
+  return /^BV[0-9A-Za-z]{10}$/.test(normalized) ? normalized : "";
+}
 
-
+function buildBilibiliPlayerUrl(value) {
+  const bvid = normalizeBvid(value);
+  if (!bvid) return "";
+  return `https://player.bilibili.com/player.html?isOutside=true&autoplay=0&bvid=${encodeURIComponent(bvid)}&p=1`;
+}

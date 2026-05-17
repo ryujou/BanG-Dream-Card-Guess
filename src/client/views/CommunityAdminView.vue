@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <main class="settings-shell">
     <section class="settings-panel linktree-admin-panel">
       <Topbar :game="game" :settings="settings" :connected="connected" :showCommunityLink="false" />
@@ -8,12 +8,23 @@
         <p>在此处修改主页的各项信息，修改完成后记得点击底部的保存按钮。</p>
       </div>
 
+      <div class="bilibili-field">
+        <label for="bilibiliBvid">B 站视频 BV 号</label>
+        <input
+          id="bilibiliBvid"
+          v-model="bilibiliBvid"
+          type="text"
+          placeholder="BV1GJ411x7h7"
+          autocomplete="off"
+        />
+      </div>
+
       <div ref="editorContainer" class="json-editor-container"></div>
       
       <div class="admin-actions">
         <div class="upload-group">
           <label class="btn secondary">
-            <span class="icon">🖼</span> 上传照片墙图片...
+            上传照片墙图片...
             <input type="file" @change="uploadImage" accept="image/*" style="display: none;" />
           </label>
           <span class="upload-status">{{ uploadStatus }}</span>
@@ -21,7 +32,7 @@
         
         <div class="save-group">
           <button @click="saveData" class="btn primary">
-            <span class="icon">💾</span> 保存全部修改
+            保存全部修改
           </button>
           <span class="save-status">{{ saveStatus }}</span>
         </div>
@@ -48,6 +59,7 @@ const settings = computed(() => snapshot.value?.settings);
 const editorContainer = ref<HTMLElement | null>(null);
 const uploadStatus = ref('');
 const saveStatus = ref('');
+const bilibiliBvid = ref('');
 let editorInstance: { getValue(): unknown; destroy(): void } | null = null;
 
 onMounted(async () => {
@@ -55,11 +67,12 @@ onMounted(async () => {
     // dynamically import the JSON editor to avoid heavy initial load
     const { JSONEditor } = await import('@json-editor/json-editor');
     
-    let initialData = { aboutUs: "", members: [], events: [], socialLinks: [], photos: [] };
+    let initialData = { aboutUs: "", members: [], events: [], socialLinks: [], photos: [], bilibiliBvid: "" };
     const response = await fetch("/api/community");
     if (response.ok) {
       initialData = await response.json();
     }
+    bilibiliBvid.value = normalizeBvid((initialData as { bilibiliBvid?: unknown }).bilibiliBvid);
     
     if (editorContainer.value) {
       editorInstance = new JSONEditor(editorContainer.value, {
@@ -111,6 +124,11 @@ onMounted(async () => {
             photos: {
               type: "array", title: "活动返图 URL 列表", format: "table",
               items: { type: "string", title: "图片链接" }
+            },
+            bilibiliBvid: {
+              type: "string",
+              title: "Bilibili BV ID",
+              description: "Fill BV only, e.g. BV1GJ411x7h7"
             }
           }
         }
@@ -143,7 +161,7 @@ async function uploadImage(event: Event) {
       });
       const data = await response.json();
       if (response.ok && data.url) {
-        uploadStatus.value = "上传成功！链接已复制到剪贴板。";
+        uploadStatus.value = "上传成功，链接已复制到剪贴板。";
         try {
           await navigator.clipboard.writeText(data.url);
         } catch {}
@@ -161,20 +179,21 @@ async function uploadImage(event: Event) {
 async function saveData() {
   if (!editorInstance) return;
   const val = editorInstance.getValue();
+  const payload = isRecord(val) ? { ...val, bilibiliBvid: normalizeBvid(bilibiliBvid.value) } : val;
   saveStatus.value = "保存中...";
   
   try {
     const res = await apiFetch("/api/community", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(val),
+      body: JSON.stringify(payload),
     });
     if (res.ok) {
       saveStatus.value = "已保存！";
       setTimeout(() => { saveStatus.value = ""; }, 3000);
     } else {
       if (res.status === 401) {
-        saveStatus.value = "权限不足，请先作为主持登录";
+        saveStatus.value = "权限不足，请先登录主持账号。";
         setTimeout(() => { router.push("/login?next=/community-admin"); }, 1500);
       } else {
         const errorData = await res.json().catch(() => ({}));
@@ -184,6 +203,18 @@ async function saveData() {
   } catch (e) {
     saveStatus.value = "请求出错";
   }
+}
+
+function normalizeBvid(value: unknown): string {
+  const raw = String(value || "").trim().replace(/\s+/g, "");
+  if (!raw) return "";
+  const withPrefix = /^BV/i.test(raw) ? raw : `BV${raw}`;
+  const normalized = withPrefix.slice(0, 12);
+  return /^BV[0-9A-Za-z]{10}$/.test(normalized) ? normalized : "";
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return !!value && typeof value === "object" && !Array.isArray(value);
 }
 </script>
 
@@ -212,6 +243,21 @@ async function saveData() {
   align-items: center;
   gap: 12px;
 }
+.bilibili-field {
+  display: grid;
+  gap: 8px;
+  margin: 0 0 24px;
+}
+.bilibili-field label {
+  font-weight: 700;
+}
+.bilibili-field input {
+  width: min(360px, 100%);
+  padding: 10px 12px;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  font: inherit;
+}
 .btn {
   display: inline-flex;
   align-items: center;
@@ -236,3 +282,4 @@ async function saveData() {
   color: #6c757d;
 }
 </style>
+
