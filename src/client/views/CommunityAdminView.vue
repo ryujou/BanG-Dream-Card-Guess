@@ -68,7 +68,7 @@ onMounted(async () => {
     const { JSONEditor } = await import('@json-editor/json-editor');
     
     let initialData = { aboutUs: "", members: [], events: [], socialLinks: [], photos: [], bilibiliBvid: "" };
-    const response = await fetch("/api/community");
+    const response = await fetch("/api/community", { cache: "no-store" });
     if (response.ok) {
       initialData = await response.json();
     }

@@ -1,7 +1,16 @@
 import type { IncomingMessage, ServerResponse } from "node:http";
 
-export function sendJson(res: ServerResponse, value: unknown, status: number = 200): void {
-  res.writeHead(status, { ...securityHeaders(), "Content-Type": "application/json; charset=utf-8" });
+export function sendJson(
+  res: ServerResponse,
+  value: unknown,
+  status: number = 200,
+  extraHeaders: Record<string, string> = {},
+): void {
+  res.writeHead(status, {
+    ...securityHeaders(),
+    "Content-Type": "application/json; charset=utf-8",
+    ...extraHeaders,
+  });
   res.end(JSON.stringify(value));
 }
 

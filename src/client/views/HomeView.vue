@@ -55,7 +55,7 @@
         <h2>成员介绍</h2>
         <div class="linktree-members">
           <a v-for="(m, i) in data.members" :key="i" class="member-pill" :href="safeUrl(m.url)" target="_blank" rel="noreferrer">
-            <img v-if="m.avatar" class="member-avatar" :src="safeUrl(m.avatar)" :alt="`${m.name || '成员'} 头像`" loading="lazy" />
+            <img v-if="m.avatar" class="member-avatar" :src="versionedUrl(m.avatar)" :alt="`${m.name || '成员'} 头像`" loading="lazy" />
             <strong>{{ m.name }}</strong>
             <span>{{ m.desc }}</span>
           </a>
@@ -79,7 +79,7 @@
       <section v-if="(data.photos && data.photos.length) || bilibiliPlayerUrl" class="linktree-section">
         <h2>活动回顾</h2>
         <div v-if="data.photos && data.photos.length" class="linktree-gallery">
-          <img v-for="(p, i) in data.photos" :key="i" :src="safeUrl(p)" alt="活动照片" loading="lazy" />
+          <img v-for="(p, i) in data.photos" :key="i" :src="versionedUrl(p)" alt="活动照片" loading="lazy" />
         </div>
         <div v-if="bilibiliPlayerUrl" class="linktree-video-wrap">
           <iframe
@@ -90,6 +90,10 @@
             allowfullscreen
             scrolling="no"
           />
+          <p v-if="bilibiliVideoUrl" class="linktree-video-fallback">
+            手机端若显示“已阻止此内容”，请
+            <a :href="bilibiliVideoUrl" target="_blank" rel="noreferrer">点此打开 B 站视频</a>
+          </p>
         </div>
       </section>
 
@@ -113,14 +117,16 @@ interface CommunityHomeData {
   socialLinks: Array<{ title?: string; url?: string }>;
   photos: string[];
   bilibiliBvid?: string;
+  updatedAt?: number;
 }
 
 const data = ref<CommunityHomeData>({ aboutUs: "", members: [], events: [], socialLinks: [], photos: [], bilibiliBvid: "" });
 const bilibiliPlayerUrl = computed(() => buildBilibiliPlayerUrl(data.value.bilibiliBvid));
+const bilibiliVideoUrl = computed(() => buildBilibiliVideoUrl(data.value.bilibiliBvid));
 
 onMounted(async () => {
   try {
-    const response = await fetch("/api/community");
+    const response = await fetch("/api/community", { cache: "no-store" });
     if (response.ok) {
       data.value = await response.json();
     }
@@ -140,6 +146,21 @@ function normalizeBvid(value: unknown): string {
 function buildBilibiliPlayerUrl(value: unknown): string {
   const bvid = normalizeBvid(value);
   if (!bvid) return "";
-  return `https://player.bilibili.com/player.html?isOutside=true&autoplay=0&bvid=${encodeURIComponent(bvid)}&p=1`;
+  return versionedUrl(`https://player.bilibili.com/player.html?isOutside=true&autoplay=0&bvid=${encodeURIComponent(bvid)}&p=1`);
+}
+
+function buildBilibiliVideoUrl(value: unknown): string {
+  const bvid = normalizeBvid(value);
+  if (!bvid) return "";
+  return `https://www.bilibili.com/video/${encodeURIComponent(bvid)}/`;
+}
+
+function versionedUrl(raw: string | undefined): string {
+  const base = safeUrl(raw);
+  if (!base) return "";
+  const token = Number(data.value.updatedAt || 0);
+  if (!Number.isFinite(token) || token <= 0) return base;
+  const separator = base.includes("?") ? "&" : "?";
+  return `${base}${separator}v=${token}`;
 }
 </script>

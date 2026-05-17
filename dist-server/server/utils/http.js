@@ -1,5 +1,9 @@
-export function sendJson(res, value, status = 200) {
-    res.writeHead(status, { ...securityHeaders(), "Content-Type": "application/json; charset=utf-8" });
+export function sendJson(res, value, status = 200, extraHeaders = {}) {
+    res.writeHead(status, {
+        ...securityHeaders(),
+        "Content-Type": "application/json; charset=utf-8",
+        ...extraHeaders,
+    });
     res.end(JSON.stringify(value));
 }
 export function securityHeaders() {

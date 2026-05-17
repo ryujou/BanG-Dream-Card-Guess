@@ -157,7 +157,18 @@ const server = createServer(async (req, res) => {
     });
   }
   
-  if (url.pathname === "/api/community" && req.method === "GET") return sendJson(res, readCommunityData());
+  if (url.pathname === "/api/community" && req.method === "GET") {
+    return sendJson(
+      res,
+      readCommunityData(),
+      200,
+      {
+        "Cache-Control": "no-store, no-cache, must-revalidate",
+        Pragma: "no-cache",
+        Expires: "0",
+      },
+    );
+  }
   if (url.pathname === "/api/community" && req.method === "POST") {
     if (!isAuthenticated(req)) return sendJson(res, { error: "Unauthorized" }, 401);
     try {

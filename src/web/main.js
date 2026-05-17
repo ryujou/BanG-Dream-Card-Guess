@@ -142,15 +142,16 @@ function render() {
 async function renderHome() {
   if (!communityData) {
     try {
-      const response = await fetch("/api/community");
+      const response = await fetch("/api/community", { cache: "no-store" });
       if (response.ok) communityData = await response.json();
     } catch (e) {
       console.error("Failed to load community data", e);
     }
   }
 
-  const data = communityData || { aboutUs: "", members: [], events: [], socialLinks: [], photos: [], bilibiliBvid: "" };
+  const data = communityData || { aboutUs: "", members: [], events: [], socialLinks: [], photos: [], bilibiliBvid: "", updatedAt: 0 };
   const bilibiliPlayerUrl = buildBilibiliPlayerUrl(data.bilibiliBvid);
+  const bilibiliVideoUrl = buildBilibiliVideoUrl(data.bilibiliBvid);
   
   app.innerHTML = `
     <main class="linktree-shell">
@@ -218,7 +219,7 @@ async function renderHome() {
           <div class="linktree-members">
             ${data.members.map(m => `
               <a class="member-pill" href="${safeUrl(m.url)}" target="_blank" rel="noreferrer">
-                ${m.avatar ? `<img class="member-avatar" src="${safeUrl(m.avatar)}" alt="${escapeHtml(m.name || "成员")} 头像" loading="lazy" />` : ``}
+                ${m.avatar ? `<img class="member-avatar" src="${versionedUrl(m.avatar, data.updatedAt)}" alt="${escapeHtml(m.name || "成员")} 头像" loading="lazy" />` : ``}
                 <strong>${escapeHtml(m.name)}</strong>
                 <span>${escapeHtml(m.desc)}</span>
               </a>
@@ -250,11 +251,12 @@ async function renderHome() {
           <h2>活动回顾</h2>
           ${data.photos && data.photos.length ? `<div class="linktree-gallery">
             ${data.photos.map(p => `
-              <img src="${safeUrl(p)}" alt="活动照片" loading="lazy" />
+              <img src="${versionedUrl(p, data.updatedAt)}" alt="活动照片" loading="lazy" />
             `).join('')}
           </div>` : ``}
           ${bilibiliPlayerUrl ? `<div class="linktree-video-wrap">
             <iframe class="linktree-video-frame" src="${bilibiliPlayerUrl}" title="Bilibili Video Player" frameborder="0" allowfullscreen scrolling="no"></iframe>
+            ${bilibiliVideoUrl ? `<p class="linktree-video-fallback">手机端若显示“已阻止此内容”，请 <a href="${bilibiliVideoUrl}" target="_blank" rel="noreferrer">点此打开 B 站视频</a></p>` : ``}
           </div>` : ``}
         </section>` : ''}
 
@@ -1553,7 +1555,7 @@ async function renderCommunityAdmin() {
   
   if (!communityData) {
     try {
-      const response = await fetch("/api/community");
+      const response = await fetch("/api/community", { cache: "no-store" });
       if (response.ok) communityData = await response.json();
     } catch (e) {
       console.error(e);
@@ -1803,8 +1805,23 @@ function normalizeBvid(value) {
   return /^BV[0-9A-Za-z]{10}$/.test(normalized) ? normalized : "";
 }
 
-function buildBilibiliPlayerUrl(value) {
+function buildBilibiliPlayerUrl(value, updatedAt = communityData?.updatedAt) {
   const bvid = normalizeBvid(value);
   if (!bvid) return "";
-  return `https://player.bilibili.com/player.html?isOutside=true&autoplay=0&bvid=${encodeURIComponent(bvid)}&p=1`;
+  return versionedUrl(`https://player.bilibili.com/player.html?isOutside=true&autoplay=0&bvid=${encodeURIComponent(bvid)}&p=1`, updatedAt);
+}
+
+function buildBilibiliVideoUrl(value) {
+  const bvid = normalizeBvid(value);
+  if (!bvid) return "";
+  return `https://www.bilibili.com/video/${encodeURIComponent(bvid)}/`;
+}
+
+function versionedUrl(value, updatedAt) {
+  const base = safeUrl(value);
+  if (!base || base === "#") return base;
+  const token = Number(updatedAt || 0);
+  if (!Number.isFinite(token) || token <= 0) return base;
+  const separator = base.includes("?") ? "&" : "?";
+  return `${base}${separator}v=${token}`;
 }

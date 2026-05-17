@@ -17,7 +17,8 @@ const defaultCommunityData = {
         { title: "下次活动预告", date: "2026-10-01", location: "湘潭某漫展", desc: "届时我们将开设猜卡面摊位，欢迎大家来玩！" }
     ],
     photos: [],
-    bilibiliBvid: ""
+    bilibiliBvid: "",
+    updatedAt: 0
 };
 let memoryCache = null;
 export function readCommunityData() {
@@ -25,16 +26,19 @@ export function readCommunityData() {
         return memoryCache;
     try {
         memoryCache = JSON.parse(readFileSync(communityStorePath, "utf-8"));
-        return memoryCache;
     }
     catch {
         memoryCache = { ...defaultCommunityData };
-        return memoryCache;
     }
+    const cache = memoryCache;
+    if (!Number.isFinite(Number(cache.updatedAt))) {
+        cache.updatedAt = 0;
+    }
+    return cache;
 }
 export async function writeCommunityData(data) {
-    memoryCache = data;
+    memoryCache = { ...data, updatedAt: Date.now() };
     await mkdir(dataDir, { recursive: true });
-    await writeFile(communityStorePath, JSON.stringify(data, null, 2));
+    await writeFile(communityStorePath, JSON.stringify(memoryCache, null, 2));
 }
 //# sourceMappingURL=community.js.map

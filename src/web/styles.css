@@ -2529,6 +2529,18 @@ select:focus {
   background: #000;
 }
 
+.linktree-video-fallback {
+  margin: 0.6rem 0 0;
+  text-align: center;
+  color: var(--color-text-dim);
+  font-size: 0.9rem;
+}
+
+.linktree-video-fallback a {
+  color: var(--color-primary);
+  font-weight: 700;
+}
+
 .linktree-footer {
   text-align: center;
   margin-top: 2rem;
