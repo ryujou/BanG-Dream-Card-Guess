@@ -34,7 +34,7 @@ export function readCommunityData() {
   }
   const cache = memoryCache as Record<string, unknown>;
   if (!Number.isFinite(Number(cache.updatedAt))) {
-    cache.updatedAt = 0;
+    cache.updatedAt = Date.now();
   }
   return cache;
 }
