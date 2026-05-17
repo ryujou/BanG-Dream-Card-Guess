@@ -2495,52 +2495,93 @@ select:focus {
   position: relative;
   width: 100%;
   margin-top: 1rem;
+  overflow: hidden;
+  border-radius: 16px;
 }
 
-.linktree-gallery-carousel img {
+.linktree-gallery-track {
+  display: flex;
+  width: 100%;
+  transition: transform 0.75s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.linktree-gallery-track img {
+  flex: 0 0 100%;
   width: 100%;
   aspect-ratio: 16 / 9;
   object-fit: cover;
-  border-radius: 16px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   display: block;
-  transition:
-    opacity 0.6s cubic-bezier(0.42, 0, 0.58, 1),
-    transform 0.6s cubic-bezier(0.42, 0, 0.58, 1);
 }
 
-.linktree-gallery-carousel img.is-fading {
-  opacity: 0.08;
-  transform: translateY(8px) scale(0.985);
+.linktree-gallery-overlay {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 0.8rem 0.9rem;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(17, 24, 39, 0.6) 60%, rgba(17, 24, 39, 0.82) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.linktree-gallery-caption {
+  margin: 0;
+  color: #fff;
+  font-size: 1.1rem;
+  font-weight: 700;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.5);
+  max-width: 70%;
+}
+
+.linktree-gallery-controls {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.linktree-gallery-controls button {
+  width: 34px;
+  height: 34px;
+  border: 0;
+  border-radius: 10px;
+  color: #fff;
+  font-size: 1.3rem;
+  line-height: 1;
+  background: rgba(255, 255, 255, 0.2);
+  cursor: pointer;
+}
+
+.linktree-gallery-controls button:hover {
+  background: rgba(255, 255, 255, 0.35);
 }
 
 .linktree-gallery-dots {
   display: flex;
-  justify-content: center;
   gap: 0.4rem;
-  margin-top: 0.6rem;
+  margin-top: 0;
 }
 
 .linktree-gallery-dots .dot {
   appearance: none;
   -webkit-appearance: none;
   display: inline-block;
-  flex: 0 0 8px;
-  width: 8px;
-  height: 8px;
-  min-width: 8px;
-  min-height: 8px;
+  flex: 0 0 10px;
+  width: 10px;
+  height: 10px;
+  min-width: 10px;
+  min-height: 10px;
   line-height: 0;
   border-radius: 999px;
   border: 0;
-  background: rgba(0, 0, 0, 0.2);
+  background: rgba(255, 255, 255, 0.55);
   cursor: pointer;
   padding: 0;
   margin: 0;
 }
 
 .linktree-gallery-dots .dot.active {
-  background: var(--color-primary);
+  background: #fff;
 }
 
 .linktree-video-wrap {

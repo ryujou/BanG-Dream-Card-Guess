@@ -67,10 +67,14 @@ onMounted(async () => {
     // dynamically import the JSON editor to avoid heavy initial load
     const { JSONEditor } = await import('@json-editor/json-editor');
     
-    let initialData = { aboutUs: "", members: [], events: [], socialLinks: [], photos: [], bilibiliBvid: "" };
+    let initialData: Record<string, unknown> = { aboutUs: "", members: [], events: [], socialLinks: [], photos: [], photoCaptions: [], bilibiliBvid: "" };
     const response = await fetch("/api/community", { cache: "no-store" });
     if (response.ok) {
       initialData = await response.json();
+    }
+    if (isRecord(initialData)) {
+      initialData.photos = normalizePhotoEntries(initialData.photos, initialData.photoCaptions);
+      delete (initialData as Record<string, unknown>).photoCaptions;
     }
     bilibiliBvid.value = normalizeBvid((initialData as { bilibiliBvid?: unknown }).bilibiliBvid);
     
@@ -123,7 +127,13 @@ onMounted(async () => {
             },
             photos: {
               type: "array", title: "活动返图 URL 列表", format: "table",
-              items: { type: "string", title: "图片链接" }
+              items: {
+                type: "object",
+                properties: {
+                  url: { type: "string", title: "图片链接" },
+                  caption: { type: "string", title: "图片文案", format: "textarea" }
+                }
+              }
             },
             bilibiliBvid: {
               type: "string",
@@ -180,6 +190,10 @@ async function saveData() {
   if (!editorInstance) return;
   const val = editorInstance.getValue();
   const payload = isRecord(val) ? { ...val, bilibiliBvid: normalizeBvid(bilibiliBvid.value) } : val;
+  if (isRecord(payload)) {
+    payload.photos = normalizePhotoEntries(payload.photos, payload.photoCaptions);
+    delete payload.photoCaptions;
+  }
   saveStatus.value = "保存中...";
   
   try {
@@ -215,6 +229,23 @@ function normalizeBvid(value: unknown): string {
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return !!value && typeof value === "object" && !Array.isArray(value);
+}
+
+function normalizePhotoEntries(photosValue: unknown, captionsValue: unknown): Array<{ url: string; caption: string }> {
+  const captions = Array.isArray(captionsValue) ? captionsValue : [];
+  if (!Array.isArray(photosValue)) return [];
+  return photosValue.map((item, index) => {
+    if (isRecord(item)) {
+      return {
+        url: String(item.url || "").trim(),
+        caption: String(item.caption || "").trim(),
+      };
+    }
+    return {
+      url: String(item || "").trim(),
+      caption: String(captions[index] || "").trim(),
+    };
+  }).filter((item) => item.url);
 }
 </script>
 

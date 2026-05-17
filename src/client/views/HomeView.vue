@@ -79,18 +79,25 @@
       <section v-if="(data.photos && data.photos.length) || bilibiliPlayerUrl" class="linktree-section">
         <h2>活动回顾</h2>
         <div v-if="versionedPhotos.length" class="linktree-gallery-carousel">
-          <transition name="carousel-fade" mode="out-in">
-            <img :key="versionedPhotos[photoIndex]" :src="versionedPhotos[photoIndex]" alt="活动照片" loading="lazy" />
-          </transition>
-          <div v-if="versionedPhotos.length > 1" class="linktree-gallery-dots">
-            <button
-              v-for="(_, i) in versionedPhotos"
-              :key="i"
-              type="button"
-              :class="['dot', { active: i === photoIndex }]"
-              :aria-label="`查看第 ${i + 1} 张活动照片`"
-              @click="photoIndex = i"
-            />
+          <div class="linktree-gallery-track" :style="trackStyle">
+            <img v-for="(p, i) in versionedPhotos" :key="`${p}-${i}`" :src="p" alt="活动照片" loading="lazy" />
+          </div>
+          <div class="linktree-gallery-overlay">
+            <p v-if="activePhotoCaption" class="linktree-gallery-caption">{{ activePhotoCaption }}</p>
+            <div v-if="versionedPhotos.length > 1" class="linktree-gallery-dots">
+              <button
+                v-for="(_, i) in versionedPhotos"
+                :key="i"
+                type="button"
+                :class="['dot', { active: i === photoIndex }]"
+                :aria-label="`查看第 ${i + 1} 张活动照片`"
+                @click="photoIndex = i"
+              />
+            </div>
+            <div v-if="versionedPhotos.length > 1" class="linktree-gallery-controls">
+              <button type="button" aria-label="上一张" @click="goPrev">‹</button>
+              <button type="button" aria-label="下一张" @click="goNext">›</button>
+            </div>
           </div>
         </div>
         <div v-if="bilibiliPlayerUrl" class="linktree-video-wrap">
@@ -127,7 +134,8 @@ interface CommunityHomeData {
   members: Array<{ name?: string; desc?: string; url?: string; avatar?: string }>;
   events: Array<{ title?: string; date?: string; location?: string; desc?: string }>;
   socialLinks: Array<{ title?: string; url?: string }>;
-  photos: string[];
+  photos: Array<string | { url?: string; caption?: string }>;
+  photoCaptions?: string[];
   bilibiliBvid?: string;
   updatedAt?: number;
 }
@@ -135,7 +143,14 @@ interface CommunityHomeData {
 const data = ref<CommunityHomeData>({ aboutUs: "", members: [], events: [], socialLinks: [], photos: [], bilibiliBvid: "" });
 const bilibiliPlayerUrl = computed(() => buildBilibiliPlayerUrl(data.value.bilibiliBvid));
 const bilibiliVideoUrl = computed(() => buildBilibiliVideoUrl(data.value.bilibiliBvid));
-const versionedPhotos = computed(() => (data.value.photos || []).map((p) => versionedUrl(p)).filter(Boolean));
+const normalizedPhotos = computed(() => normalizePhotoEntries(data.value.photos, data.value.photoCaptions));
+const versionedPhotos = computed(() => normalizedPhotos.value.map((p) => versionedUrl(p.url)).filter(Boolean));
+const trackStyle = computed(() => ({
+  transform: `translateX(-${photoIndex.value * 100}%)`,
+}));
+const activePhotoCaption = computed(() => {
+  return String(normalizedPhotos.value[photoIndex.value]?.caption || "").trim();
+});
 const photoIndex = ref(0);
 let photoTimer: number | null = null;
 
@@ -195,8 +210,8 @@ function startPhotoCarousel(): void {
   stopPhotoCarousel();
   if (versionedPhotos.value.length <= 1) return;
   photoTimer = window.setInterval(() => {
-    photoIndex.value = (photoIndex.value + 1) % versionedPhotos.value.length;
-  }, 3500);
+    goNext();
+  }, 10000);
 }
 
 function stopPhotoCarousel(): void {
@@ -204,5 +219,35 @@ function stopPhotoCarousel(): void {
     window.clearInterval(photoTimer);
     photoTimer = null;
   }
+}
+
+function goNext(): void {
+  if (!versionedPhotos.value.length) return;
+  photoIndex.value = (photoIndex.value + 1) % versionedPhotos.value.length;
+}
+
+function goPrev(): void {
+  if (!versionedPhotos.value.length) return;
+  photoIndex.value = (photoIndex.value - 1 + versionedPhotos.value.length) % versionedPhotos.value.length;
+}
+
+function normalizePhotoEntries(
+  photosValue: Array<string | { url?: string; caption?: string }> | undefined,
+  captionsValue: string[] | undefined,
+): Array<{ url: string; caption: string }> {
+  const photos = Array.isArray(photosValue) ? photosValue : [];
+  const captions = Array.isArray(captionsValue) ? captionsValue : [];
+  return photos.map((item, index) => {
+    if (item && typeof item === "object") {
+      return {
+        url: String(item.url || "").trim(),
+        caption: String(item.caption || "").trim(),
+      };
+    }
+    return {
+      url: String(item || "").trim(),
+      caption: String(captions[index] || "").trim(),
+    };
+  }).filter((item) => item.url);
 }
 </script>

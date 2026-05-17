@@ -34,6 +34,7 @@ let communityData = null;
 let communityAdminRendering = false;
 let stopwatchLoader = null;
 let homeGalleryTimer = null;
+let homeGalleryIndex = 0;
 
 const DIFFICULTY_PRESETS = {
   easy: { label: "简单", cropSize: 230, candidateCount: 90 },
@@ -151,7 +152,8 @@ async function renderHome() {
     }
   }
 
-  const data = communityData || { aboutUs: "", members: [], events: [], socialLinks: [], photos: [], bilibiliBvid: "", updatedAt: 0 };
+  const data = communityData || { aboutUs: "", members: [], events: [], socialLinks: [], photos: [], photoCaptions: [], bilibiliBvid: "", updatedAt: 0 };
+  const photoEntries = normalizePhotoEntries(data.photos, data.photoCaptions);
   const bilibiliPlayerUrl = buildBilibiliPlayerUrl(data.bilibiliBvid);
   const bilibiliVideoUrl = buildBilibiliVideoUrl(data.bilibiliBvid);
   
@@ -248,13 +250,22 @@ async function renderHome() {
         </section>` : ''}
 
         <!-- Photos -->
-        ${(data.photos && data.photos.length) || bilibiliPlayerUrl ? `
+        ${(photoEntries && photoEntries.length) || bilibiliPlayerUrl ? `
         <section class="linktree-section">
           <h2>活动回顾</h2>
-          ${data.photos && data.photos.length ? `<div class="linktree-gallery-carousel" data-gallery-size="${data.photos.length}">
-              <img id="homeGalleryImage" src="${versionedUrl(data.photos[0], data.updatedAt)}" alt="活动照片" loading="lazy" />
-              ${data.photos.length > 1 ? `<div class="linktree-gallery-dots">
-                ${data.photos.map((_, i) => `<button class="dot${i === 0 ? " active" : ""}" data-gallery-dot="${i}" aria-label="查看第 ${i + 1} 张活动照片"></button>`).join("")}
+          ${photoEntries && photoEntries.length ? `<div class="linktree-gallery-carousel" data-gallery-size="${photoEntries.length}">
+              <div id="homeGalleryTrack" class="linktree-gallery-track">
+                ${photoEntries.map((p) => `<img src="${versionedUrl(p.url, data.updatedAt)}" alt="活动照片" loading="lazy" />`).join("")}
+              </div>
+              ${photoEntries.length > 1 ? `<div class="linktree-gallery-overlay">
+                ${String(photoEntries?.[0]?.caption || "").trim() ? `<p id="homeGalleryCaption" class="linktree-gallery-caption">${escapeHtml(String(photoEntries[0].caption))}</p>` : `<p id="homeGalleryCaption" class="linktree-gallery-caption"></p>`}
+                <div class="linktree-gallery-dots">
+                  ${photoEntries.map((_, i) => `<button class="dot${i === 0 ? " active" : ""}" data-gallery-dot="${i}" aria-label="查看第 ${i + 1} 张活动照片"></button>`).join("")}
+                </div>
+                <div class="linktree-gallery-controls">
+                  <button type="button" data-gallery-prev aria-label="上一张">‹</button>
+                  <button type="button" data-gallery-next aria-label="下一张">›</button>
+                </div>
               </div>` : ``}
           </div>` : ``}
           ${bilibiliPlayerUrl ? `<div class="linktree-video-wrap">
@@ -270,40 +281,49 @@ async function renderHome() {
       </div>
     </main>
   `;
-  initHomeGalleryCarousel(data);
+  initHomeGalleryCarousel({ ...data, photos: photoEntries });
 }
 
 function initHomeGalleryCarousel(data) {
   clearHomeGalleryCarousel();
   const photos = Array.isArray(data?.photos) ? data.photos : [];
   if (photos.length <= 1) return;
-  const img = document.getElementById("homeGalleryImage");
+  const track = document.getElementById("homeGalleryTrack");
+  const caption = document.getElementById("homeGalleryCaption");
   const dots = Array.from(document.querySelectorAll("[data-gallery-dot]"));
-  if (!img || !dots.length) return;
-  let index = 0;
-  const render = (animated = false) => {
-    const nextSrc = versionedUrl(photos[index], data.updatedAt);
-    if (animated) {
-      img.classList.add("is-fading");
-      setTimeout(() => {
-        img.src = nextSrc;
-        img.classList.remove("is-fading");
-      }, 180);
-    } else {
-      img.src = nextSrc;
+  if (!track || !dots.length) return;
+  homeGalleryIndex = 0;
+  const render = () => {
+    track.style.transform = `translateX(-${homeGalleryIndex * 100}%)`;
+    dots.forEach((dot, i) => dot.classList.toggle("active", i === homeGalleryIndex));
+    if (caption) {
+      const text = String((data?.photos || [])[homeGalleryIndex]?.caption || "").trim();
+      caption.textContent = text;
+      caption.style.display = text ? "block" : "none";
     }
-    dots.forEach((dot, i) => dot.classList.toggle("active", i === index));
+  };
+  const next = () => {
+    homeGalleryIndex = (homeGalleryIndex + 1) % photos.length;
+    render();
+  };
+  const prev = () => {
+    homeGalleryIndex = (homeGalleryIndex - 1 + photos.length) % photos.length;
+    render();
   };
   dots.forEach((dot, i) => {
     dot.addEventListener("click", () => {
-      index = i;
-      render(true);
+      homeGalleryIndex = i;
+      render();
     });
   });
+  const prevBtn = document.querySelector("[data-gallery-prev]");
+  const nextBtn = document.querySelector("[data-gallery-next]");
+  if (prevBtn) prevBtn.addEventListener("click", prev);
+  if (nextBtn) nextBtn.addEventListener("click", next);
   homeGalleryTimer = setInterval(() => {
-    index = (index + 1) % photos.length;
-    render(true);
-  }, 3500);
+    next();
+  }, 10000);
+  render();
 }
 
 function clearHomeGalleryCarousel() {
@@ -1606,7 +1626,8 @@ async function renderCommunityAdmin() {
     }
   }
   
-  const data = communityData || { aboutUs: "", members: [], events: [], socialLinks: [], photos: [], bilibiliBvid: "" };
+  const data = communityData || { aboutUs: "", members: [], events: [], socialLinks: [], photos: [], photoCaptions: [], bilibiliBvid: "" };
+  const normalizedData = { ...data, photos: normalizePhotoEntries(data.photos, data.photoCaptions) };
 
   app.innerHTML = `
     <main class="settings-shell">
@@ -1741,10 +1762,13 @@ async function renderCommunityAdmin() {
         photos: {
           type: "array",
           title: "照片墙 (图片直链)",
+          format: "table",
           items: {
-            type: "string",
-            title: "图片 URL",
-            format: "url"
+            type: "object",
+            properties: {
+              url: { type: "string", title: "图片 URL", format: "url" },
+              caption: { type: "string", title: "图片文案", format: "textarea" }
+            }
           }
         },
         bilibiliBvid: {
@@ -1754,7 +1778,7 @@ async function renderCommunityAdmin() {
         }
       }
     },
-    startval: data
+    startval: normalizedData
   });
 
   document.getElementById("uploadImage").addEventListener("change", async (e) => {
@@ -1801,6 +1825,8 @@ async function renderCommunityAdmin() {
       const parsed = editor.getValue();
       const bvidInput = document.getElementById("bilibiliBvidInput");
       if (bvidInput) parsed.bilibiliBvid = normalizeBvid(bvidInput.value);
+      parsed.photos = normalizePhotoEntries(parsed.photos, parsed.photoCaptions);
+      delete parsed.photoCaptions;
       const res = await apiFetch("/api/community", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -1839,6 +1865,23 @@ function safeUrl(value) {
   } catch {
     return "#";
   }
+}
+
+function normalizePhotoEntries(photosValue, captionsValue) {
+  const photos = Array.isArray(photosValue) ? photosValue : [];
+  const captions = Array.isArray(captionsValue) ? captionsValue : [];
+  return photos.map((item, index) => {
+    if (item && typeof item === "object" && !Array.isArray(item)) {
+      return {
+        url: String(item.url || "").trim(),
+        caption: String(item.caption || "").trim(),
+      };
+    }
+    return {
+      url: String(item || "").trim(),
+      caption: String(captions[index] || "").trim(),
+    };
+  }).filter((entry) => entry.url);
 }
 
 function normalizeBvid(value) {
