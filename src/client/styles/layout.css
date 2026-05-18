@@ -416,10 +416,8 @@
   right: 0;
   bottom: 0;
   padding: 0.8rem 0.9rem;
+  min-height: 68px;
   background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(17, 24, 39, 0.6) 60%, rgba(17, 24, 39, 0.82) 100%);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
 }
 
 .linktree-gallery-caption {
@@ -429,11 +427,17 @@
   font-weight: 700;
   text-shadow: 0 2px 12px rgba(0, 0, 0, 0.5);
   max-width: 70%;
+  position: absolute;
+  left: 0.9rem;
+  bottom: 0.9rem;
 }
 
 .linktree-gallery-controls {
   display: flex;
   gap: 0.5rem;
+  position: absolute;
+  right: 0.9rem;
+  bottom: 0.7rem;
 }
 
 .linktree-gallery-controls button {
@@ -456,6 +460,10 @@
   display: flex;
   gap: 0.4rem;
   margin-top: 0;
+  position: absolute;
+  left: 50%;
+  bottom: 1.1rem;
+  transform: translateX(-50%);
 }
 
 .linktree-gallery-dots .dot {
