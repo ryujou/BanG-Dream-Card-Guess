@@ -24,6 +24,9 @@ image.png
 weight/*
 !weight/best.pt
 screenshots/*.tmp.*
+screenshots/*.png
+tests/results/
+security-audit.md
 
 node_modules
 artifacts/
