@@ -1,8 +1,10 @@
-const CACHE_NAME = "bangbangcai-v23";
+const CACHE_NAME = "bangbangcai-v26";
 const PRECACHE_URLS = [
   "/",
   "/player",
   "/note-shooter",
+  "/games/stopwatch-challenge",
+  "/stopwatch-challenge",
   "/note-shooter/bangdream.html",
   "/scores",
   "/solo",
@@ -45,6 +47,22 @@ self.addEventListener("fetch", (event) => {
   if (url.pathname.startsWith("/api/") || url.pathname.startsWith("/note-shooter-api/") || url.pathname === "/ws") return;
 
   if (request.mode === "navigate" || url.pathname.endsWith(".html") || url.pathname === "/note-shooter") {
+    event.respondWith(
+      fetch(request)
+        .then((response) => {
+          if (response.ok && url.origin === location.origin) {
+            const copy = response.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(request, copy));
+          }
+          return response;
+        })
+        .catch(() => caches.match(request))
+    );
+    return;
+  }
+
+  // JS/CSS should prefer network so clients get fresh app logic without hard refresh.
+  if (url.pathname.endsWith(".js") || url.pathname.endsWith(".css")) {
     event.respondWith(
       fetch(request)
         .then((response) => {

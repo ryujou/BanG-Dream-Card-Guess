@@ -1,10 +1,21 @@
 lib
 dist
+dist-scripts
 external
 public/cards/
 data/*
 !data/face-boxes.json
 /Server/
+Server/
+\Server/
+*.pem
+*.key
+id_rsa
+id_ed25519
+.env
+.env.*
+*.secret
+*.credentials
 deploy.sh
 deploy.tar.gz
 deploy_tmp/
@@ -15,11 +26,20 @@ weight/*
 screenshots/*.tmp.*
 
 node_modules
+artifacts/
+*.tar.gz
+*.tgz
+*.zip
+test-results/
+playwright-report/
+coverage/
+.server-build/
 __pycache__/
 *.pyc
 npm-debug.log
 yarn-debug.log
 yarn-error.log
+*.err
 tsconfig.tsbuildinfo
 
 .eslintcache

@@ -1,0 +1,139 @@
+.diagnostics-shell {
+  position: relative;
+  z-index: 1;
+  width: min(1120px, calc(100% - 32px));
+  min-height: 100vh;
+  margin: 0 auto;
+  padding: 32px 0;
+}
+
+.diagnostics-panel {
+  border: 1px solid rgba(23, 23, 31, 0.08);
+  border-radius: 8px;
+  padding: 24px;
+  background: rgba(255, 255, 255, 0.88);
+  box-shadow: 0 18px 50px rgba(48, 57, 82, 0.12);
+  backdrop-filter: blur(10px);
+}
+
+.diagnostics-head,
+.diagnostics-actions,
+.diagnostics-grid,
+.diagnostics-columns,
+.diagnostics-columns dl div {
+  display: flex;
+  gap: 12px;
+}
+
+.diagnostics-head {
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.diagnostics-head h1 {
+  font-size: clamp(2rem, 4vw, 3.5rem);
+}
+
+.diagnostics-actions {
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.diagnostics-actions a {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  border-radius: 8px;
+  padding: 0 16px;
+  color: #17171f;
+  background: #ffffff;
+  text-decoration: none;
+  box-shadow: 0 1px 0 rgba(23, 23, 31, 0.08), 0 12px 30px rgba(48, 57, 82, 0.08);
+}
+
+.diagnostics-note {
+  margin: 12px 0;
+  color: #6c757d;
+}
+
+.diagnostics-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin: 20px 0;
+}
+
+.diagnostics-grid article,
+.diagnostics-columns section {
+  border: 1px solid rgba(23, 23, 31, 0.08);
+  border-radius: 8px;
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.72);
+}
+
+.diagnostics-grid span,
+.diagnostics-columns dt {
+  color: #6c757d;
+  font-size: 0.85rem;
+}
+
+.diagnostics-grid strong {
+  display: block;
+  margin: 8px 0 4px;
+  font-size: 1.75rem;
+}
+
+.diagnostics-grid small,
+.diagnostics-columns dd {
+  overflow-wrap: anywhere;
+  color: #343a40;
+}
+
+.diagnostics-columns {
+  display: grid;
+  grid-template-columns: minmax(240px, 0.8fr) minmax(0, 1.2fr);
+}
+
+.diagnostics-columns h2 {
+  margin: 0 0 12px;
+}
+
+.diagnostics-columns dl {
+  margin: 0;
+}
+
+.diagnostics-columns dl div {
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(23, 23, 31, 0.06);
+  padding: 10px 0;
+}
+
+.diagnostics-columns dd {
+  margin: 0;
+  text-align: right;
+}
+
+.diagnostics-columns pre {
+  overflow: auto;
+  max-height: 560px;
+  margin: 0;
+  border-radius: 8px;
+  padding: 14px;
+  background: #17171f;
+  color: #f8f9fa;
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+
+@media (max-width: 760px) {
+  .diagnostics-head,
+  .diagnostics-actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .diagnostics-grid,
+  .diagnostics-columns {
+    grid-template-columns: 1fr;
+  }
+}

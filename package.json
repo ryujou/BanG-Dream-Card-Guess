@@ -3,16 +3,27 @@
   "description": "邦邦猜本地摊位互动 Web 游戏",
   "version": "1.5.1",
   "private": true,
+  "type": "module",
   "main": "server.mjs",
   "scripts": {
+    "typecheck": "vue-tsc --noEmit",
+    "check:types": "vue-tsc --noEmit && tsc -p tsconfig.server.json --noEmit",
     "dev": "vite --host 127.0.0.1",
-    "build": "vite build",
+    "build:server": "tsc -p tsconfig.server.json",
+    "build:scripts": "tsc -p tsconfig.scripts.json",
+    "build": "vue-tsc --noEmit && vite build && npm run build:server",
     "preview": "vite preview --host 127.0.0.1",
-    "start": "node server.mjs --booth",
+    "start": "npm run build:server && node server.mjs --booth",
     "booth": "npm run build && node server.mjs --booth",
     "solo": "npm run build && node server.mjs --solo",
-    "cache-cards": "node scripts/cache-cards.mjs",
-    "detect-faces": "python scripts/detect-faces.py"
+    "cache-cards": "npm run build:scripts && node dist-scripts/cache-cards.js",
+    "detect-faces": "python scripts/detect-faces.py",
+    "test": "vitest run",
+    "test:e2e": "playwright test",
+    "test:e2e:nonvisual": "playwright test --grep-invert \"Visual Regression Tests\"",
+    "verify": "npm run typecheck && npm run build && npm test && npm run test:e2e:nonvisual",
+    "check:any": "npm run build:scripts && node dist-scripts/count-any.js",
+    "package:local": "npm run build:scripts && node dist-scripts/package-local.js"
   },
   "license": "MIT",
   "contributors": [
@@ -29,14 +40,26 @@
   "dependencies": {
     "@json-editor/json-editor": "^1.17.0",
     "jimp": "^1.6.0",
+    "pinia": "^3.0.4",
     "qrcode": "^1.5.4",
     "three": "^0.166.1",
+    "vue": "^3.5.34",
+    "vue-router": "^4.6.4",
     "ws": "^8.20.0"
   },
   "devDependencies": {
+    "@playwright/test": "^1.60.0",
+    "@types/node": "^25.8.0",
+    "@vitejs/plugin-vue": "^6.0.6",
     "@vitest/coverage-v8": "^4.1.6",
+    "@vue/test-utils": "^2.4.10",
+    "@vue/tsconfig": "^0.9.1",
+    "jsdom": "^29.1.1",
     "playwright": "^1.60.0",
+    "postcss": "^8.5.14",
+    "typescript": "^6.0.3",
     "vite": "^8.0.12",
-    "vitest": "^4.1.6"
+    "vitest": "^4.1.6",
+    "vue-tsc": "^3.2.9"
   }
 }

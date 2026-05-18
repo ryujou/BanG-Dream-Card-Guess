@@ -4,6 +4,7 @@ setlocal
 cd /d "%~dp0.."
 
 if "%PORT%"=="" set "PORT=5173"
+if "%HOST_PASSWORD%"=="" set "HOST_PASSWORD=123456"
 
 echo.
 echo [BangBangCai] Start booth game
@@ -47,7 +48,7 @@ if errorlevel 1 (
 
 echo.
 echo Launching server on port %PORT%...
-start "BangBangCai Server" cmd /k "cd /d ""%CD%"" && set PORT=%PORT% && node server.mjs --booth"
+start "BangBangCai Server" cmd /k "cd /d ""%CD%"" && set ""PORT=%PORT%"" && set ""HOST_PASSWORD=%HOST_PASSWORD%"" && node server.mjs --booth"
 
 timeout /t 2 /nobreak >nul
 
@@ -59,6 +60,7 @@ echo Player: http://127.0.0.1:%PORT%/player
 echo Host:   http://127.0.0.1:%PORT%/host
 echo Setup:  http://127.0.0.1:%PORT%/settings
 echo QR:     http://127.0.0.1:%PORT%/qr
+echo Host password: %HOST_PASSWORD%
 echo.
 echo A server window has been opened. Close that window to stop the game.
 echo.

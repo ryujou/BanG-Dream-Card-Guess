@@ -33,6 +33,8 @@ let audioContext = null;
 let communityData = null;
 let communityAdminRendering = false;
 let stopwatchLoader = null;
+let homeGalleryTimer = null;
+let homeGalleryIndex = 0;
 
 const DIFFICULTY_PRESETS = {
   easy: { label: "简单", cropSize: 230, candidateCount: 90 },
@@ -125,6 +127,7 @@ function command(command, payload = {}) {
 }
 
 function render() {
+  if (route !== "home") clearHomeGalleryCarousel();
   if (route === "home") renderHome();
   else if (route === "login") renderLogin();
   else if (route === "qr") renderQr();
@@ -142,14 +145,21 @@ function render() {
 async function renderHome() {
   if (!communityData) {
     try {
-      const response = await fetch("/api/community");
+      const response = await fetch("/api/community", { cache: "no-store" });
       if (response.ok) communityData = await response.json();
     } catch (e) {
       console.error("Failed to load community data", e);
     }
   }
 
-  const data = communityData || { aboutUs: "", members: [], events: [], socialLinks: [], photos: [] };
+  const data = communityData || { aboutUs: "", members: [], events: [], socialLinks: [], photos: [], photoCaptions: [], bilibiliBvid: "", updatedAt: 0 };
+  const photoEntries = normalizePhotoEntries(data.photos, data.photoCaptions);
+  const bilibiliPlayerUrl = buildBilibiliPlayerUrl(data);
+  const bilibiliVideoUrl = buildBilibiliVideoUrl(data);
+  const bilibiliCoverUrl = versionedUrl(String(data.bilibiliCover || "").trim(), data.updatedAt);
+  const bilibiliTitle = String(data.bilibiliTitle || "").trim();
+  const mobileFallbackMode = data.mobileFallbackMode || "cover";
+  const shouldShowMobileFallback = isMobileBrowser() && mobileFallbackMode === "cover";
   
   app.innerHTML = `
     <main class="linktree-shell">
@@ -179,7 +189,7 @@ async function renderHome() {
             <span class="pill-icon">🎍</span>
             <span class="pill-text">打发时间: 音符射手</span>
           </a>
-          <a class="linktree-pill" href="/stopwatch-challenge">
+          <a class="linktree-pill" href="/games/stopwatch-challenge">
             <span class="pill-icon">⏱</span>
             <span class="pill-text">掐秒表挑战</span>
           </a>
@@ -217,6 +227,7 @@ async function renderHome() {
           <div class="linktree-members">
             ${data.members.map(m => `
               <a class="member-pill" href="${safeUrl(m.url)}" target="_blank" rel="noreferrer">
+                ${m.avatar ? `<img class="member-avatar" src="${versionedUrl(m.avatar, data.updatedAt)}" alt="${escapeHtml(m.name || "成员")} 头像" loading="lazy" />` : ``}
                 <strong>${escapeHtml(m.name)}</strong>
                 <span>${escapeHtml(m.desc)}</span>
               </a>
@@ -243,14 +254,35 @@ async function renderHome() {
         </section>` : ''}
 
         <!-- Photos -->
-        ${data.photos && data.photos.length ? `
+        ${(photoEntries && photoEntries.length) || bilibiliPlayerUrl ? `
         <section class="linktree-section">
           <h2>活动回顾</h2>
-          <div class="linktree-gallery">
-            ${data.photos.map(p => `
-              <img src="${safeUrl(p)}" alt="活动照片" loading="lazy" />
-            `).join('')}
-          </div>
+          ${photoEntries && photoEntries.length ? `<div class="linktree-gallery-carousel" data-gallery-size="${photoEntries.length}">
+              <div id="homeGalleryTrack" class="linktree-gallery-track">
+                ${photoEntries.map((p) => `<img src="${versionedUrl(p.url, data.updatedAt)}" alt="活动照片" loading="lazy" />`).join("")}
+              </div>
+              ${photoEntries.length > 1 ? `<div class="linktree-gallery-overlay">
+                ${String(photoEntries?.[0]?.caption || "").trim() ? `<p id="homeGalleryCaption" class="linktree-gallery-caption">${escapeHtml(String(photoEntries[0].caption))}</p>` : `<p id="homeGalleryCaption" class="linktree-gallery-caption"></p>`}
+                <div class="linktree-gallery-dots">
+                  ${photoEntries.map((_, i) => `<button class="dot${i === 0 ? " active" : ""}" data-gallery-dot="${i}" aria-label="查看第 ${i + 1} 张活动照片"></button>`).join("")}
+                </div>
+                <div class="linktree-gallery-controls">
+                  <button type="button" data-gallery-prev aria-label="上一张">‹</button>
+                  <button type="button" data-gallery-next aria-label="下一张">›</button>
+                </div>
+              </div>` : ``}
+          </div>` : ``}
+          ${bilibiliPlayerUrl ? `<div class="linktree-video-wrap">
+            ${shouldShowMobileFallback ? `
+            <div class="linktree-video-cover">
+              ${bilibiliCoverUrl && bilibiliCoverUrl !== "#" ? `<img src="${bilibiliCoverUrl}" alt="${escapeAttr(bilibiliTitle || "Bilibili 视频封面")}" loading="lazy" />` : ``}
+              ${bilibiliVideoUrl ? `<a class="linktree-video-open-button" href="${escapeAttr(bilibiliVideoUrl)}" target="_blank" rel="noopener noreferrer">在 B 站打开</a>` : ``}
+              ${bilibiliTitle ? `<p class="linktree-video-cover-title">${escapeHtml(bilibiliTitle)}</p>` : ``}
+            </div>
+            ` : `
+            <iframe class="linktree-video-frame" src="${bilibiliPlayerUrl}" title="Bilibili Video Player" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen scrolling="no"></iframe>
+            `}
+          </div>` : ``}
         </section>` : ''}
 
         <footer class="linktree-footer">
@@ -260,6 +292,56 @@ async function renderHome() {
       </div>
     </main>
   `;
+  initHomeGalleryCarousel({ ...data, photos: photoEntries });
+}
+
+function initHomeGalleryCarousel(data) {
+  clearHomeGalleryCarousel();
+  const photos = Array.isArray(data?.photos) ? data.photos : [];
+  if (photos.length <= 1) return;
+  const track = document.getElementById("homeGalleryTrack");
+  const caption = document.getElementById("homeGalleryCaption");
+  const dots = Array.from(document.querySelectorAll("[data-gallery-dot]"));
+  if (!track || !dots.length) return;
+  homeGalleryIndex = 0;
+  const render = () => {
+    track.style.transform = `translateX(-${homeGalleryIndex * 100}%)`;
+    dots.forEach((dot, i) => dot.classList.toggle("active", i === homeGalleryIndex));
+    if (caption) {
+      const text = String((data?.photos || [])[homeGalleryIndex]?.caption || "").trim();
+      caption.textContent = text;
+      caption.style.display = text ? "block" : "none";
+    }
+  };
+  const next = () => {
+    homeGalleryIndex = (homeGalleryIndex + 1) % photos.length;
+    render();
+  };
+  const prev = () => {
+    homeGalleryIndex = (homeGalleryIndex - 1 + photos.length) % photos.length;
+    render();
+  };
+  dots.forEach((dot, i) => {
+    dot.addEventListener("click", () => {
+      homeGalleryIndex = i;
+      render();
+    });
+  });
+  const prevBtn = document.querySelector("[data-gallery-prev]");
+  const nextBtn = document.querySelector("[data-gallery-next]");
+  if (prevBtn) prevBtn.addEventListener("click", prev);
+  if (nextBtn) nextBtn.addEventListener("click", next);
+  homeGalleryTimer = setInterval(() => {
+    next();
+  }, 10000);
+  render();
+}
+
+function clearHomeGalleryCarousel() {
+  if (homeGalleryTimer) {
+    clearInterval(homeGalleryTimer);
+    homeGalleryTimer = null;
+  }
 }
 
 function renderQr() {
@@ -1548,14 +1630,16 @@ async function renderCommunityAdmin() {
   
   if (!communityData) {
     try {
-      const response = await fetch("/api/community");
+      const response = await fetch("/api/community", { cache: "no-store" });
       if (response.ok) communityData = await response.json();
     } catch (e) {
       console.error(e);
     }
   }
   
-  const data = communityData || { aboutUs: "", members: [], events: [], socialLinks: [], photos: [] };
+  const data = communityData || { aboutUs: "", members: [], events: [], socialLinks: [], photos: [], photoCaptions: [], bilibiliBvid: "" };
+  const normalizedData = { ...data, photos: normalizePhotoEntries(data.photos, data.photoCaptions) };
+  delete normalizedData.updatedAt;
 
   app.innerHTML = `
     <main class="settings-shell">
@@ -1568,6 +1652,14 @@ async function renderCommunityAdmin() {
         </div>
 
         <div id="jsonEditorContainer" class="json-editor-container"></div>
+        <div class="community-bvid-row">
+          <label for="bilibiliBvidInput">Bilibili BV ID</label>
+          <input id="bilibiliBvidInput" type="text" placeholder="BV1GJ411x7h7" value="${escapeAttr(data.bilibiliBvid || "")}" />
+        </div>
+        <div class="community-bvid-row">
+          <label for="bilibiliCoverInput">Bilibili 封面图链接</label>
+          <input id="bilibiliCoverInput" type="text" placeholder="https://your-cdn.example.com/cover.jpg" value="${escapeAttr(data.bilibiliCover || "")}" />
+        </div>
         
         <div class="admin-actions">
           <div class="upload-group">
@@ -1686,15 +1778,18 @@ async function renderCommunityAdmin() {
         photos: {
           type: "array",
           title: "照片墙 (图片直链)",
+          format: "table",
           items: {
-            type: "string",
-            title: "图片 URL",
-            format: "url"
+            type: "object",
+            properties: {
+              url: { type: "string", title: "图片 URL", format: "url" },
+              caption: { type: "string", title: "图片文案", format: "textarea" }
+            }
           }
         }
       }
     },
-    startval: data
+    startval: normalizedData
   });
 
   document.getElementById("uploadImage").addEventListener("change", async (e) => {
@@ -1739,6 +1834,13 @@ async function renderCommunityAdmin() {
 
     try {
       const parsed = editor.getValue();
+      const bvidInput = document.getElementById("bilibiliBvidInput");
+      if (bvidInput) parsed.bilibiliBvid = normalizeBvid(bvidInput.value);
+      const coverInput = document.getElementById("bilibiliCoverInput");
+      if (coverInput) parsed.bilibiliCover = String(coverInput.value || "").trim();
+      parsed.photos = normalizePhotoEntries(parsed.photos, parsed.photoCaptions);
+      delete parsed.photoCaptions;
+      delete parsed.updatedAt;
       const res = await apiFetch("/api/community", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -1765,7 +1867,13 @@ function safeUrl(value) {
   const raw = String(value || "").trim();
   if (!raw) return "#";
   try {
-    const url = new URL(raw, location.origin);
+    let normalized = raw;
+    if (/^\/\//.test(normalized)) {
+      normalized = `https:${normalized}`;
+    } else if (!/^[a-zA-Z][a-zA-Z\d+\-.]*:/.test(normalized) && /^[^/\s]+\.[^/\s]+(?:[/?#]|$)/.test(normalized)) {
+      normalized = `https://${normalized}`;
+    }
+    const url = new URL(normalized, location.origin);
     if (!["http:", "https:"].includes(url.protocol)) return "#";
     return escapeAttr(url.href);
   } catch {
@@ -1773,8 +1881,84 @@ function safeUrl(value) {
   }
 }
 
+function normalizePhotoEntries(photosValue, captionsValue) {
+  const photos = Array.isArray(photosValue) ? photosValue : [];
+  const captions = Array.isArray(captionsValue) ? captionsValue : [];
+  return photos.map((item, index) => {
+    if (item && typeof item === "object" && !Array.isArray(item)) {
+      return {
+        url: String(item.url || "").trim(),
+        caption: String(item.caption || "").trim(),
+      };
+    }
+    return {
+      url: String(item || "").trim(),
+      caption: String(captions[index] || "").trim(),
+    };
+  }).filter((entry) => entry.url);
+}
 
+function normalizeBvid(value) {
+  const raw = String(value || "").trim().replace(/\s+/g, "");
+  if (!raw) return "";
+  const withPrefix = /^BV/i.test(raw) ? raw : `BV${raw}`;
+  const normalized = withPrefix.slice(0, 12);
+  return /^BV[0-9A-Za-z]{10}$/.test(normalized) ? normalized : "";
+}
 
+function normalizeAid(value) {
+  const raw = String(value || "").trim();
+  return /^\d+$/.test(raw) ? raw : "";
+}
 
+function isMobileBrowser(userAgent) {
+  const ua = userAgent ?? (typeof navigator !== "undefined" ? navigator.userAgent : "");
+  return /Android|iPhone|iPad|iPod|Mobile/i.test(ua);
+}
 
+function buildBilibiliPlayerUrl(value, updatedAt = communityData?.updatedAt) {
+  const bvid = normalizeBvid(value?.bilibiliBvid);
+  const aid = normalizeAid(value?.bilibiliAid);
+  if (!bvid && !aid) return "";
+  const params = new URLSearchParams();
+  params.set("isOutside", "true");
+  params.set("autoplay", toBilibiliFlag(value?.bilibiliAutoplay, false));
+  params.set("danmaku", toBilibiliFlag(value?.bilibiliDanmaku, false));
+  if (bvid) params.set("bvid", bvid);
+  else params.set("aid", aid);
+  const cid = normalizeAid(value?.bilibiliCid);
+  if (cid) params.set("cid", cid);
+  const page = normalizeAid(value?.bilibiliPage) || "1";
+  if (value?.bilibiliHighQuality !== undefined) {
+    params.set("high_quality", toBilibiliFlag(value.bilibiliHighQuality, true));
+  }
+  const useMinimal = Boolean(value?.bilibiliMinimalMode);
+  if (useMinimal) {
+    params.set("p", page);
+    params.set("hideCoverInfo", "1");
+    return versionedUrl(`https://www.bilibili.com/blackboard/html5mobileplayer.html?${params.toString()}`, updatedAt);
+  }
+  params.set("page", page);
+  return versionedUrl(`https://player.bilibili.com/player.html?${params.toString()}`, updatedAt);
+}
 
+function buildBilibiliVideoUrl(value) {
+  const bvid = normalizeBvid(value?.bilibiliBvid);
+  if (bvid) return `https://www.bilibili.com/video/${encodeURIComponent(bvid)}`;
+  const aid = normalizeAid(value?.bilibiliAid);
+  if (aid) return `https://www.bilibili.com/video/av${encodeURIComponent(aid)}`;
+  return "";
+}
+
+function toBilibiliFlag(value, fallback) {
+  return value === undefined ? (fallback ? "1" : "0") : (value ? "1" : "0");
+}
+
+function versionedUrl(value, updatedAt) {
+  const base = safeUrl(value);
+  if (!base || base === "#") return "";
+  const token = Number(updatedAt || 0);
+  if (!Number.isFinite(token) || token <= 0) return base;
+  const separator = base.includes("?") ? "&" : "?";
+  return `${base}${separator}v=${token}`;
+}

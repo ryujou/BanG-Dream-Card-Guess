@@ -2247,6 +2247,8 @@ select:focus {
 
 /* --- Linktree Style Homepage --- */
 .linktree-shell {
+  position: relative;
+  z-index: 1;
   width: 100%;
   min-height: 100vh;
   display: flex;
@@ -2430,6 +2432,16 @@ select:focus {
   color: var(--color-text-dim);
 }
 
+.member-avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 0.6rem;
+  border: 2px solid rgba(255, 255, 255, 0.85);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+}
+
 .linktree-events {
   display: flex;
   flex-direction: column;
@@ -2479,23 +2491,183 @@ select:focus {
   line-height: 1.5;
 }
 
-.linktree-gallery {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 1rem;
+.linktree-gallery-carousel {
+  position: relative;
+  width: 100%;
+  margin-top: 1rem;
+  overflow: hidden;
+  border-radius: 16px;
 }
 
-.linktree-gallery img {
+.linktree-gallery-track {
+  display: flex;
   width: 100%;
-  aspect-ratio: 1;
+  transition: transform 0.75s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.linktree-gallery-track img {
+  flex: 0 0 100%;
+  width: 100%;
+  aspect-ratio: 16 / 9;
   object-fit: cover;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  display: block;
+}
+
+.linktree-gallery-overlay {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 0.8rem 0.9rem;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(17, 24, 39, 0.6) 60%, rgba(17, 24, 39, 0.82) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.linktree-gallery-caption {
+  margin: 0;
+  color: #fff;
+  font-size: 1.1rem;
+  font-weight: 700;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.5);
+  max-width: 70%;
+}
+
+.linktree-gallery-controls {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.linktree-gallery-controls button {
+  width: 34px;
+  height: 34px;
+  border: 0;
+  border-radius: 10px;
+  color: #fff;
+  font-size: 1.3rem;
+  line-height: 1;
+  background: rgba(255, 255, 255, 0.2);
+  cursor: pointer;
+}
+
+.linktree-gallery-controls button:hover {
+  background: rgba(255, 255, 255, 0.35);
+}
+
+.linktree-gallery-dots {
+  display: flex;
+  gap: 0.4rem;
+  margin-top: 0;
+}
+
+.linktree-gallery-dots .dot {
+  appearance: none;
+  -webkit-appearance: none;
+  display: inline-block;
+  flex: 0 0 10px;
+  width: 10px;
+  height: 10px;
+  min-width: 10px;
+  min-height: 10px;
+  line-height: 0;
+  border-radius: 999px;
+  border: 0;
+  background: rgba(255, 255, 255, 0.55);
+  cursor: pointer;
+  padding: 0;
+  margin: 0;
+}
+
+.linktree-gallery-dots .dot.active {
+  background: #fff;
+}
+
+.linktree-video-wrap {
+  position: relative;
+  z-index: 2;
+  margin-top: 1rem;
+  isolation: isolate;
+}
+
+.linktree-video-frame {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border: 0;
   border-radius: 16px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-  transition: transform 0.3s;
+  background: #000;
 }
 
-.linktree-gallery img:hover {
-  transform: scale(1.02);
+.linktree-video-cover {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #111;
+}
+
+.linktree-video-cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.linktree-video-cover::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+}
+
+.linktree-video-open-button {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 1;
+  transform: translate(-50%, -50%);
+  padding: 10px 16px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.72);
+  color: #fff;
+  text-decoration: none;
+  font-size: 14px;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.linktree-video-open-button:hover {
+  background: rgba(0, 0, 0, 0.86);
+}
+
+.linktree-video-cover-title {
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 12px;
+  z-index: 1;
+  margin: 0;
+  color: #fff;
+  font-size: 13px;
+  line-height: 1.4;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.linktree-video-fallback {
+  margin: 0.6rem 0 0;
+  text-align: center;
+  color: var(--color-text-dim);
+  font-size: 0.9rem;
+}
+
+.linktree-video-fallback a {
+  color: var(--color-primary);
+  font-weight: 700;
 }
 
 .linktree-footer {
@@ -2616,6 +2788,28 @@ select:focus {
   min-height: 36px;
   margin: 0;
 }
+
+.community-bvid-row {
+  margin-top: -0.5rem;
+  margin-bottom: 1.5rem;
+  display: grid;
+  gap: 8px;
+}
+
+.community-bvid-row label {
+  font-weight: 700;
+}
+
+.community-bvid-row input {
+  width: 100%;
+  max-width: 320px;
+  height: 40px;
+  padding: 0 12px;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  background: #fff;
+}
+
 .admin-actions {
   display: flex;
   flex-direction: column;
