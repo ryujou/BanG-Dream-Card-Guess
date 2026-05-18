@@ -101,18 +101,24 @@
           </div>
         </div>
         <div v-if="bilibiliPlayerUrl" class="linktree-video-wrap">
-          <iframe
-            class="linktree-video-frame"
-            :src="bilibiliPlayerUrl"
-            title="Bilibili Video Player"
-            frameborder="0"
-            allowfullscreen
-            scrolling="no"
-          />
-          <p v-if="bilibiliVideoUrl" class="linktree-video-fallback">
-            手机端若显示“已阻止此内容”，请
-            <a :href="bilibiliVideoUrl" target="_blank" rel="noreferrer">点此打开 B 站视频</a>
-          </p>
+          <template v-if="shouldShowMobileFallback">
+            <div class="linktree-video-cover">
+              <img v-if="bilibiliCoverUrl && bilibiliCoverUrl !== '#'" :src="bilibiliCoverUrl" :alt="bilibiliTitle || 'Bilibili 视频封面'" loading="lazy" />
+              <a v-if="bilibiliVideoUrl" class="linktree-video-open-button" :href="bilibiliVideoUrl" target="_blank" rel="noopener noreferrer">在 B 站打开</a>
+              <p v-if="bilibiliTitle" class="linktree-video-cover-title">{{ bilibiliTitle }}</p>
+            </div>
+          </template>
+          <template v-else>
+            <iframe
+              class="linktree-video-frame"
+              :src="bilibiliPlayerUrl"
+              title="Bilibili Video Player"
+              frameborder="0"
+              allow="autoplay; fullscreen; picture-in-picture"
+              allowfullscreen
+              scrolling="no"
+            />
+          </template>
         </div>
       </section>
 
@@ -126,6 +132,7 @@
 <script setup lang="ts">
 import { ref, onMounted, onBeforeUnmount, computed, watch } from 'vue';
 import { safeUrl } from '../utils/image';
+import { buildBilibiliEmbedUrl, buildBilibiliVideoUrl, isMobileBrowser } from '../utils/bilibili';
 
 const COMMUNITY_URL = "https://qm.qq.com/q/6ytGE7qIWQ";
 
@@ -137,12 +144,33 @@ interface CommunityHomeData {
   photos: Array<string | { url?: string; caption?: string }>;
   photoCaptions?: string[];
   bilibiliBvid?: string;
+  bilibiliAid?: string | number;
+  bilibiliCid?: string | number;
+  bilibiliPage?: string | number;
+  bilibiliAutoplay?: boolean;
+  bilibiliDanmaku?: boolean;
+  bilibiliHighQuality?: boolean;
+  bilibiliCover?: string;
+  cover?: string;
+  poster?: string;
+  thumbnail?: string;
+  pic?: string;
+  bilibiliTitle?: string;
+  mobileFallbackMode?: "cover" | "iframe-first";
+  bilibiliMinimalMode?: boolean;
   updatedAt?: number;
 }
 
 const data = ref<CommunityHomeData>({ aboutUs: "", members: [], events: [], socialLinks: [], photos: [], bilibiliBvid: "" });
-const bilibiliPlayerUrl = computed(() => buildBilibiliPlayerUrl(data.value.bilibiliBvid));
-const bilibiliVideoUrl = computed(() => buildBilibiliVideoUrl(data.value.bilibiliBvid));
+const isMobileClient = ref(false);
+const bilibiliPlayerUrl = computed(() => buildBilibiliPlayerUrl(data.value));
+const bilibiliVideoUrl = computed(() => buildBilibiliOpenUrl(data.value));
+const bilibiliCoverUrl = computed(() => {
+  return versionedUrl(String(data.value.bilibiliCover || "").trim());
+});
+const bilibiliTitle = computed(() => String(data.value.bilibiliTitle || "").trim());
+const mobileFallbackMode = computed(() => data.value.mobileFallbackMode || "cover");
+const shouldShowMobileFallback = computed(() => isMobileClient.value && mobileFallbackMode.value === "cover");
 const normalizedPhotos = computed(() => normalizePhotoEntries(data.value.photos, data.value.photoCaptions));
 const versionedPhotos = computed(() => normalizedPhotos.value.map((p) => versionedUrl(p.url)).filter(Boolean));
 const trackStyle = computed(() => ({
@@ -155,6 +183,7 @@ const photoIndex = ref(0);
 let photoTimer: number | null = null;
 
 onMounted(async () => {
+  isMobileClient.value = isMobileBrowser();
   try {
     const response = await fetch("/api/community", { cache: "no-store" });
     if (response.ok) {
@@ -177,29 +206,29 @@ watch(versionedPhotos, () => {
   startPhotoCarousel();
 });
 
-function normalizeBvid(value: unknown): string {
-  const raw = String(value || "").trim().replace(/\s+/g, "");
-  if (!raw) return "";
-  const withPrefix = /^BV/i.test(raw) ? raw : `BV${raw}`;
-  const normalized = withPrefix.slice(0, 12);
-  return /^BV[0-9A-Za-z]{10}$/.test(normalized) ? normalized : "";
+function buildBilibiliPlayerUrl(value: CommunityHomeData): string {
+  return versionedUrl(buildBilibiliEmbedUrl({
+    bvid: value.bilibiliBvid,
+    aid: value.bilibiliAid,
+    cid: value.bilibiliCid,
+    page: value.bilibiliPage,
+    autoplay: value.bilibiliAutoplay ?? false,
+    danmaku: value.bilibiliDanmaku ?? false,
+    highQuality: value.bilibiliHighQuality,
+    minimalMode: value.bilibiliMinimalMode,
+  }));
 }
 
-function buildBilibiliPlayerUrl(value: unknown): string {
-  const bvid = normalizeBvid(value);
-  if (!bvid) return "";
-  return versionedUrl(`https://player.bilibili.com/player.html?isOutside=true&autoplay=0&bvid=${encodeURIComponent(bvid)}&p=1`);
-}
-
-function buildBilibiliVideoUrl(value: unknown): string {
-  const bvid = normalizeBvid(value);
-  if (!bvid) return "";
-  return `https://www.bilibili.com/video/${encodeURIComponent(bvid)}/`;
+function buildBilibiliOpenUrl(value: CommunityHomeData): string {
+  return buildBilibiliVideoUrl({
+    bvid: value.bilibiliBvid,
+    aid: value.bilibiliAid,
+  });
 }
 
 function versionedUrl(raw: string | undefined): string {
   const base = safeUrl(raw);
-  if (!base) return "";
+  if (!base || base === "#") return "";
   const token = Number(data.value.updatedAt || 0);
   if (!Number.isFinite(token) || token <= 0) return base;
   const separator = base.includes("?") ? "&" : "?";

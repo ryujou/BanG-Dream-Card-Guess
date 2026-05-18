@@ -154,8 +154,12 @@ async function renderHome() {
 
   const data = communityData || { aboutUs: "", members: [], events: [], socialLinks: [], photos: [], photoCaptions: [], bilibiliBvid: "", updatedAt: 0 };
   const photoEntries = normalizePhotoEntries(data.photos, data.photoCaptions);
-  const bilibiliPlayerUrl = buildBilibiliPlayerUrl(data.bilibiliBvid);
-  const bilibiliVideoUrl = buildBilibiliVideoUrl(data.bilibiliBvid);
+  const bilibiliPlayerUrl = buildBilibiliPlayerUrl(data);
+  const bilibiliVideoUrl = buildBilibiliVideoUrl(data);
+  const bilibiliCoverUrl = versionedUrl(String(data.bilibiliCover || "").trim(), data.updatedAt);
+  const bilibiliTitle = String(data.bilibiliTitle || "").trim();
+  const mobileFallbackMode = data.mobileFallbackMode || "cover";
+  const shouldShowMobileFallback = isMobileBrowser() && mobileFallbackMode === "cover";
   
   app.innerHTML = `
     <main class="linktree-shell">
@@ -269,8 +273,15 @@ async function renderHome() {
               </div>` : ``}
           </div>` : ``}
           ${bilibiliPlayerUrl ? `<div class="linktree-video-wrap">
-            <iframe class="linktree-video-frame" src="${bilibiliPlayerUrl}" title="Bilibili Video Player" frameborder="0" allowfullscreen scrolling="no"></iframe>
-            ${bilibiliVideoUrl ? `<p class="linktree-video-fallback">手机端若显示“已阻止此内容”，请 <a href="${bilibiliVideoUrl}" target="_blank" rel="noreferrer">点此打开 B 站视频</a></p>` : ``}
+            ${shouldShowMobileFallback ? `
+            <div class="linktree-video-cover">
+              ${bilibiliCoverUrl && bilibiliCoverUrl !== "#" ? `<img src="${bilibiliCoverUrl}" alt="${escapeAttr(bilibiliTitle || "Bilibili 视频封面")}" loading="lazy" />` : ``}
+              ${bilibiliVideoUrl ? `<a class="linktree-video-open-button" href="${escapeAttr(bilibiliVideoUrl)}" target="_blank" rel="noopener noreferrer">在 B 站打开</a>` : ``}
+              ${bilibiliTitle ? `<p class="linktree-video-cover-title">${escapeHtml(bilibiliTitle)}</p>` : ``}
+            </div>
+            ` : `
+            <iframe class="linktree-video-frame" src="${bilibiliPlayerUrl}" title="Bilibili Video Player" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen scrolling="no"></iframe>
+            `}
           </div>` : ``}
         </section>` : ''}
 
@@ -1628,6 +1639,7 @@ async function renderCommunityAdmin() {
   
   const data = communityData || { aboutUs: "", members: [], events: [], socialLinks: [], photos: [], photoCaptions: [], bilibiliBvid: "" };
   const normalizedData = { ...data, photos: normalizePhotoEntries(data.photos, data.photoCaptions) };
+  delete normalizedData.updatedAt;
 
   app.innerHTML = `
     <main class="settings-shell">
@@ -1643,6 +1655,10 @@ async function renderCommunityAdmin() {
         <div class="community-bvid-row">
           <label for="bilibiliBvidInput">Bilibili BV ID</label>
           <input id="bilibiliBvidInput" type="text" placeholder="BV1GJ411x7h7" value="${escapeAttr(data.bilibiliBvid || "")}" />
+        </div>
+        <div class="community-bvid-row">
+          <label for="bilibiliCoverInput">Bilibili 封面图链接</label>
+          <input id="bilibiliCoverInput" type="text" placeholder="https://your-cdn.example.com/cover.jpg" value="${escapeAttr(data.bilibiliCover || "")}" />
         </div>
         
         <div class="admin-actions">
@@ -1770,11 +1786,6 @@ async function renderCommunityAdmin() {
               caption: { type: "string", title: "图片文案", format: "textarea" }
             }
           }
-        },
-        bilibiliBvid: {
-          type: "string",
-          title: "B 站视频 BV 号",
-          description: "例如 BV1GJ411x7h7，仅填写 BV 号"
         }
       }
     },
@@ -1825,8 +1836,11 @@ async function renderCommunityAdmin() {
       const parsed = editor.getValue();
       const bvidInput = document.getElementById("bilibiliBvidInput");
       if (bvidInput) parsed.bilibiliBvid = normalizeBvid(bvidInput.value);
+      const coverInput = document.getElementById("bilibiliCoverInput");
+      if (coverInput) parsed.bilibiliCover = String(coverInput.value || "").trim();
       parsed.photos = normalizePhotoEntries(parsed.photos, parsed.photoCaptions);
       delete parsed.photoCaptions;
+      delete parsed.updatedAt;
       const res = await apiFetch("/api/community", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -1892,21 +1906,57 @@ function normalizeBvid(value) {
   return /^BV[0-9A-Za-z]{10}$/.test(normalized) ? normalized : "";
 }
 
+function normalizeAid(value) {
+  const raw = String(value || "").trim();
+  return /^\d+$/.test(raw) ? raw : "";
+}
+
+function isMobileBrowser(userAgent) {
+  const ua = userAgent ?? (typeof navigator !== "undefined" ? navigator.userAgent : "");
+  return /Android|iPhone|iPad|iPod|Mobile/i.test(ua);
+}
+
 function buildBilibiliPlayerUrl(value, updatedAt = communityData?.updatedAt) {
-  const bvid = normalizeBvid(value);
-  if (!bvid) return "";
-  return versionedUrl(`https://player.bilibili.com/player.html?isOutside=true&autoplay=0&bvid=${encodeURIComponent(bvid)}&p=1`, updatedAt);
+  const bvid = normalizeBvid(value?.bilibiliBvid);
+  const aid = normalizeAid(value?.bilibiliAid);
+  if (!bvid && !aid) return "";
+  const params = new URLSearchParams();
+  params.set("isOutside", "true");
+  params.set("autoplay", toBilibiliFlag(value?.bilibiliAutoplay, false));
+  params.set("danmaku", toBilibiliFlag(value?.bilibiliDanmaku, false));
+  if (bvid) params.set("bvid", bvid);
+  else params.set("aid", aid);
+  const cid = normalizeAid(value?.bilibiliCid);
+  if (cid) params.set("cid", cid);
+  const page = normalizeAid(value?.bilibiliPage) || "1";
+  if (value?.bilibiliHighQuality !== undefined) {
+    params.set("high_quality", toBilibiliFlag(value.bilibiliHighQuality, true));
+  }
+  const useMinimal = Boolean(value?.bilibiliMinimalMode);
+  if (useMinimal) {
+    params.set("p", page);
+    params.set("hideCoverInfo", "1");
+    return versionedUrl(`https://www.bilibili.com/blackboard/html5mobileplayer.html?${params.toString()}`, updatedAt);
+  }
+  params.set("page", page);
+  return versionedUrl(`https://player.bilibili.com/player.html?${params.toString()}`, updatedAt);
 }
 
 function buildBilibiliVideoUrl(value) {
-  const bvid = normalizeBvid(value);
-  if (!bvid) return "";
-  return `https://www.bilibili.com/video/${encodeURIComponent(bvid)}/`;
+  const bvid = normalizeBvid(value?.bilibiliBvid);
+  if (bvid) return `https://www.bilibili.com/video/${encodeURIComponent(bvid)}`;
+  const aid = normalizeAid(value?.bilibiliAid);
+  if (aid) return `https://www.bilibili.com/video/av${encodeURIComponent(aid)}`;
+  return "";
+}
+
+function toBilibiliFlag(value, fallback) {
+  return value === undefined ? (fallback ? "1" : "0") : (value ? "1" : "0");
 }
 
 function versionedUrl(value, updatedAt) {
   const base = safeUrl(value);
-  if (!base || base === "#") return base;
+  if (!base || base === "#") return "";
   const token = Number(updatedAt || 0);
   if (!Number.isFinite(token) || token <= 0) return base;
   const separator = base.includes("?") ? "&" : "?";

@@ -2603,6 +2603,61 @@ select:focus {
   background: #000;
 }
 
+.linktree-video-cover {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #111;
+}
+
+.linktree-video-cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.linktree-video-cover::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+}
+
+.linktree-video-open-button {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 1;
+  transform: translate(-50%, -50%);
+  padding: 10px 16px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.72);
+  color: #fff;
+  text-decoration: none;
+  font-size: 14px;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.linktree-video-open-button:hover {
+  background: rgba(0, 0, 0, 0.86);
+}
+
+.linktree-video-cover-title {
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 12px;
+  z-index: 1;
+  margin: 0;
+  color: #fff;
+  font-size: 13px;
+  line-height: 1.4;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
 .linktree-video-fallback {
   margin: 0.6rem 0 0;
   text-align: center;

@@ -21,6 +21,7 @@ const defaultCommunityData = {
   photos: [],
   photoCaptions: [],
   bilibiliBvid: "",
+  bilibiliCover: "",
   updatedAt: 0
 };
 

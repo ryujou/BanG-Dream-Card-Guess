@@ -18,6 +18,16 @@
           autocomplete="off"
         />
       </div>
+      <div class="bilibili-field">
+        <label for="bilibiliCover">B 站封面图链接</label>
+        <input
+          id="bilibiliCover"
+          v-model="bilibiliCover"
+          type="text"
+          placeholder="https://your-cdn.example.com/cover.jpg"
+          autocomplete="off"
+        />
+      </div>
 
       <div ref="editorContainer" class="json-editor-container"></div>
       
@@ -60,6 +70,7 @@ const editorContainer = ref<HTMLElement | null>(null);
 const uploadStatus = ref('');
 const saveStatus = ref('');
 const bilibiliBvid = ref('');
+const bilibiliCover = ref('');
 let editorInstance: { getValue(): unknown; destroy(): void } | null = null;
 
 onMounted(async () => {
@@ -75,8 +86,10 @@ onMounted(async () => {
     if (isRecord(initialData)) {
       initialData.photos = normalizePhotoEntries(initialData.photos, initialData.photoCaptions);
       delete (initialData as Record<string, unknown>).photoCaptions;
+      delete (initialData as Record<string, unknown>).updatedAt;
     }
     bilibiliBvid.value = normalizeBvid((initialData as { bilibiliBvid?: unknown }).bilibiliBvid);
+    bilibiliCover.value = String((initialData as { bilibiliCover?: unknown }).bilibiliCover || "").trim();
     
     if (editorContainer.value) {
       editorInstance = new JSONEditor(editorContainer.value, {
@@ -134,11 +147,6 @@ onMounted(async () => {
                   caption: { type: "string", title: "图片文案", format: "textarea" }
                 }
               }
-            },
-            bilibiliBvid: {
-              type: "string",
-              title: "Bilibili BV ID",
-              description: "Fill BV only, e.g. BV1GJ411x7h7"
             }
           }
         }
@@ -189,10 +197,13 @@ async function uploadImage(event: Event) {
 async function saveData() {
   if (!editorInstance) return;
   const val = editorInstance.getValue();
-  const payload = isRecord(val) ? { ...val, bilibiliBvid: normalizeBvid(bilibiliBvid.value) } : val;
+  const payload = isRecord(val)
+    ? { ...val, bilibiliBvid: normalizeBvid(bilibiliBvid.value), bilibiliCover: String(bilibiliCover.value || "").trim() }
+    : val;
   if (isRecord(payload)) {
     payload.photos = normalizePhotoEntries(payload.photos, payload.photoCaptions);
     delete payload.photoCaptions;
+    delete payload.updatedAt;
   }
   saveStatus.value = "保存中...";
   
