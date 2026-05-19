@@ -24,7 +24,7 @@
           id="bilibiliCover"
           v-model="bilibiliCover"
           type="text"
-          placeholder="https://your-cdn.example.com/cover.jpg"
+          placeholder="请输入封面图片链接（例如：https://你的域名/cover.jpg）"
           autocomplete="off"
         />
       </div>
@@ -72,10 +72,11 @@ const saveStatus = ref('');
 const bilibiliBvid = ref('');
 const bilibiliCover = ref('');
 let editorInstance: { getValue(): unknown; destroy(): void } | null = null;
+let editorTextObserver: MutationObserver | null = null;
 
 onMounted(async () => {
   try {
-    // dynamically import the JSON editor to avoid heavy initial load
+    // 动态加载 JSON 编辑器，减少首页初始体积
     const { JSONEditor } = await import('@json-editor/json-editor');
     
     let initialData: Record<string, unknown> = { aboutUs: "", members: [], events: [], socialLinks: [], photos: [], photoCaptions: [], bilibiliBvid: "" };
@@ -83,13 +84,18 @@ onMounted(async () => {
     if (response.ok) {
       initialData = await response.json();
     }
+    const rawBvid = (initialData as { bilibiliBvid?: unknown }).bilibiliBvid;
+    const rawCover = (initialData as { bilibiliCover?: unknown }).bilibiliCover;
     if (isRecord(initialData)) {
       initialData.photos = normalizePhotoEntries(initialData.photos, initialData.photoCaptions);
       delete (initialData as Record<string, unknown>).photoCaptions;
       delete (initialData as Record<string, unknown>).updatedAt;
+      delete (initialData as Record<string, unknown>).bilibiliBvid;
+      delete (initialData as Record<string, unknown>).bilibiliCover;
+      delete (initialData as Record<string, unknown>).bilibiliCoverBvid;
     }
-    bilibiliBvid.value = normalizeBvid((initialData as { bilibiliBvid?: unknown }).bilibiliBvid);
-    bilibiliCover.value = String((initialData as { bilibiliCover?: unknown }).bilibiliCover || "").trim();
+    bilibiliBvid.value = normalizeBvid(rawBvid);
+    bilibiliCover.value = String(rawCover || "").trim();
     
     if (editorContainer.value) {
       editorInstance = new JSONEditor(editorContainer.value, {
@@ -98,10 +104,12 @@ onMounted(async () => {
         disable_edit_json: true,
         disable_properties: true,
         disable_collapse: true,
+        no_additional_properties: true,
         startval: initialData,
         schema: {
           type: "object",
           title: "主页配置",
+          additionalProperties: false,
           properties: {
             aboutUs: { type: "string", title: "关于我们 (简介)", format: "textarea" },
             socialLinks: {
@@ -151,6 +159,11 @@ onMounted(async () => {
           }
         }
       });
+      refreshEditorUi(editorContainer.value);
+      editorTextObserver = new MutationObserver(() => {
+        if (editorContainer.value) refreshEditorUi(editorContainer.value);
+      });
+      editorTextObserver.observe(editorContainer.value, { childList: true, subtree: true });
     }
   } catch (e) {
     console.error(e);
@@ -160,6 +173,10 @@ onMounted(async () => {
 onUnmounted(() => {
   if (editorInstance) {
     editorInstance.destroy();
+  }
+  if (editorTextObserver) {
+    editorTextObserver.disconnect();
+    editorTextObserver = null;
   }
 });
 
@@ -258,6 +275,44 @@ function normalizePhotoEntries(photosValue: unknown, captionsValue: unknown): Ar
     };
   }).filter((item) => item.url);
 }
+
+function localizeEditorButtons(root: HTMLElement): void {
+  const replacements: Record<string, string> = {
+    "Delete Last row": "删除最后一行",
+    "Delete All": "删除全部",
+    "Add row": "新增一行",
+    "Delete": "删除",
+    "Move up": "上移",
+    "Move down": "下移",
+  };
+  const nodes = root.querySelectorAll("button, .btn");
+  for (const node of nodes) {
+    const text = node.textContent?.trim();
+    if (!text) continue;
+    const mapped = replacements[text];
+    if (mapped && node.textContent !== mapped) {
+      node.textContent = mapped;
+    }
+  }
+}
+
+function removeLegacyBilibiliEditors(root: HTMLElement): void {
+  const blockedNames = new Set(["bilibiliBvid", "bilibiliCover", "bilibiliCoverBvid"]);
+  const labels = root.querySelectorAll("label, .control-label, h3, legend");
+  for (const label of labels) {
+    const text = label.textContent?.trim();
+    if (!text || !blockedNames.has(text)) continue;
+    const fieldNode = label.closest("[data-schemapath]") || label.parentElement;
+    if (fieldNode && fieldNode instanceof HTMLElement) {
+      fieldNode.style.display = "none";
+    }
+  }
+}
+
+function refreshEditorUi(root: HTMLElement): void {
+  localizeEditorButtons(root);
+  removeLegacyBilibiliEditors(root);
+}
 </script>
 
 <style scoped>
@@ -295,10 +350,117 @@ function normalizePhotoEntries(photosValue: unknown, captionsValue: unknown): Ar
 }
 .bilibili-field input {
   width: min(360px, 100%);
-  padding: 10px 12px;
-  border: 1px solid #dee2e6;
-  border-radius: 8px;
+  height: 64px;
+  padding: 0 18px;
+  border: 1px solid #d0d7e2;
+  border-radius: 16px;
+  background: #f8fafc;
   font: inherit;
+  font-size: 16px;
+  line-height: 1.1;
+  color: #1f2328;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+.bilibili-field input:focus {
+  outline: none;
+  border-color: #71a7ff;
+  box-shadow: 0 0 0 4px rgba(113, 167, 255, 0.2);
+  background: #fff;
+}
+.json-editor-container :deep(input[type="text"]),
+.json-editor-container :deep(input[type="url"]),
+.json-editor-container :deep(input[type="search"]),
+.json-editor-container :deep(input:not([type])),
+.json-editor-container :deep(textarea),
+.json-editor-container :deep(select) {
+  width: 100%;
+  min-height: 56px;
+  padding: 14px 18px;
+  border: 1px solid #d0d7e2;
+  border-radius: 16px;
+  background: #f8fafc;
+  color: #1f2328;
+  font: inherit;
+  line-height: 1.4;
+  box-sizing: border-box;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+.json-editor-container :deep(textarea) {
+  min-height: 120px;
+  resize: vertical;
+}
+.json-editor-container :deep(input:focus),
+.json-editor-container :deep(textarea:focus),
+.json-editor-container :deep(select:focus) {
+  outline: none;
+  border-color: #71a7ff;
+  box-shadow: 0 0 0 4px rgba(113, 167, 255, 0.2);
+  background: #fff;
+}
+.json-editor-container :deep(.well),
+.json-editor-container :deep(.panel),
+.json-editor-container :deep(fieldset) {
+  border-radius: 18px;
+  border: 1px solid #e3e8f0;
+  background: #ffffff;
+  padding: 14px 16px;
+}
+.json-editor-container :deep(table) {
+  border-collapse: separate;
+  border-spacing: 0 12px;
+}
+.json-editor-container :deep(table > tbody > tr) {
+  background: #f8fafc;
+}
+.json-editor-container :deep(table > tbody > tr > td),
+.json-editor-container :deep(table > tbody > tr > th) {
+  border-top: 1px solid #e3e8f0;
+  border-bottom: 1px solid #e3e8f0;
+  padding: 10px;
+}
+.json-editor-container :deep(table > tbody > tr > td:first-child),
+.json-editor-container :deep(table > tbody > tr > th:first-child) {
+  border-left: 1px solid #e3e8f0;
+  border-radius: 14px 0 0 14px;
+}
+.json-editor-container :deep(table > tbody > tr > td:last-child),
+.json-editor-container :deep(table > tbody > tr > th:last-child) {
+  border-right: 1px solid #e3e8f0;
+  border-radius: 0 14px 14px 0;
+}
+.json-editor-container :deep(button),
+.json-editor-container :deep(.btn),
+.json-editor-container :deep(input[type="button"]),
+.json-editor-container :deep(input[type="submit"]) {
+  min-height: 44px;
+  padding: 10px 16px;
+  border-radius: 12px;
+  border: 1px solid #d0d7e2;
+  background: #f1f4f9;
+  color: #5f6b7a;
+  font: inherit;
+  font-weight: 600;
+}
+.json-editor-container :deep(button:hover),
+.json-editor-container :deep(.btn:hover),
+.json-editor-container :deep(input[type="button"]:hover),
+.json-editor-container :deep(input[type="submit"]:hover) {
+  filter: brightness(0.98);
+}
+.json-editor-container :deep(button[class*="delete"]),
+.json-editor-container :deep(.btn[class*="delete"]),
+.json-editor-container :deep(button[class*="danger"]),
+.json-editor-container :deep(.btn[class*="danger"]) {
+  border-color: #ffc0cb;
+  background: #fff6f8;
+  color: #ff4d73;
+}
+.json-editor-container :deep(button[class*="delete"]:hover),
+.json-editor-container :deep(.btn[class*="delete"]:hover),
+.json-editor-container :deep(button[class*="danger"]:hover),
+.json-editor-container :deep(.btn[class*="danger"]:hover) {
+  border-color: #ffa8b9;
+  background: #ffeef2;
 }
 .btn {
   display: inline-flex;

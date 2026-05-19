@@ -3,6 +3,7 @@ dist
 dist-scripts
 external
 public/cards/
+public/standees/
 data/*
 !data/face-boxes.json
 /Server/

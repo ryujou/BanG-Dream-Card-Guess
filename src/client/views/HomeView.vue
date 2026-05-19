@@ -1,5 +1,21 @@
 <template>
   <main class="linktree-shell">
+    <img
+      v-if="leftStandeeUrl"
+      class="side-standee side-standee-left"
+      :src="leftStandeeUrl"
+      alt=""
+      loading="eager"
+      decoding="async"
+    />
+    <img
+      v-if="rightStandeeUrl"
+      class="side-standee side-standee-right"
+      :src="rightStandeeUrl"
+      alt=""
+      loading="eager"
+      decoding="async"
+    />
     <div class="linktree-container">
       <header class="linktree-header">
         <div class="linktree-icon-grid">
@@ -135,6 +151,17 @@ import { safeUrl } from '../utils/image';
 import { buildBilibiliEmbedUrl, buildBilibiliVideoUrl, isMobileBrowser } from '../utils/bilibili';
 
 const COMMUNITY_URL = "https://qm.qq.com/q/6ytGE7qIWQ";
+const STANDEES_JSON_URL = "/standees/standees.json";
+const FALLBACK_STANDEE_URLS = [
+  "https://bestdori.com/assets/jp/characters/resourceset/res001059_rip/trim_normal.png",
+  "https://bestdori.com/assets/jp/characters/resourceset/res006056_rip/trim_normal.png",
+  "https://bestdori.com/assets/jp/characters/resourceset/res011059_rip/trim_normal.png",
+  "https://bestdori.com/assets/jp/characters/resourceset/res016053_rip/trim_normal.png",
+  "https://bestdori.com/assets/jp/characters/resourceset/res021053_rip/trim_normal.png",
+  "https://bestdori.com/assets/jp/characters/resourceset/res026017_rip/trim_normal.png",
+  "https://bestdori.com/assets/jp/characters/resourceset/res031017_rip/trim_normal.png",
+  "https://bestdori.com/assets/jp/characters/resourceset/res007053_rip/trim_normal.png",
+];
 
 interface CommunityHomeData {
   aboutUs: string;
@@ -163,6 +190,8 @@ interface CommunityHomeData {
 
 const data = ref<CommunityHomeData>({ aboutUs: "", members: [], events: [], socialLinks: [], photos: [], bilibiliBvid: "" });
 const isMobileClient = ref(false);
+const leftStandeeUrl = ref("");
+const rightStandeeUrl = ref("");
 const bilibiliPlayerUrl = computed(() => buildBilibiliPlayerUrl(data.value));
 const bilibiliVideoUrl = computed(() => buildBilibiliOpenUrl(data.value));
 const bilibiliCoverUrl = computed(() => {
@@ -184,6 +213,7 @@ let photoTimer: number | null = null;
 
 onMounted(async () => {
   isMobileClient.value = isMobileBrowser();
+  void loadRandomStandees();
   try {
     const response = await fetch("/api/community", { cache: "no-store" });
     if (response.ok) {
@@ -278,5 +308,56 @@ function normalizePhotoEntries(
       caption: String(captions[index] || "").trim(),
     };
   }).filter((item) => item.url);
+}
+
+function pickTwoDifferent(list: string[]): [string, string] {
+  const safeList = list.filter(Boolean);
+  if (safeList.length === 0) return ["", ""];
+  if (safeList.length === 1) return [safeList[0], safeList[0]];
+  const firstIndex = Math.floor(Math.random() * safeList.length);
+  let secondIndex = Math.floor(Math.random() * safeList.length);
+  while (secondIndex === firstIndex) {
+    secondIndex = Math.floor(Math.random() * safeList.length);
+  }
+  return [safeList[firstIndex], safeList[secondIndex]];
+}
+
+function parseStandeeUrls(payload: unknown): string[] {
+  if (Array.isArray(payload)) {
+    return payload.map((item) => String(item || "").trim()).filter(Boolean);
+  }
+  if (payload && typeof payload === "object") {
+    const items = (payload as { items?: unknown }).items;
+    if (Array.isArray(items)) {
+      return items
+        .map((item) => {
+          if (item && typeof item === "object") {
+            return String((item as { url?: unknown }).url || "").trim();
+          }
+          return "";
+        })
+        .filter(Boolean);
+    }
+  }
+  return [];
+}
+
+async function loadRandomStandees(): Promise<void> {
+  const fallback = pickTwoDifferent(FALLBACK_STANDEE_URLS);
+  leftStandeeUrl.value = fallback[0];
+  rightStandeeUrl.value = fallback[1];
+
+  try {
+    const response = await fetch(STANDEES_JSON_URL, { cache: "force-cache" });
+    if (!response.ok) return;
+    const payload = await response.json();
+    const urls = parseStandeeUrls(payload);
+    if (!urls.length) return;
+    const [left, right] = pickTwoDifferent(urls);
+    leftStandeeUrl.value = left;
+    rightStandeeUrl.value = right;
+  } catch {
+    // keep fallback standees
+  }
 }
 </script>
