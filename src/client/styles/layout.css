@@ -609,6 +609,23 @@
   font-weight: 700;
 }
 
+.linktree-umami-card {
+  width: 100%;
+  border-radius: 16px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+}
+
+.linktree-umami-frame {
+  width: 100%;
+  height: clamp(520px, 68vh, 760px);
+  border: 0;
+  display: block;
+  background: #fff;
+}
+
 .linktree-footer {
   text-align: center;
   margin-top: 2rem;

@@ -92,6 +92,19 @@
         </div>
       </section>
 
+      <section class="linktree-section">
+        <h2>访问来源地区</h2>
+        <div class="linktree-umami-card">
+          <iframe
+            class="linktree-umami-frame"
+            :src="umamiShareUrl"
+            title="Umami 访问来源地区统计"
+            loading="lazy"
+            referrerpolicy="strict-origin-when-cross-origin"
+          />
+        </div>
+      </section>
+
       <section v-if="(data.photos && data.photos.length) || bilibiliPlayerUrl" class="linktree-section">
         <h2>活动回顾</h2>
         <div v-if="versionedPhotos.length" class="linktree-gallery-carousel">
@@ -151,6 +164,7 @@ import { safeUrl } from '../utils/image';
 import { buildBilibiliEmbedUrl, buildBilibiliVideoUrl, isMobileBrowser } from '../utils/bilibili';
 
 const COMMUNITY_URL = "https://qm.qq.com/q/6ytGE7qIWQ";
+const DEFAULT_UMAMI_SHARE_URL = "https://stats.example.com/share/REPLACE_ME";
 const STANDEES_JSON_URL = "/standees/standees.json";
 const FALLBACK_STANDEE_URLS = [
   "https://bestdori.com/assets/jp/characters/resourceset/res001059_rip/trim_normal.png",
@@ -200,6 +214,7 @@ const bilibiliCoverUrl = computed(() => {
 const bilibiliTitle = computed(() => String(data.value.bilibiliTitle || "").trim());
 const mobileFallbackMode = computed(() => data.value.mobileFallbackMode || "cover");
 const shouldShowMobileFallback = computed(() => isMobileClient.value && mobileFallbackMode.value === "cover");
+const umamiShareUrl = computed(() => String(import.meta.env.VITE_UMAMI_SHARE_URL || DEFAULT_UMAMI_SHARE_URL).trim());
 const normalizedPhotos = computed(() => normalizePhotoEntries(data.value.photos, data.value.photoCaptions));
 const versionedPhotos = computed(() => normalizedPhotos.value.map((p) => versionedUrl(p.url)).filter(Boolean));
 const trackStyle = computed(() => ({

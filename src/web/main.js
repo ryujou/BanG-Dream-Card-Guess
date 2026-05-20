@@ -1,6 +1,7 @@
 ﻿import "./styles.css";
 
 const COMMUNITY_URL = "https://qm.qq.com/q/6ytGE7qIWQ";
+const UMAMI_SHARE_URL = "https://stats.example.com/share/REPLACE_ME";
 const HOME_ANNOUNCEMENTS = [
   "官方公告：湘潭 BanG Dream! 同好会现场互动入口已开放",
   "玩家可进入玩家页参与猜卡互动",
@@ -252,6 +253,19 @@ async function renderHome() {
             `).join('')}
           </div>
         </section>` : ''}
+
+        <section class="linktree-section">
+          <h2>访问来源地区</h2>
+          <div class="linktree-umami-card">
+            <iframe
+              class="linktree-umami-frame"
+              src="${safeUrl(UMAMI_SHARE_URL)}"
+              title="Umami 访问来源地区统计"
+              loading="lazy"
+              referrerpolicy="strict-origin-when-cross-origin"
+            ></iframe>
+          </div>
+        </section>
 
         <!-- Photos -->
         ${(photoEntries && photoEntries.length) || bilibiliPlayerUrl ? `

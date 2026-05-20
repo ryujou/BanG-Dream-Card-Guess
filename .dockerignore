@@ -1,0 +1,14 @@
+node_modules
+dist
+dist-server
+dist-scripts
+playwright-report
+test-results
+tests
+screenshots
+artifacts
+Server
+.git
+.sisyphus
+.playwright-mcp
+*.log
