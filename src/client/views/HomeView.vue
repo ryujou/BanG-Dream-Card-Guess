@@ -156,16 +156,6 @@ import { buildBilibiliEmbedUrl, buildBilibiliVideoUrl, isMobileBrowser } from '.
 
 const COMMUNITY_URL = "https://qm.qq.com/q/6ytGE7qIWQ";
 const STANDEES_JSON_URL = "/standees/standees.json";
-const FALLBACK_STANDEE_URLS = [
-  "https://bestdori.com/assets/jp/characters/resourceset/res001059_rip/trim_normal.png",
-  "https://bestdori.com/assets/jp/characters/resourceset/res006056_rip/trim_normal.png",
-  "https://bestdori.com/assets/jp/characters/resourceset/res011059_rip/trim_normal.png",
-  "https://bestdori.com/assets/jp/characters/resourceset/res016053_rip/trim_normal.png",
-  "https://bestdori.com/assets/jp/characters/resourceset/res021053_rip/trim_normal.png",
-  "https://bestdori.com/assets/jp/characters/resourceset/res026017_rip/trim_normal.png",
-  "https://bestdori.com/assets/jp/characters/resourceset/res031017_rip/trim_normal.png",
-  "https://bestdori.com/assets/jp/characters/resourceset/res007053_rip/trim_normal.png",
-];
 
 interface CommunityHomeData {
   aboutUs: string;
@@ -342,9 +332,8 @@ function parseStandeeUrls(payload: unknown): string[] {
 }
 
 async function loadRandomStandees(): Promise<void> {
-  const fallback = pickTwoDifferent(FALLBACK_STANDEE_URLS);
-  leftStandeeUrl.value = fallback[0];
-  rightStandeeUrl.value = fallback[1];
+  leftStandeeUrl.value = "";
+  rightStandeeUrl.value = "";
 
   try {
     const response = await fetch(STANDEES_JSON_URL, { cache: "force-cache" });
@@ -356,7 +345,7 @@ async function loadRandomStandees(): Promise<void> {
     leftStandeeUrl.value = left;
     rightStandeeUrl.value = right;
   } catch {
-    // keep fallback standees
+    // keep empty when local standee list is unavailable
   }
 }
 </script>
