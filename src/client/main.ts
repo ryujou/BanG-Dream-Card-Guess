@@ -2,6 +2,7 @@ import { createApp } from 'vue';
 import { createPinia } from 'pinia';
 import App from './App.vue';
 import router from './router';
+import { injectUmamiScript } from './config/umami';
 
 import './styles/base.css';
 import './styles/layout.css';
@@ -16,4 +17,5 @@ import './styles/legacy.css';
 const app = createApp(App);
 app.use(createPinia());
 app.use(router);
+injectUmamiScript();
 app.mount('#app');

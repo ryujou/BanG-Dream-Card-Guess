@@ -14,7 +14,15 @@ Server/
 id_rsa
 id_ed25519
 .env
+.env.local
 .env.*
+.env.*.local
+infra/umami/.env
+infra/umami/backups/
+*.dump
+*.sql.gz
+!.env.local.example
+!infra/umami/.env.example
 *.secret
 *.credentials
 deploy.sh

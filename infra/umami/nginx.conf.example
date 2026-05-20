@@ -1,0 +1,23 @@
+﻿# Example Nginx server block for Umami.
+# Place into a new file (for example /etc/nginx/conf.d/stats.xtbang.top.conf)
+# and keep your existing Nginx config unchanged.
+# TLS certificate can be managed by certbot or an external gateway.
+
+server {
+  listen 80;
+  server_name stats.xtbang.top;
+
+  location / {
+    proxy_pass http://127.0.0.1:3000;
+    proxy_http_version 1.1;
+
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_set_header X-Forwarded-Host $host;
+  }
+
+  # Optional: if Umami iframe is embedded on xtbang.top.
+  add_header Content-Security-Policy "frame-ancestors 'self' https://xtbang.top" always;
+}

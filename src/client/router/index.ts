@@ -54,6 +54,11 @@ const router = createRouter({
       component: () => import('../views/ScoresView.vue'),
     },
     {
+      path: '/stats',
+      name: 'stats',
+      component: () => import('../views/StatsView.vue'),
+    },
+    {
       path: '/note-shooter',
       name: 'note-shooter',
       component: () => import('../views/NoteShooterView.vue'),

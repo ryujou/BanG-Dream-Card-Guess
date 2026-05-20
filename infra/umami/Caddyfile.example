@@ -1,0 +1,13 @@
+﻿# Example Caddy site config for Umami.
+# Add this block into your existing Caddyfile; do not replace other sites.
+
+stats.xtbang.top {
+  encode gzip zstd
+
+  reverse_proxy 127.0.0.1:3000
+
+  # If you need stricter embedding rules, adjust CSP to match your site domain.
+  header {
+    Content-Security-Policy "frame-ancestors 'self' https://xtbang.top"
+  }
+}
