@@ -19,42 +19,42 @@
     <div class="linktree-container">
       <header class="linktree-header">
         <div class="linktree-icon-grid">
-          <img class="linktree-avatar" src="/icon5.png" alt="婀樻江 BanG Dream! 鍚屽ソ浼?" />
-          <img class="linktree-avatar" src="/icon4.png" alt="婀樻江 BanG Dream! 鍚屽ソ浼氬浘鏍?" />
-          <img class="linktree-avatar" src="/icon3.png" alt="婀樻江 BanG Dream! 鍚屽ソ浼氬浘鏍?" />
+          <img class="linktree-avatar" src="/icon5.png" alt="湘江 BanG Dream! 同好会" />
+          <img class="linktree-avatar" src="/icon4.png" alt="湘江 BanG Dream! 同好会图标" />
+          <img class="linktree-avatar" src="/icon3.png" alt="湘江 BanG Dream! 同好会图标" />
         </div>
-        <h1 class="linktree-title">婀樻江 BanG Dream! 鍚屽ソ浼?</h1>
+        <h1 class="linktree-title">湘江 BanG Dream! 同好会</h1>
         <p v-if="data.aboutUs" class="linktree-bio">{{ data.aboutUs }}</p>
       </header>
 
       <section class="linktree-links">
         <router-link class="linktree-pill primary-pill" to="/player">
-          <span class="pill-icon">馃幃</span>
-          <span class="pill-text">杩涘叆鐚滃崱娓告垙 (鐜╁椤?</span>
+          <span class="pill-icon">🎮</span>
+          <span class="pill-text">进入猜卡游戏（玩家页）</span>
         </router-link>
         <router-link class="linktree-pill" to="/host">
-          <span class="pill-icon">馃憫</span>
-          <span class="pill-text">娓告垙鎺у埗鍙?(涓绘寔椤?</span>
+          <span class="pill-icon">🧑‍💼</span>
+          <span class="pill-text">游戏控制台（主持页）</span>
         </router-link>
         <router-link class="linktree-pill" to="/note-shooter">
-          <span class="pill-icon">馃帊</span>
-          <span class="pill-text">鎵撳彂鏃堕棿: 闊崇灏勬墜</span>
+          <span class="pill-icon">🎵</span>
+          <span class="pill-text">打发时间：音符射手</span>
         </router-link>
         <router-link class="linktree-pill" to="/games/stopwatch-challenge">
-          <span class="pill-icon">鈴?</span>
-          <span class="pill-text">鎺愮琛ㄦ寫鎴?</span>
+          <span class="pill-icon">⏱️</span>
+          <span class="pill-text">秒表挑战</span>
         </router-link>
         <router-link class="linktree-pill" to="/games/bang-klotski">
-          <span class="pill-icon">馃З</span>
-          <span class="pill-text">鍗庡閬撳皬娓告垙</span>
+          <span class="pill-icon">🧩</span>
+          <span class="pill-text">华容道小游戏</span>
         </router-link>
         <a class="linktree-pill" href="https://enldm.cyou/bangmap" target="_blank" rel="noreferrer">
-          <span class="pill-icon">馃椇锔?</span>
-          <span class="pill-text">BanG Map 鍚屽ソ浼氬湴鍥?</span>
+          <span class="pill-icon">🗺️</span>
+          <span class="pill-text">BanG Map 同好会地图</span>
         </a>
         <a class="linktree-pill highlight-pill" :href="COMMUNITY_URL" target="_blank" rel="noreferrer">
-          <span class="pill-icon">馃挰</span>
-          <span class="pill-text">鐐瑰嚮鍔犲叆瀹樻柟浜ゆ祦缇?</span>
+          <span class="pill-icon">💬</span>
+          <span class="pill-text">点击加入官方交流群</span>
         </a>
         <router-link class="linktree-pill" to="/stats">
           <span class="pill-icon">🗺️</span>
@@ -63,7 +63,7 @@
       </section>
 
       <section v-if="data.socialLinks && data.socialLinks.length" class="linktree-section">
-        <h2>鏇村骞冲彴</h2>
+        <h2>更多平台</h2>
         <div class="linktree-links">
           <a v-for="(link, i) in data.socialLinks" :key="i" class="linktree-pill" :href="safeUrl(link.url)" target="_blank" rel="noreferrer">
             <span class="pill-text">{{ link.title }}</span>
@@ -72,10 +72,10 @@
       </section>
 
       <section v-if="data.members && data.members.length" class="linktree-section">
-        <h2>鎴愬憳浠嬬粛</h2>
+        <h2>成员介绍</h2>
         <div class="linktree-members">
           <a v-for="(m, i) in data.members" :key="i" class="member-pill" :href="safeUrl(m.url)" target="_blank" rel="noreferrer">
-            <img v-if="m.avatar" class="member-avatar" :src="versionedUrl(m.avatar)" :alt="`${m.name || '鎴愬憳'} 澶村儚`" loading="lazy" />
+            <img v-if="m.avatar" class="member-avatar" :src="versionedUrl(m.avatar)" :alt="`${m.name || '成员'} 头像`" loading="lazy" />
             <strong>{{ m.name }}</strong>
             <span>{{ m.desc }}</span>
           </a>
@@ -83,7 +83,7 @@
       </section>
 
       <section v-if="data.events && data.events.length" class="linktree-section">
-        <h2>杩戞湡娲诲姩</h2>
+        <h2>近期活动</h2>
         <div class="linktree-events">
           <div v-for="(e, i) in data.events" :key="i" class="event-box">
             <div class="event-box-header">
@@ -97,10 +97,10 @@
       </section>
 
       <section v-if="(data.photos && data.photos.length) || bilibiliPlayerUrl" class="linktree-section">
-        <h2>娲诲姩鍥為【</h2>
+        <h2>活动回顾</h2>
         <div v-if="versionedPhotos.length" class="linktree-gallery-carousel">
           <div class="linktree-gallery-track" :style="trackStyle">
-            <img v-for="(p, i) in versionedPhotos" :key="`${p}-${i}`" :src="p" alt="娲诲姩鐓х墖" loading="lazy" />
+            <img v-for="(p, i) in versionedPhotos" :key="`${p}-${i}`" :src="p" alt="活动照片" loading="lazy" />
           </div>
           <div class="linktree-gallery-overlay">
             <p v-if="activePhotoCaption" class="linktree-gallery-caption">{{ activePhotoCaption }}</p>
@@ -123,8 +123,8 @@
         <div v-if="bilibiliPlayerUrl" class="linktree-video-wrap">
           <template v-if="shouldShowMobileFallback">
             <div class="linktree-video-cover">
-              <img v-if="bilibiliCoverUrl && bilibiliCoverUrl !== '#'" :src="bilibiliCoverUrl" :alt="bilibiliTitle || 'Bilibili 瑙嗛灏侀潰'" loading="lazy" />
-              <a v-if="bilibiliVideoUrl" class="linktree-video-open-button" :href="bilibiliVideoUrl" target="_blank" rel="noopener noreferrer">鍦?B 绔欐墦寮€</a>
+              <img v-if="bilibiliCoverUrl && bilibiliCoverUrl !== '#'" :src="bilibiliCoverUrl" :alt="bilibiliTitle || 'Bilibili 视频封面'" loading="lazy" />
+              <a v-if="bilibiliVideoUrl" class="linktree-video-open-button" :href="bilibiliVideoUrl" target="_blank" rel="noopener noreferrer">在 B 站打开</a>
               <p v-if="bilibiliTitle" class="linktree-video-cover-title">{{ bilibiliTitle }}</p>
             </div>
           </template>

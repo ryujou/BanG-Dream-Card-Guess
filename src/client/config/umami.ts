@@ -1,6 +1,6 @@
-const DEFAULT_BASE_URL = 'https://stats.xtbang.top';
-const DEFAULT_SCRIPT_SRC = 'https://stats.xtbang.top/script.js';
-const DEFAULT_SHARE_URL = 'https://stats.xtbang.top/share/REPLACE_ME';
+const DEFAULT_BASE_URL = 'https://xtbang.top/umami';
+const DEFAULT_SCRIPT_SRC = 'https://xtbang.top/umami/script.js';
+const DEFAULT_SHARE_URL = 'https://xtbang.top/share/REPLACE_ME';
 const DEFAULT_WEBSITE_ID = 'REPLACE_WITH_UMAMI_WEBSITE_ID';
 
 function readEnv(value: unknown): string {
