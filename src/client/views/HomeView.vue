@@ -25,13 +25,18 @@
         </div>
         <h1 class="linktree-title">湘江 BanG Dream! 同好会</h1>
         <p v-if="data.aboutUs" class="linktree-bio">{{ data.aboutUs }}</p>
+        <p v-else class="linktree-bio">线下摊位互动、同好聚会与游戏现场。</p>
       </header>
 
-      <section class="linktree-links">
-        <router-link class="linktree-pill primary-pill" to="/player">
+      <section class="linktree-links linktree-hero-links">
+        <router-link class="linktree-pill primary-pill cta-main" to="/player">
           <span class="pill-icon">🎮</span>
           <span class="pill-text">进入猜卡游戏（玩家页）</span>
         </router-link>
+        <a class="linktree-pill highlight-pill cta-join" :href="COMMUNITY_URL" target="_blank" rel="noreferrer">
+          <span class="pill-icon">💬</span>
+          <span class="pill-text">点击加入官方交流群</span>
+        </a>
         <router-link class="linktree-pill" to="/host">
           <span class="pill-icon">🧑‍💼</span>
           <span class="pill-text">游戏控制台（主持页）</span>
@@ -51,10 +56,6 @@
         <a class="linktree-pill" href="https://enldm.cyou/bangmap" target="_blank" rel="noreferrer">
           <span class="pill-icon">🗺️</span>
           <span class="pill-text">BanG Map 同好会地图</span>
-        </a>
-        <a class="linktree-pill highlight-pill" :href="COMMUNITY_URL" target="_blank" rel="noreferrer">
-          <span class="pill-icon">💬</span>
-          <span class="pill-text">点击加入官方交流群</span>
         </a>
         <router-link class="linktree-pill" to="/stats">
           <span class="pill-icon">🗺️</span>
