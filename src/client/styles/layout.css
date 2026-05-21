@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,600;0,700;0,800;1,700&family=Noto+Sans+JP:wght@400;500;700;800&display=swap");
+
 .shell {
   position: relative;
   z-index: 1;
@@ -196,6 +198,7 @@
   --bd-peach: #ffc98a;
   --bd-ink: #1f2633;
   --bd-card-border: rgba(42, 56, 84, 0.1);
+  font-family: "Montserrat", "Noto Sans JP", "Noto Sans SC", "Hiragino Kaku Gothic ProN", "Yu Gothic", "Microsoft YaHei", sans-serif;
 }
 
 .linktree-shell::before {
@@ -593,11 +596,11 @@
 
 .linktree-gallery-dots {
   display: flex;
-  gap: 0.4rem;
+  gap: 0.34rem;
   margin-top: 0;
   position: absolute;
   left: 50%;
-  bottom: 1.1rem;
+  bottom: 1rem;
   transform: translateX(-50%);
 }
 
@@ -605,22 +608,36 @@
   appearance: none;
   -webkit-appearance: none;
   display: inline-block;
-  flex: 0 0 8px;
-  width: 10px;
-  height: 10px;
-  min-width: 10px;
-  min-height: 10px;
+  flex: 0 0 14px;
+  width: 14px;
+  height: 14px;
+  min-width: 14px;
+  min-height: 14px;
   line-height: 0;
-  border-radius: 999px;
+  -webkit-mask-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='44' height='44' viewBox='0 0 44 44' fill='none'%3E%3Cpath fill='%23000' d='M32.639 39.936c.405-.426.709-.958.608-1.597l-.911-7.027 4.351-5.43c.405-.425.506-1.064.304-1.703-.203-.532-.709-.958-1.215-1.065l-6.678-1.277-3.542-5.962c-.303-.533-.81-.852-1.416-.852-.608 0-1.114.32-1.316.852l-3.137 6.281-6.577 1.703c-.506.106-1.012.638-1.113 1.17-.101.32-.101.746 0 1.065l.303.64 4.655 5.11-.506 7.026c0 .639.203 1.171.709 1.49.505.32 1.113.426 1.619.107l6.07-3.087 6.275 2.661c.404.426 1.011.32 1.517-.106Z'/%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='44' height='44' viewBox='0 0 44 44' fill='none'%3E%3Cpath fill='%23000' d='M32.639 39.936c.405-.426.709-.958.608-1.597l-.911-7.027 4.351-5.43c.405-.425.506-1.064.304-1.703-.203-.532-.709-.958-1.215-1.065l-6.678-1.277-3.542-5.962c-.303-.533-.81-.852-1.416-.852-.608 0-1.114.32-1.316.852l-3.137 6.281-6.577 1.703c-.506.106-1.012.638-1.113 1.17-.101.32-.101.746 0 1.065l.303.64 4.655 5.11-.506 7.026c0 .639.203 1.171.709 1.49.505.32 1.113.426 1.619.107l6.07-3.087 6.275 2.661c.404.426 1.011.32 1.517-.106Z'/%3E%3C/svg%3E");
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-position: center;
+  mask-position: center;
   border: 0;
-  background: rgba(255, 255, 255, 0.55);
+  background: rgba(255, 183, 208, 0.95);
   cursor: pointer;
   padding: 0;
   margin: 0;
+  transition: transform 0.2s ease, background-color 0.2s ease, filter 0.2s ease;
+}
+
+.linktree-gallery-dots .dot:hover {
+  transform: scale(1.08);
+  background: rgba(250, 138, 180, 0.95);
 }
 
 .linktree-gallery-dots .dot.active {
-  background: #fff;
+  background: #f31864;
+  filter: drop-shadow(0 1px 4px rgba(243, 24, 100, 0.4));
 }
 
 .linktree-video-wrap {

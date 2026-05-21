@@ -19,11 +19,11 @@
     <div class="linktree-container">
       <header class="linktree-header">
         <div class="linktree-icon-grid">
-          <img class="linktree-avatar" src="/icon5.png" alt="湘江 BanG Dream! 同好会" />
-          <img class="linktree-avatar" src="/icon4.png" alt="湘江 BanG Dream! 同好会图标" />
-          <img class="linktree-avatar" src="/icon3.png" alt="湘江 BanG Dream! 同好会图标" />
+          <img class="linktree-avatar" src="/icon5.png" alt="湘潭 BanG Dream! 同好会" />
+          <img class="linktree-avatar" src="/icon4.png" alt="湘潭 BanG Dream! 同好会图标" />
+          <img class="linktree-avatar" src="/icon3.png" alt="湘潭 BanG Dream! 同好会图标" />
         </div>
-        <h1 class="linktree-title">湘江 BanG Dream! 同好会</h1>
+        <h1 class="linktree-title">湘潭 BanG Dream! 同好会</h1>
         <p v-if="data.aboutUs" class="linktree-bio">{{ data.aboutUs }}</p>
         <p v-else class="linktree-bio">线下摊位互动、同好聚会与游戏现场。</p>
       </header>
