@@ -12,29 +12,33 @@ const cart = useCartStore()
       <div
         v-for="item in cart.items"
         :key="item.product.id"
-        class="flex items-center gap-4 bg-white rounded-lg p-4 mb-4 shadow-sm"
+        class="bg-white rounded-lg p-4 mb-4 shadow-sm"
       >
-        <img
-          :src="item.product.image"
-          :alt="item.product.name"
-          class="w-20 h-20 rounded-lg object-cover"
-        />
-        <div class="flex-1">
-          <h3 class="font-semibold">{{ item.product.name }}</h3>
-          <p class="text-sm text-gray-500">¥{{ item.product.price.toFixed(2) }}</p>
+        <div class="flex gap-3">
+          <img
+            :src="item.product.image"
+            :alt="item.product.name"
+            class="w-16 h-16 sm:w-20 sm:h-20 rounded-lg object-cover shrink-0"
+          />
+          <div class="flex-1 min-w-0">
+            <h3 class="font-semibold text-sm sm:text-base truncate">{{ item.product.name }}</h3>
+            <p class="text-sm text-gray-500 mt-1">¥{{ item.product.price.toFixed(2) }}</p>
+          </div>
         </div>
-        <div class="flex items-center gap-2">
-          <button
-            @click="cart.updateQuantity(item.product.id, item.quantity - 1)"
-            class="w-8 h-8 rounded border text-lg font-bold hover:bg-gray-100"
-          >−</button>
-          <span class="w-8 text-center font-medium">{{ item.quantity }}</span>
-          <button
-            @click="cart.updateQuantity(item.product.id, item.quantity + 1)"
-            class="w-8 h-8 rounded border text-lg font-bold hover:bg-gray-100"
-          >+</button>
+        <div class="flex items-center justify-between mt-3">
+          <div class="flex items-center gap-2">
+            <button
+              @click="cart.updateQuantity(item.product.id, item.quantity - 1)"
+              class="w-8 h-8 rounded border text-lg font-bold hover:bg-gray-100"
+            >−</button>
+            <span class="w-8 text-center font-medium">{{ item.quantity }}</span>
+            <button
+              @click="cart.updateQuantity(item.product.id, item.quantity + 1)"
+              class="w-8 h-8 rounded border text-lg font-bold hover:bg-gray-100"
+            >+</button>
+          </div>
+          <button @click="cart.removeItem(item.product.id)" class="text-red-500 hover:text-red-700 text-sm">删除</button>
         </div>
-        <button @click="cart.removeItem(item.product.id)" class="text-red-500 hover:text-red-700 text-sm">删除</button>
       </div>
 
       <div class="bg-white rounded-lg p-6 shadow-sm mt-6">
