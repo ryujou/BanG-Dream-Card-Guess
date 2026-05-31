@@ -87,6 +87,27 @@ const router = createRouter({
       component: () => import('../views/CommunityAdminView.vue'),
     },
     {
+      path: '/shop',
+      name: 'shop',
+      component: () => import('../views/ShopView.vue'),
+    },
+    {
+      path: '/shop/:id',
+      name: 'product-detail',
+      component: () => import('../views/ProductDetailView.vue'),
+      props: true,
+    },
+    {
+      path: '/cart',
+      name: 'cart',
+      component: () => import('../views/CartView.vue'),
+    },
+    {
+      path: '/checkout',
+      name: 'checkout',
+      component: () => import('../views/CheckoutView.vue'),
+    },
+    {
       path: '/:pathMatch(.*)*',
       redirect: '/',
     }

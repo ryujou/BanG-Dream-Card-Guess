@@ -57,6 +57,10 @@
           <span class="pill-icon">🗺️</span>
           <span class="pill-text">BanG Map 同好会地图</span>
         </a>
+        <router-link class="linktree-pill highlight-pill" to="/shop">
+          <span class="pill-icon">🛍️</span>
+          <span class="pill-text">社团周边商城</span>
+        </router-link>
         <router-link class="linktree-pill" to="/stats">
           <span class="pill-icon">🗺️</span>
           <span class="pill-text">查看访问来源地图</span>

@@ -4,6 +4,7 @@ import App from './App.vue';
 import router from './router';
 import { injectUmamiScript } from './config/umami';
 
+import './styles/tailwind.css';
 import './styles/base.css';
 import './styles/layout.css';
 import './styles/game.css';

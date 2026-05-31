@@ -1,0 +1,64 @@
+[
+  {
+    "id": "1",
+    "name": "镭射亚克力钥匙扣 湖南科技大学 普通款",
+    "price": 5.21,
+    "image": "https://i.imgs.ovh/2026/05/31/b80f2450b90e4ee9554e37715fd2eeac.jpg",
+    "images": [
+      "https://i.imgs.ovh/2026/05/31/b80f2450b90e4ee9554e37715fd2eeac.jpg",
+      "https://i.imgs.ovh/2026/05/31/231070724592ffab9ea610199009cfab.jpg",
+      "https://i.imgs.ovh/2026/05/31/d23d504442590d07c6ddd92c87b3dbf2.jpg",
+      "https://i.imgs.ovh/2026/05/31/d5213474665c2607eae1ac8011d2ddae.jpg"
+    ],
+    "description": "社团自制 BanG Dream! 镭射亚克力钥匙扣（普通款），长约7cm，双面印刷，精致耐用。",
+    "category": "钥匙扣",
+    "rating": 5,
+    "inStock": true
+  },
+  {
+    "id": "2",
+    "name": "镭射亚克力钥匙扣 湖南科技大学 夜光款",
+    "price": 9.47,
+    "image": "https://i.imgs.ovh/2026/05/31/3a930219d6f62c19a8fa1ea4a48630f7.jpg",
+    "images": [
+      "https://i.imgs.ovh/2026/05/31/3a930219d6f62c19a8fa1ea4a48630f7.jpg",
+      "https://i.imgs.ovh/2026/05/31/231070724592ffab9ea610199009cfab.jpg",
+      "https://i.imgs.ovh/2026/05/31/d23d504442590d07c6ddd92c87b3dbf2.jpg",
+      "https://i.imgs.ovh/2026/05/31/d5213474665c2607eae1ac8011d2ddae.jpg"
+    ],
+    "description": "社团自制 BanG Dream! 镭射亚克力钥匙扣（夜光款），长约7cm，双面印刷，精致耐用。",
+    "category": "钥匙扣",
+    "rating": 5,
+    "inStock": true
+  },
+  {
+    "id": "3",
+    "name": "镭射亚克力钥匙扣 湘潭大学A",
+    "price": 5.21,
+    "image": "https://i.imgs.ovh/2026/05/31/580b68cb2b11f49015a17724c5e8a128.jpg",
+    "images": [
+      "https://i.imgs.ovh/2026/05/31/580b68cb2b11f49015a17724c5e8a128.jpg",
+      "https://i.imgs.ovh/2026/05/31/c6feeca46e630c4485f7ad5091f9273a.jpg",
+      "https://i.imgs.ovh/2026/05/31/a606801ad4ae9b9463d5613d17a6d344.jpg"
+    ],
+    "description": "社团自制 BanG Dream! 镭射亚克力钥匙扣，长约7cm，双面印刷，精致耐用。",
+    "category": "钥匙扣",
+    "rating": 5,
+    "inStock": true
+  },
+  {
+    "id": "4",
+    "name": "镭射亚克力钥匙扣 湘潭大学B",
+    "price": 5.21,
+    "image": "https://i.imgs.ovh/2026/05/31/d356449ede278c327d35f23de8ab7c3b.jpg",
+    "images": [
+      "https://i.imgs.ovh/2026/05/31/d356449ede278c327d35f23de8ab7c3b.jpg",
+      "https://i.imgs.ovh/2026/05/31/7dd33a9b2410d6c4956eadded478d36a.jpg",
+      "https://i.imgs.ovh/2026/05/31/4f263f7c76b0021028642eb102fceeff.jpg"
+    ],
+    "description": "社团自制 BanG Dream! 镭射亚克力钥匙扣，长约7cm，双面印刷，精致耐用。",
+    "category": "钥匙扣",
+    "rating": 5,
+    "inStock": true
+  }
+]
