@@ -34,7 +34,7 @@ describe('Server Protocol Tests', () => {
   it('HTTP: /api/login with wrong password should fail', async () => {
     const res = await fetch(`${BASE_URL}/api/login`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'Origin': BASE_URL },
       body: 'password=wrong'
     });
     expect(res.status).toBe(403);
@@ -45,7 +45,7 @@ describe('Server Protocol Tests', () => {
   it('HTTP: /api/login with correct password should succeed', async () => {
     const res = await fetch(`${BASE_URL}/api/login`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'Origin': BASE_URL },
       body: 'password=test-password'
     });
     expect(res.status).toBe(200);

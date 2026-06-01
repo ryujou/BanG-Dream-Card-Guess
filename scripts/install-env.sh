@@ -6,15 +6,16 @@ cd "$(dirname "$0")/.."
 echo
 echo "[BangBangCai] Install environment"
 echo "--------------------------------"
+MIN_NODE_MAJOR=20
 
 need_node=0
 if ! command -v node >/dev/null 2>&1; then
   need_node=1
 else
   node_major="$(node -p "Number(process.versions.node.split('.')[0])")"
-  if [ "$node_major" -lt 18 ]; then
+  if [ "$node_major" -lt "$MIN_NODE_MAJOR" ]; then
     need_node=1
-    echo "Node.js $(node -v) is too old. Node.js 18 or newer is required."
+    echo "Node.js $(node -v) is too old. Node.js ${MIN_NODE_MAJOR} or newer is required."
   fi
 fi
 
@@ -55,12 +56,27 @@ if ! command -v npm >/dev/null 2>&1; then
   exit 1
 fi
 
+node_major="$(node -p "Number(process.versions.node.split('.')[0])")"
+if [ "$node_major" -lt "$MIN_NODE_MAJOR" ]; then
+  echo "Node.js is still too old: $(node -v)"
+  echo "Please install Node.js ${MIN_NODE_MAJOR}+ and run again."
+  exit 1
+fi
+
 echo "Node: $(node -v)"
 echo "npm:  $(npm -v)"
 
 echo
 echo "Installing project dependencies..."
-npm install
+if [ -f package-lock.json ]; then
+  echo "Detected package-lock.json, using npm ci..."
+  if ! npm ci; then
+    echo "npm ci failed, falling back to npm install..."
+    npm install
+  fi
+else
+  npm install
+fi
 
 echo
 echo "Building web files..."

@@ -51,16 +51,16 @@ const settings = { ...defaultSettings, ...(persistedConfig.settings || {}) };
 const persistLock = { timer: null };
 // --- Game state ---
 const GAME_MESSAGES = {
-    correct: "锟截达拷锟斤拷确",
+    correct: "回答正确",
     wrong: "回答错误",
-    timeout: "时锟戒到",
-    skip: "锟斤拷锟斤拷锟斤拷",
-    loading: "锟斤拷锟斤拷锟斤拷一锟斤拷",
-    recropDone: "锟斤拷锟斤拷锟斤拷",
-    reveal: "锟金案斤拷锟斤拷",
-    hideAnswer: "锟斤拷锟斤拷锟斤拷锟斤拷",
-    reset: "锟斤拷锟斤拷锟斤拷",
-    stop: "锟斤拷戏锟斤拷停止",
+    timeout: "时间到",
+    skip: "已跳过",
+    loading: "加载下一题",
+    recropDone: "已重切",
+    reveal: "答案揭晓",
+    hideAnswer: "答案已隐藏",
+    reset: "已重置",
+    stop: "游戏已停止",
     emptyGuess: "请输入答案",
 };
 const SETTINGS_DEPS = {
@@ -77,8 +77,8 @@ const SETTINGS_DEPS = {
 };
 function currentTeamNames() {
     return {
-        A: persistedTeamName?.("A", "A 锟斤拷") || "A 锟斤拷",
-        B: persistedTeamName?.("B", "B 锟斤拷") || "B 锟斤拷",
+        A: persistedTeamName?.("A", "A 队") || "A 队",
+        B: persistedTeamName?.("B", "B 队") || "B 队",
     };
 }
 const game = createInitialGameState(settings, currentTeamNames());
@@ -93,6 +93,9 @@ const LOGIN_RATE_LIMIT_MAX_ATTEMPTS = 10;
 const server = createServer(async (req, res) => {
     const url = new URL(req.url || "/", `http://127.0.0.1`);
     const originValid = isTrustedOrigin(req);
+    if (isMutatingMethod(req.method) && !req.headers.origin) {
+        return sendJson(res, { error: "Missing origin" }, 403);
+    }
     if (isMutatingMethod(req.method) && !originValid) {
         return sendJson(res, { error: "Invalid origin" }, 403);
     }
@@ -210,7 +213,7 @@ const server = createServer(async (req, res) => {
         if (!isAuthenticated(req))
             return sendJson(res, { ok: false, message: "Unauthorized" }, 401);
         if (!id && !playerId)
-            return sendJson(res, { ok: false, message: "缺锟劫成硷拷 ID" }, 400);
+            return sendJson(res, { ok: false, message: "缺少成绩 ID" }, 400);
         const scores = scoreStore.readNoteShooterScores();
         const nextScores = scope === "player" && playerId
             ? scores.filter((entry) => entry.player_id !== playerId)
@@ -260,7 +263,7 @@ const server = createServer(async (req, res) => {
             return res.end(svg);
         }
         catch {
-            return sendJson(res, { error: "锟斤拷锟斤拷失锟斤拷" }, 500);
+            return sendJson(res, { error: "生成失败" }, 500);
         }
     }
     // Bestdori proxy
@@ -323,7 +326,7 @@ wss.on("connection", (ws, req) => {
         }
         catch (error) {
             logger.error(error, { event: "websocket_message_error" });
-            socket.send(JSON.stringify({ type: "error", message: error instanceof Error ? error.message : "锟斤拷锟斤拷失锟斤拷" }));
+            socket.send(JSON.stringify({ type: "error", message: error instanceof Error ? error.message : "操作失败" }));
         }
     });
     socket.on("close", () => {
@@ -335,10 +338,12 @@ wss.on("connection", (ws, req) => {
 // --- Command handler ---
 async function handleCommand(ws, command, payload) {
     const client = clients.get(ws);
-    const soloAllowed = APP_MODE === "solo" && client?.role === "self" && isSoloAllowedCommand(command);
-    const playerAllowed = APP_MODE === "booth" && client?.role === "player" && isPlayerAllowedCommand(command);
-    if (!client?.authenticated && !soloAllowed && !playerAllowed)
-        throw new Error("锟斤拷锟饺碉拷录锟斤拷锟街讹拷");
+    if (!client)
+        throw new Error("请先建立连接");
+    const soloAllowed = APP_MODE === "solo" && client.role === "self" && isSoloAllowedCommand(command);
+    const playerAllowed = APP_MODE === "booth" && client.role === "player" && isPlayerAllowedCommand(command);
+    if (!client.authenticated && !soloAllowed && !playerAllowed)
+        throw new Error("请先登录");
     const safePayload = validateCommandPayload(command, payload);
     switch (command) {
         case "start":
@@ -387,7 +392,7 @@ async function handleCommand(ws, command, payload) {
             break;
         default:
             logger.warn("Unknown WebSocket command", { command, role: client?.role || "unknown" });
-            throw new Error(`未知锟斤拷锟斤拷: ${command}`);
+            throw new Error(`未知命令: ${command}`);
     }
 }
 function applyPureCommand(command, payload = {}) {
@@ -406,7 +411,7 @@ async function recrop() {
     if (!game.current || game.status !== "playing" || game.loading || !settings.allowRecrop || game.recrops >= settings.maxRecrops)
         return;
     game.loading = true;
-    game.message = "锟斤拷锟铰裁硷拷锟斤拷";
+    game.message = "正在重新裁剪";
     broadcast();
     let crop;
     try {
@@ -416,13 +421,13 @@ async function recrop() {
         logger.error(error, { event: "crop_failed", cardId: game.current?.cardId });
         game.loading = false;
         broadcast();
-        throw error;
+        return;
     }
     rememberCrop(crop);
     game.current.crop = crop;
     game.recrops += 1;
     game.loading = false;
-    game.message = "锟斤拷锟斤拷锟斤拷";
+    game.message = "已重切";
     broadcast();
 }
 function finishRound(result) {
@@ -501,7 +506,7 @@ async function updateSettings(next) {
         clearAutoNext();
         game.status = "idle";
         game.current = null;
-        game.message = "锟斤拷锟斤拷锟窖革拷锟铰ｏ拷锟斤拷目锟斤拷锟斤拷锟斤拷";
+        game.message = "设置已更改，题目已重置";
         broadcast();
     }
 }
@@ -562,7 +567,7 @@ async function startRound() {
     roundToken = token;
     clearAutoNext();
     stopTimer();
-    markRoundLoading(game, settings, "锟斤拷锟斤拷锟斤拷一锟斤拷");
+    markRoundLoading(game, settings, "加载下一题");
     broadcast();
     let round = null;
     try {
@@ -571,10 +576,10 @@ async function startRound() {
     catch (error) {
         logger.error(error, { event: "card_load_failed" });
         if (token === roundToken) {
-            markRoundLoadFailed(game, error instanceof Error ? error.message : "锟斤拷目锟斤拷锟斤拷失锟斤拷");
+            markRoundLoadFailed(game, error instanceof Error ? error.message : "题目加载失败");
             broadcast();
         }
-        throw error;
+        return;
     }
     if (token !== roundToken)
         return;
@@ -582,7 +587,7 @@ async function startRound() {
         return;
     rememberRound(round);
     rememberCrop(round.crop);
-    markRoundPlaying(game, settings, round, "锟斤拷锟斤拷锟斤拷");
+    markRoundPlaying(game, settings, round, "开始作答");
     broadcast();
     startTimer();
     prepareNextRound();
@@ -765,6 +770,8 @@ function publicState(role) {
     });
 }
 function sendState(ws) {
+    if (ws.readyState !== ws.OPEN)
+        return;
     const role = clients.get(ws)?.role || "player";
     ws.send(JSON.stringify({ type: "state", state: publicState(role) }));
 }
@@ -817,6 +824,13 @@ function checkLoginRateLimit(ip) {
 function clearLoginRateLimit(ip) {
     loginAttempts.delete(ip);
 }
+function cleanupLoginRateLimits(now = Date.now()) {
+    for (const [ip, entry] of loginAttempts.entries()) {
+        if (now - entry.firstAt > LOGIN_RATE_LIMIT_WINDOW_MS)
+            loginAttempts.delete(ip);
+    }
+}
+const loginCleanupTimer = setInterval(cleanupLoginRateLimits, 5 * 60 * 1000);
 function hasValidCsrf(req) {
     const cookieToken = getCookie(req, CSRF_COOKIE);
     const headerToken = String(req.headers["x-csrf-token"] || "");
@@ -856,8 +870,5 @@ process.on("uncaughtExceptionMonitor", (error) => {
 });
 process.on("unhandledRejection", (reason) => {
     logger.error(reason instanceof Error ? reason : String(reason), { event: "unhandledRejection" });
-    setImmediate(() => {
-        throw reason instanceof Error ? reason : new Error(String(reason));
-    });
 });
 //# sourceMappingURL=index.js.map

@@ -1,7 +1,32 @@
-﻿// 主持登录认证
+// 主持登录认证
 import { randomBytes, timingSafeEqual } from "node:crypto";
+import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 
-export const HOST_PASSWORD = process.env.HOST_PASSWORD || randomBytes(16).toString("hex");
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const rootDir = path.resolve(__dirname, "..", "..");
+const dataDir = process.env.DATA_DIR ? path.resolve(process.env.DATA_DIR) : path.join(rootDir, "data");
+const passwordFilePath = path.join(dataDir, "host-password");
+
+function loadOrCreateHostPassword(): string {
+  if (process.env.HOST_PASSWORD) return process.env.HOST_PASSWORD;
+  try {
+    return readFileSync(passwordFilePath, "utf8").trim();
+  } catch {
+    // File doesn't exist or can't be read — generate and persist
+  }
+  const generated = randomBytes(16).toString("hex");
+  try {
+    mkdirSync(dataDir, { recursive: true });
+    writeFileSync(passwordFilePath, generated, "utf8");
+  } catch {
+    // Ignore write failures — still use the generated password for this session
+  }
+  return generated;
+}
+
+export const HOST_PASSWORD = loadOrCreateHostPassword();
 export const AUTH_COOKIE = "bbc_host_auth";
 export const CSRF_COOKIE = "bbc_csrf";
 export const AUTH_SESSION_TTL_MS = 24 * 60 * 60 * 1000;

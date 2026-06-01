@@ -95,7 +95,7 @@ describe('runtime diagnostics API', () => {
   async function loginCookie() {
     const response = await fetch(`${BASE_URL}/api/login`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'Origin': BASE_URL },
       body: 'password=diagnostics-password',
     });
     expect(response.status).toBe(200);
