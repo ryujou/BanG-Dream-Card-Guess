@@ -1,5 +1,7 @@
-import { createRouter, createWebHistory } from 'vue-router';
+import { createRouter, createWebHistory, type RouteLocationNormalized } from 'vue-router';
 import { useGameStore } from '../stores/game';
+
+const HOST_REQUIRED_ROUTES = new Set(['host', 'settings', 'qr', 'community-admin']);
 
 const router = createRouter({
   history: createWebHistory(),
@@ -8,6 +10,21 @@ const router = createRouter({
       path: '/',
       name: 'home',
       component: () => import('../views/HomeView.vue'),
+    },
+    {
+      path: '/forum',
+      name: 'forum',
+      component: () => import('../views/ForumView.vue'),
+    },
+    {
+      path: '/feed',
+      name: 'feed',
+      component: () => import('../views/FeedView.vue'),
+    },
+    {
+      path: '/music',
+      name: 'music',
+      component: () => import('../views/MusicView.vue'),
     },
     {
       path: '/player',
@@ -26,11 +43,13 @@ const router = createRouter({
     {
       path: '/host',
       name: 'host',
+      meta: { requiresHostAuth: true },
       component: () => import('../views/HostView.vue'),
     },
     {
       path: '/settings',
       name: 'settings',
+      meta: { requiresHostAuth: true },
       component: () => import('../views/SettingsView.vue'),
     },
     {
@@ -41,6 +60,7 @@ const router = createRouter({
     {
       path: '/qr',
       name: 'qr',
+      meta: { requiresHostAuth: true },
       component: () => import('../views/QrView.vue'),
     },
     {
@@ -82,8 +102,19 @@ const router = createRouter({
       component: () => import('../views/BangKlotskiView.vue'),
     },
     {
+      path: '/videos/:id',
+      name: 'home-video-detail',
+      component: () => import('../views/HomeVideoDetailView.vue'),
+    },
+    {
+      path: '/community/forum/:slug+',
+      name: 'forum-thread',
+      component: () => import('../views/ForumThreadView.vue'),
+    },
+    {
       path: '/community-admin',
       name: 'community-admin',
+      meta: { requiresHostAuth: true },
       component: () => import('../views/CommunityAdminView.vue'),
     },
     {
@@ -113,6 +144,27 @@ const router = createRouter({
     }
   ]
 });
+
+router.beforeEach(async (to) => {
+  if (!routeRequiresHostAuth(to)) return true;
+  if (await hasHostSession()) return true;
+  return { path: '/login', query: { next: to.fullPath } };
+});
+
+function routeRequiresHostAuth(route: RouteLocationNormalized): boolean {
+  return Boolean(route.meta.requiresHostAuth) || HOST_REQUIRED_ROUTES.has(String(route.name || ''));
+}
+
+async function hasHostSession(): Promise<boolean> {
+  try {
+    const response = await fetch('/api/session', { cache: 'no-store' });
+    if (!response.ok) return false;
+    const payload = await response.json().catch(() => null) as { authenticated?: unknown } | null;
+    return payload?.authenticated === true;
+  } catch {
+    return false;
+  }
+}
 
 router.afterEach((to) => {
   const gameStore = useGameStore();

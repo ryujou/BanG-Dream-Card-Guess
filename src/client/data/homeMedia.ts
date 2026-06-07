@@ -1,0 +1,186 @@
+export interface HomeMediaCard {
+  id: string;
+  title: string;
+  author: string;
+  meta: string;
+  views: string;
+  comments: string;
+  duration: string;
+  href: string;
+  image: string;
+  bvid?: string;
+}
+
+export interface HomeForumPost {
+  title: string;
+  author: string;
+  date: string;
+  href: string;
+  tag: string;
+}
+
+export interface HomeForumSection {
+  id: string;
+  title: string;
+  eyebrow: string;
+  desc: string;
+  href: string;
+  image: string;
+  posts: HomeForumPost[];
+}
+
+export const PUBLIC_ACTIVITY_PHOTOS = [
+  { url: "https://i.imgs.ovh/2026/05/09/28ca42c7af547a45325868fe99db8834.jpg", caption: "东门小辣椒猴山聚会" },
+  { url: "https://i.imgs.ovh/2026/05/09/2bad39889fe9eddb581cf19eac74ccee.jpg", caption: "湘大社团百团大战" },
+  { url: "https://i.imgs.ovh/2026/05/13/782915b8902b6b51c204cde7d6926fb7.jpg", caption: "万楼联合漫展" },
+  { url: "https://i.imgs.ovh/2026/05/13/c5d4b911735e8f86263282076e840e5c.jpg", caption: "万楼联合漫展" },
+] as const;
+
+export const featureMediaCards: HomeMediaCard[] = [
+  {
+    id: "bv1hzve6de6v",
+    title: "B站视频测试：BV1hzVe6DE6V",
+    author: "Bilibili",
+    meta: "连接于 视频投稿",
+    views: "B站",
+    comments: "测试链接",
+    duration: "--:--",
+    href: "/videos/bv1hzve6de6v",
+    bvid: "BV1hzVe6DE6V",
+    image: "/cards/res024036_rip/card_normal.png",
+  },
+  {
+    id: "bv18xva6feea",
+    title: "B站视频测试：BV18xVA6FEeA",
+    author: "Bilibili",
+    meta: "连接于 视频投稿",
+    views: "B站",
+    comments: "测试链接",
+    duration: "--:--",
+    href: "/videos/bv18xva6feea",
+    bvid: "BV18xVA6FEeA",
+    image: "/cards/res026017_rip/card_normal.png",
+  },
+  {
+    id: "public-bv1bosqbcerv",
+    title: "公网活动视频：BV1boSqBCErV",
+    author: "xtbang.top",
+    meta: "连接于 活动回顾",
+    views: "公网",
+    comments: "活动视频",
+    duration: "--:--",
+    href: "/videos/public-bv1bosqbcerv",
+    bvid: "BV1boSqBCErV",
+    image: "https://i.imgs.ovh/2026/05/18/4cfccccfbab0880ca4d9cfb8dd686968.jpg",
+  },
+  {
+    id: "public-activity-photo",
+    title: "湘潭同好会摊位互动记录",
+    author: "BanG Dream! 湘潭同好站",
+    meta: "连接于 最近活动",
+    views: "620",
+    comments: "0",
+    duration: "2:21",
+    href: "https://qm.qq.com/q/6ytGE7qIWQ",
+    image: PUBLIC_ACTIVITY_PHOTOS[0].url,
+  },
+];
+
+export const secondaryMediaCards: HomeMediaCard[] = [
+  {
+    id: "stats-map",
+    title: "访问来源地图与同好分布",
+    author: "Bang Map",
+    meta: "连接于 数据页",
+    views: "1.4万",
+    comments: "3",
+    duration: "0:56",
+    href: "/stats",
+    image: "/cards/res013074_rip/card_after_training.png",
+  },
+  {
+    id: "stopwatch-challenge",
+    title: "秒表挑战小游戏",
+    author: "Stopwatch Challenge",
+    meta: "连接于 小游戏",
+    views: "1519",
+    comments: "1",
+    duration: "4:31",
+    href: "/games/stopwatch-challenge",
+    image: "/cards/res024054_rip/card_normal.png",
+  },
+  {
+    id: "bang-klotski",
+    title: "BanG 华容道",
+    author: "Bang Klotski",
+    meta: "连接于 小游戏",
+    views: "664",
+    comments: "1",
+    duration: "7:53",
+    href: "/games/bang-klotski",
+    image: "/cards/res035014_rip/card_after_training.png",
+  },
+  {
+    id: "community-qq",
+    title: "加入官方交流群",
+    author: "QQ Community",
+    meta: "连接于 社群",
+    views: "1736",
+    comments: "2",
+    duration: "3:23",
+    href: "https://qm.qq.com/q/6ytGE7qIWQ",
+    image: "/cards/res017038_rip/card_normal.png",
+  },
+  {
+    id: "host-console",
+    title: "主持端与现场控制台",
+    author: "Host Console",
+    meta: "连接于 摊位后台",
+    views: "295",
+    comments: "0",
+    duration: "1:07",
+    href: "/host",
+    image: "/cards/res040003_rip/card_normal.png",
+  },
+];
+
+export const defaultForumSections: HomeForumSection[] = [
+  {
+    id: "booth-news",
+    title: "湘潭摊位情报站",
+    eyebrow: "Booth / Event",
+    desc: "集中整理湘潭 BanG Dream! 同好会线下摊位、漫展出摊、返图征集与协力招募信息。",
+    href: "/community/forum/booth-news",
+    image: PUBLIC_ACTIVITY_PHOTOS[2].url,
+    posts: [
+      { title: "下一次猜卡面摊位筹备记录", author: "湘潭同好会", date: "2026-06-06", href: "/community/forum/booth-news/booth-card-guess", tag: "活动" },
+      { title: "万楼联合漫展返图与摊位复盘", author: "摄影协力", date: "2026-05-13", href: "/community/forum/booth-news/wanlou-report", tag: "返图" },
+    ],
+  },
+  {
+    id: "local-players",
+    title: "湘潭同城招呼板",
+    eyebrow: "Players / Q&A",
+    desc: "给湘大、湖科大、湖工与周边玩家的入群指路、拼车拼桌、打歌约局和新人问答。",
+    href: "https://qm.qq.com/q/6ytGE7qIWQ",
+    image: "/cards/res017038_rip/card_normal.png",
+    posts: [
+      { title: "新人入坑与本地群指路", author: "BanG Dream! 湘潭同好站", date: "2026-06-01", href: "https://qm.qq.com/q/6ytGE7qIWQ", tag: "Q&A" },
+      { title: "湘潭高校玩家约局楼", author: "同城玩家", date: "2026-05-20", href: "/community/forum/local-players/matchup", tag: "约局" },
+    ],
+  },
+  {
+    id: "game-lab",
+    title: "现场小游戏研究室",
+    eyebrow: "Game Lab",
+    desc: "记录猜卡面、音符射手、秒表挑战与 BanG 华容道的玩法反馈、题库建议和现场运营经验。",
+    href: "/community/forum/game-lab",
+    image: "/cards/res024054_rip/card_normal.png",
+    posts: [
+      { title: "猜卡面题库难度反馈集中帖", author: "Booth Staff", date: "2026-05-18", href: "/community/forum/game-lab/card-guess-feedback", tag: "反馈" },
+      { title: "音符射手和秒表挑战现场玩法建议", author: "小游戏维护组", date: "2026-05-10", href: "/community/forum/game-lab/minigames", tag: "小游戏" },
+    ],
+  },
+];
+
+export const allHomeMediaCards = [...featureMediaCards, ...secondaryMediaCards];

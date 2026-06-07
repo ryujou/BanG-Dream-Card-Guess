@@ -295,10 +295,12 @@
 .login-panel {
   width: 100%;
   padding: 28px;
-  border: 1px solid rgba(23, 23, 31, 0.08);
-  border-radius: 8px;
-  background: rgba(255, 255, 255, 0.9);
-  box-shadow: 0 24px 70px rgba(49, 57, 84, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 0;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.04)),
+    rgba(10, 10, 14, 0.86);
+  box-shadow: 0 34px 90px rgba(0, 0, 0, 0.48);
   backdrop-filter: blur(18px);
 }
 
@@ -311,8 +313,8 @@
 .login-error {
   border-radius: 8px;
   padding: 12px 14px;
-  background: rgba(255, 93, 108, 0.12);
-  color: #d9283d;
+  background: rgba(255, 93, 108, 0.16);
+  color: #ff8a9a;
   font-weight: 800;
 }
 

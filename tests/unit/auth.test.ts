@@ -1,4 +1,4 @@
-﻿import { describe, it, expect, beforeEach } from "vitest";
+import { describe, it, expect, beforeEach } from "vitest";
 import {
   sameSecret, createAuthSession, isAuthenticated,
   getAuthToken, verifyPassword, revokeAuthSession,
@@ -26,7 +26,7 @@ describe("auth.ts", () => {
 
   describe("HOST_PASSWORD", () => {
     it("case 1", () => {
-      expect(HOST_PASSWORD).toMatch(/^[0-9a-f]{32}$/);
+      expect(HOST_PASSWORD).toBe("123456");
     });
   });
 

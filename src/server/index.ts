@@ -143,6 +143,9 @@ const server = createServer(async (req, res) => {
 
   // API routes
   if (url.pathname === "/api/health") return sendJson(res, publicHealthSnapshot());
+  if (url.pathname === "/api/session" && req.method === "GET") {
+    return sendJson(res, { authenticated: isAuthenticated(req) });
+  }
   if (url.pathname === "/api/diagnostics" && req.method === "GET") {
     if (!isAuthenticated(req)) return sendJson(res, { error: "Unauthorized" }, 401);
     return sendJson(res, diagnosticsSnapshot(req));

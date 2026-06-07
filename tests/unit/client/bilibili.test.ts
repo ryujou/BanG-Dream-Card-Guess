@@ -12,6 +12,13 @@ describe("Bilibili utils", () => {
     expect(url.startsWith("https://player.bilibili.com/player.html?")).toBe(true);
     expect(url).toContain("bvid=BV1GJ411x7h7");
     expect(url).not.toContain("aid=123456");
+    expect(url).toContain("page=1");
+    expect(url).toContain("high_quality=1");
+    expect(url).toContain("quality=112");
+    expect(url).toContain("qn=112");
+    expect(url).toContain("fnver=0");
+    expect(url).toContain("fnval=4048");
+    expect(url).toContain("as_wide=1");
   });
 
   it("does not include cid/page undefined and encodes boolean flags", () => {
@@ -43,8 +50,9 @@ describe("Bilibili utils", () => {
     expect(pickBilibiliCover({})).toBe("");
   });
 
-  it("normalizes bvid safely", () => {
+  it("normalizes bvid safely from raw ids and full Bilibili links", () => {
     expect(normalizeBvid("1GJ411x7h7")).toBe("BV1GJ411x7h7");
+    expect(normalizeBvid("https://www.bilibili.com/video/BV1hzVe6DE6V")).toBe("BV1hzVe6DE6V");
     expect(normalizeBvid("invalid")).toBe("");
   });
 

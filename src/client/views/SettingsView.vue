@@ -10,7 +10,7 @@
           <router-link to="/player">玩家页</router-link>
           <router-link to="/host">主持页</router-link>
           <router-link to="/qr">二维码</router-link>
-          <a href="/community-admin">同好会主页编辑</a>
+          <router-link to="/community-admin">同好会主页编辑</router-link>
           <button type="button" @click="logout">退出</button>
         </div>
       </div>

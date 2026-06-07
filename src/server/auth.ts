@@ -8,22 +8,22 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const rootDir = path.resolve(__dirname, "..", "..");
 const dataDir = process.env.DATA_DIR ? path.resolve(process.env.DATA_DIR) : path.join(rootDir, "data");
 const passwordFilePath = path.join(dataDir, "host-password");
+const DEFAULT_LOCAL_HOST_PASSWORD = "123456";
 
 function loadOrCreateHostPassword(): string {
   if (process.env.HOST_PASSWORD) return process.env.HOST_PASSWORD;
   try {
     return readFileSync(passwordFilePath, "utf8").trim();
   } catch {
-    // File doesn't exist or can't be read — generate and persist
+    // Keep local installs predictable. Production should set HOST_PASSWORD.
   }
-  const generated = randomBytes(16).toString("hex");
   try {
     mkdirSync(dataDir, { recursive: true });
-    writeFileSync(passwordFilePath, generated, "utf8");
+    writeFileSync(passwordFilePath, DEFAULT_LOCAL_HOST_PASSWORD, "utf8");
   } catch {
-    // Ignore write failures — still use the generated password for this session
+    // Ignore write failures; still use the local default for this session.
   }
-  return generated;
+  return DEFAULT_LOCAL_HOST_PASSWORD;
 }
 
 export const HOST_PASSWORD = loadOrCreateHostPassword();

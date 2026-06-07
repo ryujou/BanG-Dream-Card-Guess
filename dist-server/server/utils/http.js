@@ -15,7 +15,7 @@ export function securityHeaders() {
             "script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net",
             "connect-src 'self' ws: wss:",
             "font-src 'self' data: https:",
-            "frame-src 'self' https://player.bilibili.com",
+            "frame-src 'self' https://player.bilibili.com https://www.bilibili.com",
             "frame-ancestors 'self'",
             "base-uri 'self'",
             "object-src 'none'",

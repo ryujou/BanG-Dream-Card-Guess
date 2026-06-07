@@ -13,8 +13,9 @@ export interface BilibiliUrlOptions {
 export function normalizeBvid(value: unknown): string {
   const raw = String(value || "").trim().replace(/\s+/g, "");
   if (!raw) return "";
-  const withPrefix = /^BV/i.test(raw) ? raw : `BV${raw}`;
-  const normalized = withPrefix.slice(0, 12);
+  const matched = raw.match(/BV[0-9A-Za-z]{10}/i)?.[0];
+  const withPrefix = matched || (/^[0-9A-Za-z]{10}$/.test(raw) ? `BV${raw}` : raw);
+  const normalized = /^BV/i.test(withPrefix) ? `BV${withPrefix.slice(2, 12)}` : "";
   return /^BV[0-9A-Za-z]{10}$/.test(normalized) ? normalized : "";
 }
 
@@ -42,9 +43,6 @@ export function buildBilibiliEmbedUrl(options: BilibiliUrlOptions): string {
   const aid = normalizeAid(options.aid);
   if (!bvid && !aid) return "";
   const params = new URLSearchParams();
-  params.set("isOutside", "true");
-  params.set("autoplay", toFlag(options.autoplay, false));
-  params.set("danmaku", toFlag(options.danmaku, false));
   if (bvid) params.set("bvid", bvid);
   else params.set("aid", aid);
 
@@ -54,14 +52,25 @@ export function buildBilibiliEmbedUrl(options: BilibiliUrlOptions): string {
   const page = normalizeAid(options.page) || "1";
 
   const highQuality = options.highQuality ?? options.high_quality;
-  if (highQuality !== undefined) params.set("high_quality", toFlag(highQuality, true));
   const useMinimal = Boolean(options.minimalMode);
   if (useMinimal) {
+    params.set("isOutside", "true");
+    params.set("autoplay", toFlag(options.autoplay, false));
+    params.set("danmaku", toFlag(options.danmaku, false));
     params.set("p", page);
     params.set("hideCoverInfo", "1");
     return `https://www.bilibili.com/blackboard/html5mobileplayer.html?${params.toString()}`;
   }
+
   params.set("page", page);
+  params.set("high_quality", toFlag(highQuality, true));
+  params.set("quality", "112");
+  params.set("qn", "112");
+  params.set("fnver", "0");
+  params.set("fnval", "4048");
+  params.set("as_wide", "1");
+  params.set("danmaku", toFlag(options.danmaku, false));
+  params.set("autoplay", toFlag(options.autoplay, false));
   return `https://player.bilibili.com/player.html?${params.toString()}`;
 }
 
