@@ -1,0 +1,8876 @@
+{
+  "3": {
+    "resourceSetName": "res001_no003",
+    "characterId": 1,
+    "rarity": 3,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "4": {
+    "resourceSetName": "res001_no004",
+    "characterId": 1,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "7": {
+    "resourceSetName": "res002_no003",
+    "characterId": 2,
+    "rarity": 3,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "11": {
+    "resourceSetName": "res003_no003",
+    "characterId": 3,
+    "rarity": 3,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "15": {
+    "resourceSetName": "res004_no003",
+    "characterId": 4,
+    "rarity": 3,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "19": {
+    "resourceSetName": "res005_no003",
+    "characterId": 5,
+    "rarity": 3,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "23": {
+    "resourceSetName": "res006_no003",
+    "characterId": 6,
+    "rarity": 3,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "27": {
+    "resourceSetName": "res007_no003",
+    "characterId": 7,
+    "rarity": 3,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "31": {
+    "resourceSetName": "res008_no003",
+    "characterId": 8,
+    "rarity": 3,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "35": {
+    "resourceSetName": "res009_no003",
+    "characterId": 9,
+    "rarity": 3,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "39": {
+    "resourceSetName": "res010_no003",
+    "characterId": 10,
+    "rarity": 3,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "43": {
+    "resourceSetName": "res011_no003",
+    "characterId": 11,
+    "rarity": 3,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "47": {
+    "resourceSetName": "res012_no003",
+    "characterId": 12,
+    "rarity": 3,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "51": {
+    "resourceSetName": "res013_no003",
+    "characterId": 13,
+    "rarity": 3,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "55": {
+    "resourceSetName": "res014_no003",
+    "characterId": 14,
+    "rarity": 3,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "59": {
+    "resourceSetName": "res015_no003",
+    "characterId": 15,
+    "rarity": 3,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "63": {
+    "resourceSetName": "res016_no003",
+    "characterId": 16,
+    "rarity": 3,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "67": {
+    "resourceSetName": "res017_no003",
+    "characterId": 17,
+    "rarity": 3,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "71": {
+    "resourceSetName": "res018_no003",
+    "characterId": 18,
+    "rarity": 3,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "75": {
+    "resourceSetName": "res019_no003",
+    "characterId": 19,
+    "rarity": 3,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "79": {
+    "resourceSetName": "res020_no003",
+    "characterId": 20,
+    "rarity": 3,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "87": {
+    "resourceSetName": "res021_no007",
+    "characterId": 21,
+    "rarity": 3,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "88": {
+    "resourceSetName": "res021_no008",
+    "characterId": 21,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "91": {
+    "resourceSetName": "res022_no003",
+    "characterId": 22,
+    "rarity": 3,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "92": {
+    "resourceSetName": "res022_no004",
+    "characterId": 22,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "95": {
+    "resourceSetName": "res023_no003",
+    "characterId": 23,
+    "rarity": 3,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "96": {
+    "resourceSetName": "res023_no004",
+    "characterId": 23,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "99": {
+    "resourceSetName": "res024_no003",
+    "characterId": 24,
+    "rarity": 3,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "103": {
+    "resourceSetName": "res025_no003",
+    "characterId": 25,
+    "rarity": 3,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "107": {
+    "resourceSetName": "res026_no003",
+    "characterId": 26,
+    "rarity": 3,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "109": {
+    "resourceSetName": "res002_no005",
+    "characterId": 2,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "110": {
+    "resourceSetName": "res024_no005",
+    "characterId": 24,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "111": {
+    "resourceSetName": "res004_no005",
+    "characterId": 4,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "112": {
+    "resourceSetName": "res003_no005",
+    "characterId": 3,
+    "rarity": 3,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "114": {
+    "resourceSetName": "res018_no005",
+    "characterId": 18,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "115": {
+    "resourceSetName": "res017_no005",
+    "characterId": 17,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "116": {
+    "resourceSetName": "res021_no009",
+    "characterId": 21,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "117": {
+    "resourceSetName": "res020_no005",
+    "characterId": 20,
+    "rarity": 3,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "119": {
+    "resourceSetName": "res016_no005",
+    "characterId": 16,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "120": {
+    "resourceSetName": "res013_no005",
+    "characterId": 13,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "121": {
+    "resourceSetName": "res026_no006",
+    "characterId": 26,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "122": {
+    "resourceSetName": "res014_no006",
+    "characterId": 14,
+    "rarity": 3,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "124": {
+    "resourceSetName": "res014_no007",
+    "characterId": 14,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "125": {
+    "resourceSetName": "res006_no005",
+    "characterId": 6,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "126": {
+    "resourceSetName": "res021_no010",
+    "characterId": 21,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "127": {
+    "resourceSetName": "res018_no006",
+    "characterId": 18,
+    "rarity": 3,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "129": {
+    "resourceSetName": "res007_no005",
+    "characterId": 7,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "130": {
+    "resourceSetName": "res005_no005",
+    "characterId": 5,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "131": {
+    "resourceSetName": "res022_no005",
+    "characterId": 22,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "132": {
+    "resourceSetName": "res008_no005",
+    "characterId": 8,
+    "rarity": 3,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "134": {
+    "resourceSetName": "res010_no005",
+    "characterId": 10,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "135": {
+    "resourceSetName": "res009_no005",
+    "characterId": 9,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "136": {
+    "resourceSetName": "res011_no005",
+    "characterId": 11,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "137": {
+    "resourceSetName": "res012_no005",
+    "characterId": 12,
+    "rarity": 3,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "139": {
+    "resourceSetName": "res020_no006",
+    "characterId": 20,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "140": {
+    "resourceSetName": "res026_no007",
+    "characterId": 26,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "141": {
+    "resourceSetName": "res013_no006",
+    "characterId": 13,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "142": {
+    "resourceSetName": "res015_no006",
+    "characterId": 15,
+    "rarity": 3,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "144": {
+    "resourceSetName": "res015_no007",
+    "characterId": 15,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "145": {
+    "resourceSetName": "res021_no011",
+    "characterId": 21,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "146": {
+    "resourceSetName": "res025_no006",
+    "characterId": 25,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "147": {
+    "resourceSetName": "res016_no006",
+    "characterId": 16,
+    "rarity": 3,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "149": {
+    "resourceSetName": "res021_no012",
+    "characterId": 21,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "150": {
+    "resourceSetName": "res023_no005",
+    "characterId": 23,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "151": {
+    "resourceSetName": "res024_no006",
+    "characterId": 24,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "152": {
+    "resourceSetName": "res019_no006",
+    "characterId": 19,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "153": {
+    "resourceSetName": "res002_no007",
+    "characterId": 2,
+    "rarity": 3,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "155": {
+    "resourceSetName": "res003_no006",
+    "characterId": 3,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "156": {
+    "resourceSetName": "res025_no007",
+    "characterId": 25,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "157": {
+    "resourceSetName": "res001_no006",
+    "characterId": 1,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "158": {
+    "resourceSetName": "res002_no008",
+    "characterId": 2,
+    "rarity": 3,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "160": {
+    "resourceSetName": "res008_no006",
+    "characterId": 8,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "161": {
+    "resourceSetName": "res024_no007",
+    "characterId": 24,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "162": {
+    "resourceSetName": "res007_no006",
+    "characterId": 7,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "163": {
+    "resourceSetName": "res006_no007",
+    "characterId": 6,
+    "rarity": 3,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "165": {
+    "resourceSetName": "res012_no007",
+    "characterId": 12,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "166": {
+    "resourceSetName": "res011_no006",
+    "characterId": 11,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "167": {
+    "resourceSetName": "res010_no006",
+    "characterId": 10,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "168": {
+    "resourceSetName": "res009_no006",
+    "characterId": 9,
+    "rarity": 3,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "170": {
+    "resourceSetName": "res004_no007",
+    "characterId": 4,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "171": {
+    "resourceSetName": "res022_no006",
+    "characterId": 22,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "172": {
+    "resourceSetName": "res003_no007",
+    "characterId": 3,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "173": {
+    "resourceSetName": "res013_no008",
+    "characterId": 13,
+    "rarity": 3,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "175": {
+    "resourceSetName": "res019_no007",
+    "characterId": 19,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "176": {
+    "resourceSetName": "res018_no007",
+    "characterId": 18,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "177": {
+    "resourceSetName": "res017_no006",
+    "characterId": 17,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "178": {
+    "resourceSetName": "res022_no007",
+    "characterId": 22,
+    "rarity": 3,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "180": {
+    "resourceSetName": "res014_no009",
+    "characterId": 14,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "181": {
+    "resourceSetName": "res015_no008",
+    "characterId": 15,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "182": {
+    "resourceSetName": "res016_no008",
+    "characterId": 16,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "183": {
+    "resourceSetName": "res023_no007",
+    "characterId": 23,
+    "rarity": 3,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "185": {
+    "resourceSetName": "res002_no009",
+    "characterId": 2,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "186": {
+    "resourceSetName": "res013_no010",
+    "characterId": 13,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "187": {
+    "resourceSetName": "res012_no008",
+    "characterId": 12,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "188": {
+    "resourceSetName": "res024_no008",
+    "characterId": 24,
+    "rarity": 3,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "190": {
+    "resourceSetName": "res005_no007",
+    "characterId": 5,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "191": {
+    "resourceSetName": "res006_no008",
+    "characterId": 6,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "192": {
+    "resourceSetName": "res008_no007",
+    "characterId": 8,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "193": {
+    "resourceSetName": "res024_no009",
+    "characterId": 24,
+    "rarity": 3,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "195": {
+    "resourceSetName": "res017_no007",
+    "characterId": 17,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "196": {
+    "resourceSetName": "res018_no008",
+    "characterId": 18,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "197": {
+    "resourceSetName": "res001_no007",
+    "characterId": 1,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "198": {
+    "resourceSetName": "res021_no013",
+    "characterId": 21,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "199": {
+    "resourceSetName": "res009_no007",
+    "characterId": 9,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "200": {
+    "resourceSetName": "res005_no008",
+    "characterId": 5,
+    "rarity": 3,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "202": {
+    "resourceSetName": "res020_no008",
+    "characterId": 20,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "203": {
+    "resourceSetName": "res025_no008",
+    "characterId": 25,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "204": {
+    "resourceSetName": "res019_no008",
+    "characterId": 19,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "205": {
+    "resourceSetName": "res017_no009",
+    "characterId": 17,
+    "rarity": 3,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "207": {
+    "resourceSetName": "res004_no008",
+    "characterId": 4,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "208": {
+    "resourceSetName": "res003_no009",
+    "characterId": 3,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "209": {
+    "resourceSetName": "res002_no010",
+    "characterId": 2,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "210": {
+    "resourceSetName": "res001_no008",
+    "characterId": 1,
+    "rarity": 3,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "212": {
+    "resourceSetName": "res011_no007",
+    "characterId": 11,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "213": {
+    "resourceSetName": "res010_no007",
+    "characterId": 10,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "214": {
+    "resourceSetName": "res026_no008",
+    "characterId": 26,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "215": {
+    "resourceSetName": "res009_no008",
+    "characterId": 9,
+    "rarity": 3,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "217": {
+    "resourceSetName": "res019_no009",
+    "characterId": 19,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "218": {
+    "resourceSetName": "res007_no008",
+    "characterId": 7,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "219": {
+    "resourceSetName": "res020_no009",
+    "characterId": 20,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "220": {
+    "resourceSetName": "res016_no009",
+    "characterId": 16,
+    "rarity": 3,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "222": {
+    "resourceSetName": "res006_no009",
+    "characterId": 6,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "223": {
+    "resourceSetName": "res008_no008",
+    "characterId": 8,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "224": {
+    "resourceSetName": "res005_no009",
+    "characterId": 5,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "225": {
+    "resourceSetName": "res025_no010",
+    "characterId": 25,
+    "rarity": 3,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "227": {
+    "resourceSetName": "res012_no010",
+    "characterId": 12,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "228": {
+    "resourceSetName": "res016_no010",
+    "characterId": 16,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "229": {
+    "resourceSetName": "res023_no008",
+    "characterId": 23,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "230": {
+    "resourceSetName": "res011_no008",
+    "characterId": 11,
+    "rarity": 3,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "232": {
+    "resourceSetName": "res013_no011",
+    "characterId": 13,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "233": {
+    "resourceSetName": "res014_no010",
+    "characterId": 14,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "234": {
+    "resourceSetName": "res015_no009",
+    "characterId": 15,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "235": {
+    "resourceSetName": "res022_no008",
+    "characterId": 22,
+    "rarity": 3,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "237": {
+    "resourceSetName": "res017_no010",
+    "characterId": 17,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "238": {
+    "resourceSetName": "res024_no011",
+    "characterId": 24,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "239": {
+    "resourceSetName": "res018_no010",
+    "characterId": 18,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "240": {
+    "resourceSetName": "res020_no010",
+    "characterId": 20,
+    "rarity": 3,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "242": {
+    "resourceSetName": "res006_no010",
+    "characterId": 6,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "243": {
+    "resourceSetName": "res007_no010",
+    "characterId": 7,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "244": {
+    "resourceSetName": "res002_no011",
+    "characterId": 2,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "245": {
+    "resourceSetName": "res022_no009",
+    "characterId": 22,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "246": {
+    "resourceSetName": "res004_no009",
+    "characterId": 4,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "247": {
+    "resourceSetName": "res003_no010",
+    "characterId": 3,
+    "rarity": 3,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "249": {
+    "resourceSetName": "res009_no009",
+    "characterId": 9,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "250": {
+    "resourceSetName": "res010_no009",
+    "characterId": 10,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "251": {
+    "resourceSetName": "res025_no011",
+    "characterId": 25,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "252": {
+    "resourceSetName": "res012_no011",
+    "characterId": 12,
+    "rarity": 3,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "254": {
+    "resourceSetName": "res011_no009",
+    "characterId": 11,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "255": {
+    "resourceSetName": "res019_no011",
+    "characterId": 19,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "256": {
+    "resourceSetName": "res023_no009",
+    "characterId": 23,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "257": {
+    "resourceSetName": "res007_no011",
+    "characterId": 7,
+    "rarity": 3,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "259": {
+    "resourceSetName": "res003_no011",
+    "characterId": 3,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "260": {
+    "resourceSetName": "res002_no012",
+    "characterId": 2,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "261": {
+    "resourceSetName": "res014_no011",
+    "characterId": 14,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "262": {
+    "resourceSetName": "res021_no014",
+    "characterId": 21,
+    "rarity": 3,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "264": {
+    "resourceSetName": "res007_no012",
+    "characterId": 7,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "265": {
+    "resourceSetName": "res023_no010",
+    "characterId": 23,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "266": {
+    "resourceSetName": "res006_no011",
+    "characterId": 6,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "267": {
+    "resourceSetName": "res008_no009",
+    "characterId": 8,
+    "rarity": 3,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "269": {
+    "resourceSetName": "res015_no010",
+    "characterId": 15,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "270": {
+    "resourceSetName": "res016_no011",
+    "characterId": 16,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "271": {
+    "resourceSetName": "res024_no012",
+    "characterId": 24,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "272": {
+    "resourceSetName": "res026_no010",
+    "characterId": 26,
+    "rarity": 3,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "274": {
+    "resourceSetName": "res008_no010",
+    "characterId": 8,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "275": {
+    "resourceSetName": "res004_no010",
+    "characterId": 4,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "276": {
+    "resourceSetName": "res025_no012",
+    "characterId": 25,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "277": {
+    "resourceSetName": "res021_no015",
+    "characterId": 21,
+    "rarity": 3,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "279": {
+    "resourceSetName": "res001_no010",
+    "characterId": 1,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "280": {
+    "resourceSetName": "res026_no011",
+    "characterId": 26,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "281": {
+    "resourceSetName": "res003_no012",
+    "characterId": 3,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "282": {
+    "resourceSetName": "res004_no011",
+    "characterId": 4,
+    "rarity": 3,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "284": {
+    "resourceSetName": "res018_no012",
+    "characterId": 18,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "285": {
+    "resourceSetName": "res020_no012",
+    "characterId": 20,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "286": {
+    "resourceSetName": "res022_no011",
+    "characterId": 22,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "287": {
+    "resourceSetName": "res019_no012",
+    "characterId": 19,
+    "rarity": 3,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "289": {
+    "resourceSetName": "res021_no016",
+    "characterId": 21,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "290": {
+    "resourceSetName": "res001_no011",
+    "characterId": 1,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "291": {
+    "resourceSetName": "res005_no011",
+    "characterId": 5,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "292": {
+    "resourceSetName": "res009_no011",
+    "characterId": 9,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "293": {
+    "resourceSetName": "res013_no012",
+    "characterId": 13,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "294": {
+    "resourceSetName": "res017_no012",
+    "characterId": 17,
+    "rarity": 3,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "296": {
+    "resourceSetName": "res010_no010",
+    "characterId": 10,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "297": {
+    "resourceSetName": "res012_no012",
+    "characterId": 12,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "298": {
+    "resourceSetName": "res021_no017",
+    "characterId": 21,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "299": {
+    "resourceSetName": "res023_no011",
+    "characterId": 23,
+    "rarity": 3,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "301": {
+    "resourceSetName": "res016_no012",
+    "characterId": 16,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "302": {
+    "resourceSetName": "res014_no013",
+    "characterId": 14,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "303": {
+    "resourceSetName": "res015_no011",
+    "characterId": 15,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "304": {
+    "resourceSetName": "res013_no013",
+    "characterId": 13,
+    "rarity": 3,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "307": {
+    "resourceSetName": "res020_no013",
+    "characterId": 20,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "308": {
+    "resourceSetName": "res019_no013",
+    "characterId": 19,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "309": {
+    "resourceSetName": "res017_no013",
+    "characterId": 17,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "310": {
+    "resourceSetName": "res025_no013",
+    "characterId": 25,
+    "rarity": 3,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "313": {
+    "resourceSetName": "res003_no014",
+    "characterId": 3,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "314": {
+    "resourceSetName": "res004_no012",
+    "characterId": 4,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "315": {
+    "resourceSetName": "res002_no014",
+    "characterId": 2,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "316": {
+    "resourceSetName": "res001_no012",
+    "characterId": 1,
+    "rarity": 3,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "319": {
+    "resourceSetName": "res009_no012",
+    "characterId": 9,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "320": {
+    "resourceSetName": "res024_no013",
+    "characterId": 24,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "321": {
+    "resourceSetName": "res006_no013",
+    "characterId": 6,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "322": {
+    "resourceSetName": "res010_no011",
+    "characterId": 10,
+    "rarity": 3,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "324": {
+    "resourceSetName": "res018_no014",
+    "characterId": 18,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "325": {
+    "resourceSetName": "res001_no013",
+    "characterId": 1,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "326": {
+    "resourceSetName": "res021_no018",
+    "characterId": 21,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "327": {
+    "resourceSetName": "res017_no014",
+    "characterId": 17,
+    "rarity": 3,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "330": {
+    "resourceSetName": "res005_no012",
+    "characterId": 5,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "331": {
+    "resourceSetName": "res007_no013",
+    "characterId": 7,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "332": {
+    "resourceSetName": "res008_no013",
+    "characterId": 8,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "333": {
+    "resourceSetName": "res026_no012",
+    "characterId": 26,
+    "rarity": 3,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "335": {
+    "resourceSetName": "res022_no013",
+    "characterId": 22,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "336": {
+    "resourceSetName": "res023_no013",
+    "characterId": 23,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "337": {
+    "resourceSetName": "res024_no014",
+    "characterId": 24,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "338": {
+    "resourceSetName": "res025_no015",
+    "characterId": 25,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "339": {
+    "resourceSetName": "res026_no013",
+    "characterId": 26,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "341": {
+    "resourceSetName": "res012_no013",
+    "characterId": 12,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "342": {
+    "resourceSetName": "res011_no012",
+    "characterId": 11,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "343": {
+    "resourceSetName": "res010_no012",
+    "characterId": 10,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "344": {
+    "resourceSetName": "res024_no015",
+    "characterId": 24,
+    "rarity": 3,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "348": {
+    "resourceSetName": "res015_no012",
+    "characterId": 15,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "349": {
+    "resourceSetName": "res016_no013",
+    "characterId": 16,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "350": {
+    "resourceSetName": "res006_no015",
+    "characterId": 6,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "351": {
+    "resourceSetName": "res003_no016",
+    "characterId": 3,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "352": {
+    "resourceSetName": "res009_no014",
+    "characterId": 9,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "353": {
+    "resourceSetName": "res021_no020",
+    "characterId": 21,
+    "rarity": 3,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "356": {
+    "resourceSetName": "res014_no014",
+    "characterId": 14,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "357": {
+    "resourceSetName": "res013_no014",
+    "characterId": 13,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "358": {
+    "resourceSetName": "res025_no016",
+    "characterId": 25,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "359": {
+    "resourceSetName": "res015_no013",
+    "characterId": 15,
+    "rarity": 3,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "361": {
+    "resourceSetName": "res017_no015",
+    "characterId": 17,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "362": {
+    "resourceSetName": "res018_no015",
+    "characterId": 18,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "363": {
+    "resourceSetName": "res020_no014",
+    "characterId": 20,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "364": {
+    "resourceSetName": "res019_no014",
+    "characterId": 19,
+    "rarity": 3,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "368": {
+    "resourceSetName": "res007_no014",
+    "characterId": 7,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "369": {
+    "resourceSetName": "res002_no015",
+    "characterId": 2,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "370": {
+    "resourceSetName": "res014_no015",
+    "characterId": 14,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "371": {
+    "resourceSetName": "res022_no015",
+    "characterId": 22,
+    "rarity": 3,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "373": {
+    "resourceSetName": "res009_no015",
+    "characterId": 9,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "374": {
+    "resourceSetName": "res012_no014",
+    "characterId": 12,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "375": {
+    "resourceSetName": "res023_no015",
+    "characterId": 23,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "376": {
+    "resourceSetName": "res010_no013",
+    "characterId": 10,
+    "rarity": 3,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "380": {
+    "resourceSetName": "res004_no015",
+    "characterId": 4,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "381": {
+    "resourceSetName": "res001_no014",
+    "characterId": 1,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "382": {
+    "resourceSetName": "res026_no015",
+    "characterId": 26,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "383": {
+    "resourceSetName": "res002_no016",
+    "characterId": 2,
+    "rarity": 3,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "385": {
+    "resourceSetName": "res013_no015",
+    "characterId": 13,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "386": {
+    "resourceSetName": "res011_no014",
+    "characterId": 11,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "387": {
+    "resourceSetName": "res020_no015",
+    "characterId": 20,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "388": {
+    "resourceSetName": "res004_no016",
+    "characterId": 4,
+    "rarity": 3,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "391": {
+    "resourceSetName": "res008_no015",
+    "characterId": 8,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "392": {
+    "resourceSetName": "res005_no013",
+    "characterId": 5,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "393": {
+    "resourceSetName": "res021_no022",
+    "characterId": 21,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "394": {
+    "resourceSetName": "res006_no016",
+    "characterId": 6,
+    "rarity": 3,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "397": {
+    "resourceSetName": "res019_no015",
+    "characterId": 19,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "398": {
+    "resourceSetName": "res017_no017",
+    "characterId": 17,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "399": {
+    "resourceSetName": "res022_no016",
+    "characterId": 22,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "400": {
+    "resourceSetName": "res018_no017",
+    "characterId": 18,
+    "rarity": 3,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "402": {
+    "resourceSetName": "res010_no014",
+    "characterId": 10,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "403": {
+    "resourceSetName": "res012_no015",
+    "characterId": 12,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "404": {
+    "resourceSetName": "res021_no023",
+    "characterId": 21,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "405": {
+    "resourceSetName": "res023_no017",
+    "characterId": 23,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "406": {
+    "resourceSetName": "res024_no017",
+    "characterId": 24,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "407": {
+    "resourceSetName": "res026_no016",
+    "characterId": 26,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "408": {
+    "resourceSetName": "res025_no017",
+    "characterId": 25,
+    "rarity": 3,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "410": {
+    "resourceSetName": "res013_no016",
+    "characterId": 13,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "411": {
+    "resourceSetName": "res015_no014",
+    "characterId": 15,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "412": {
+    "resourceSetName": "res016_no015",
+    "characterId": 16,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "413": {
+    "resourceSetName": "res014_no016",
+    "characterId": 14,
+    "rarity": 3,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "416": {
+    "resourceSetName": "res001_no015",
+    "characterId": 1,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "417": {
+    "resourceSetName": "res002_no017",
+    "characterId": 2,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "418": {
+    "resourceSetName": "res003_no018",
+    "characterId": 3,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "419": {
+    "resourceSetName": "res004_no017",
+    "characterId": 4,
+    "rarity": 3,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "422": {
+    "resourceSetName": "res006_no017",
+    "characterId": 6,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "423": {
+    "resourceSetName": "res005_no015",
+    "characterId": 5,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "424": {
+    "resourceSetName": "res022_no018",
+    "characterId": 22,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "425": {
+    "resourceSetName": "res021_no025",
+    "characterId": 21,
+    "rarity": 3,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "428": {
+    "resourceSetName": "res016_no016",
+    "characterId": 16,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "429": {
+    "resourceSetName": "res020_no017",
+    "characterId": 20,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "430": {
+    "resourceSetName": "res024_no019",
+    "characterId": 24,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "431": {
+    "resourceSetName": "res011_no015",
+    "characterId": 11,
+    "rarity": 3,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "434": {
+    "resourceSetName": "res011_no016",
+    "characterId": 11,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "435": {
+    "resourceSetName": "res009_no017",
+    "characterId": 9,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "436": {
+    "resourceSetName": "res026_no017",
+    "characterId": 26,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "437": {
+    "resourceSetName": "res012_no016",
+    "characterId": 12,
+    "rarity": 3,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "440": {
+    "resourceSetName": "res010_no016",
+    "characterId": 10,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "441": {
+    "resourceSetName": "res008_no017",
+    "characterId": 8,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "442": {
+    "resourceSetName": "res025_no018",
+    "characterId": 25,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "443": {
+    "resourceSetName": "res007_no017",
+    "characterId": 7,
+    "rarity": 3,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "445": {
+    "resourceSetName": "res018_no018",
+    "characterId": 18,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "446": {
+    "resourceSetName": "res020_no018",
+    "characterId": 20,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "447": {
+    "resourceSetName": "res023_no018",
+    "characterId": 23,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "448": {
+    "resourceSetName": "res019_no018",
+    "characterId": 19,
+    "rarity": 3,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "450": {
+    "resourceSetName": "res015_no015",
+    "characterId": 15,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "451": {
+    "resourceSetName": "res013_no018",
+    "characterId": 13,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "452": {
+    "resourceSetName": "res014_no017",
+    "characterId": 14,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "453": {
+    "resourceSetName": "res025_no019",
+    "characterId": 25,
+    "rarity": 3,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "456": {
+    "resourceSetName": "res003_no019",
+    "characterId": 3,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "457": {
+    "resourceSetName": "res004_no018",
+    "characterId": 4,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "458": {
+    "resourceSetName": "res017_no019",
+    "characterId": 17,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "459": {
+    "resourceSetName": "res005_no016",
+    "characterId": 5,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "460": {
+    "resourceSetName": "res019_no019",
+    "characterId": 19,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "461": {
+    "resourceSetName": "res024_no020",
+    "characterId": 24,
+    "rarity": 3,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "463": {
+    "resourceSetName": "res010_no017",
+    "characterId": 10,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "464": {
+    "resourceSetName": "res011_no017",
+    "characterId": 11,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "465": {
+    "resourceSetName": "res022_no019",
+    "characterId": 22,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "466": {
+    "resourceSetName": "res009_no019",
+    "characterId": 9,
+    "rarity": 3,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "469": {
+    "resourceSetName": "res002_no019",
+    "characterId": 2,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "470": {
+    "resourceSetName": "res001_no017",
+    "characterId": 1,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "471": {
+    "resourceSetName": "res023_no019",
+    "characterId": 23,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "472": {
+    "resourceSetName": "res026_no018",
+    "characterId": 26,
+    "rarity": 3,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "475": {
+    "resourceSetName": "res015_no017",
+    "characterId": 15,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "476": {
+    "resourceSetName": "res014_no018",
+    "characterId": 14,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "477": {
+    "resourceSetName": "res012_no019",
+    "characterId": 12,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "478": {
+    "resourceSetName": "res011_no018",
+    "characterId": 11,
+    "rarity": 3,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "481": {
+    "resourceSetName": "res007_no018",
+    "characterId": 7,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "482": {
+    "resourceSetName": "res008_no018",
+    "characterId": 8,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "483": {
+    "resourceSetName": "res025_no020",
+    "characterId": 25,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "484": {
+    "resourceSetName": "res005_no017",
+    "characterId": 5,
+    "rarity": 3,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "486": {
+    "resourceSetName": "res020_no019",
+    "characterId": 20,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "487": {
+    "resourceSetName": "res017_no020",
+    "characterId": 17,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "488": {
+    "resourceSetName": "res018_no019",
+    "characterId": 18,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "489": {
+    "resourceSetName": "res019_no020",
+    "characterId": 19,
+    "rarity": 3,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "493": {
+    "resourceSetName": "res004_no020",
+    "characterId": 4,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "494": {
+    "resourceSetName": "res001_no019",
+    "characterId": 1,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "495": {
+    "resourceSetName": "res002_no020",
+    "characterId": 2,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "496": {
+    "resourceSetName": "res022_no020",
+    "characterId": 22,
+    "rarity": 3,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "499": {
+    "resourceSetName": "res019_no021",
+    "characterId": 19,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "500": {
+    "resourceSetName": "res003_no021",
+    "characterId": 3,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "501": {
+    "resourceSetName": "res014_no020",
+    "characterId": 14,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "502": {
+    "resourceSetName": "res023_no020",
+    "characterId": 23,
+    "rarity": 3,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "504": {
+    "resourceSetName": "res012_no020",
+    "characterId": 12,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "505": {
+    "resourceSetName": "res009_no020",
+    "characterId": 9,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "506": {
+    "resourceSetName": "res026_no019",
+    "characterId": 26,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "507": {
+    "resourceSetName": "res010_no019",
+    "characterId": 10,
+    "rarity": 3,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "509": {
+    "resourceSetName": "res021_no028",
+    "characterId": 21,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "510": {
+    "resourceSetName": "res024_no022",
+    "characterId": 24,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "511": {
+    "resourceSetName": "res018_no020",
+    "characterId": 18,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "512": {
+    "resourceSetName": "res008_no019",
+    "characterId": 8,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "513": {
+    "resourceSetName": "res011_no020",
+    "characterId": 11,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "514": {
+    "resourceSetName": "res016_no019",
+    "characterId": 16,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "515": {
+    "resourceSetName": "res003_no022",
+    "characterId": 3,
+    "rarity": 3,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "517": {
+    "resourceSetName": "res005_no018",
+    "characterId": 5,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "518": {
+    "resourceSetName": "res006_no020",
+    "characterId": 6,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "519": {
+    "resourceSetName": "res007_no019",
+    "characterId": 7,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "520": {
+    "resourceSetName": "res008_no020",
+    "characterId": 8,
+    "rarity": 3,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "522": {
+    "resourceSetName": "res016_no020",
+    "characterId": 16,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "523": {
+    "resourceSetName": "res013_no019",
+    "characterId": 13,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "524": {
+    "resourceSetName": "res015_no018",
+    "characterId": 15,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "525": {
+    "resourceSetName": "res021_no029",
+    "characterId": 21,
+    "rarity": 3,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "528": {
+    "resourceSetName": "res009_no021",
+    "characterId": 9,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "529": {
+    "resourceSetName": "res004_no021",
+    "characterId": 4,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "530": {
+    "resourceSetName": "res005_no019",
+    "characterId": 5,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "531": {
+    "resourceSetName": "res006_no021",
+    "characterId": 6,
+    "rarity": 3,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "535": {
+    "resourceSetName": "res001_no020",
+    "characterId": 1,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "536": {
+    "resourceSetName": "res003_no024",
+    "characterId": 3,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "537": {
+    "resourceSetName": "res021_no030",
+    "characterId": 21,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "538": {
+    "resourceSetName": "res002_no021",
+    "characterId": 2,
+    "rarity": 3,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "540": {
+    "resourceSetName": "res019_no022",
+    "characterId": 19,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "541": {
+    "resourceSetName": "res017_no022",
+    "characterId": 17,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "542": {
+    "resourceSetName": "res018_no021",
+    "characterId": 18,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "543": {
+    "resourceSetName": "res020_no021",
+    "characterId": 20,
+    "rarity": 3,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "545": {
+    "resourceSetName": "res006_no022",
+    "characterId": 6,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "546": {
+    "resourceSetName": "res007_no020",
+    "characterId": 7,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "547": {
+    "resourceSetName": "res025_no022",
+    "characterId": 25,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "548": {
+    "resourceSetName": "res005_no020",
+    "characterId": 5,
+    "rarity": 3,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "551": {
+    "resourceSetName": "res011_no022",
+    "characterId": 11,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "552": {
+    "resourceSetName": "res012_no021",
+    "characterId": 12,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "553": {
+    "resourceSetName": "res024_no023",
+    "characterId": 24,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "554": {
+    "resourceSetName": "res009_no022",
+    "characterId": 9,
+    "rarity": 3,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "556": {
+    "resourceSetName": "res008_no023",
+    "characterId": 8,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "557": {
+    "resourceSetName": "res018_no022",
+    "characterId": 18,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "558": {
+    "resourceSetName": "res026_no022",
+    "characterId": 26,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "559": {
+    "resourceSetName": "res007_no021",
+    "characterId": 7,
+    "rarity": 3,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "563": {
+    "resourceSetName": "res019_no023",
+    "characterId": 19,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "564": {
+    "resourceSetName": "res020_no022",
+    "characterId": 20,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "565": {
+    "resourceSetName": "res013_no020",
+    "characterId": 13,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "566": {
+    "resourceSetName": "res010_no021",
+    "characterId": 10,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "567": {
+    "resourceSetName": "res022_no023",
+    "characterId": 22,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "568": {
+    "resourceSetName": "res015_no019",
+    "characterId": 15,
+    "rarity": 3,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "571": {
+    "resourceSetName": "res014_no022",
+    "characterId": 14,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "572": {
+    "resourceSetName": "res016_no021",
+    "characterId": 16,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "573": {
+    "resourceSetName": "res023_no023",
+    "characterId": 23,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "574": {
+    "resourceSetName": "res013_no021",
+    "characterId": 13,
+    "rarity": 3,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "576": {
+    "resourceSetName": "res003_no025",
+    "characterId": 3,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "577": {
+    "resourceSetName": "res002_no022",
+    "characterId": 2,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "578": {
+    "resourceSetName": "res004_no024",
+    "characterId": 4,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "579": {
+    "resourceSetName": "res021_no031",
+    "characterId": 21,
+    "rarity": 3,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "583": {
+    "resourceSetName": "res001_no022",
+    "characterId": 1,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "584": {
+    "resourceSetName": "res015_no021",
+    "characterId": 15,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "585": {
+    "resourceSetName": "res017_no023",
+    "characterId": 17,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "586": {
+    "resourceSetName": "res003_no026",
+    "characterId": 3,
+    "rarity": 3,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "589": {
+    "resourceSetName": "res008_no024",
+    "characterId": 8,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "590": {
+    "resourceSetName": "res005_no021",
+    "characterId": 5,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "591": {
+    "resourceSetName": "res007_no022",
+    "characterId": 7,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "592": {
+    "resourceSetName": "res006_no023",
+    "characterId": 6,
+    "rarity": 3,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "595": {
+    "resourceSetName": "res009_no023",
+    "characterId": 9,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "596": {
+    "resourceSetName": "res010_no022",
+    "characterId": 10,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "597": {
+    "resourceSetName": "res011_no024",
+    "characterId": 11,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "598": {
+    "resourceSetName": "res012_no022",
+    "characterId": 12,
+    "rarity": 3,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "600": {
+    "resourceSetName": "res012_no023",
+    "characterId": 12,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "601": {
+    "resourceSetName": "res016_no022",
+    "characterId": 16,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "602": {
+    "resourceSetName": "res026_no024",
+    "characterId": 26,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "603": {
+    "resourceSetName": "res021_no032",
+    "characterId": 21,
+    "rarity": 3,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "606": {
+    "resourceSetName": "res013_no022",
+    "characterId": 13,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "607": {
+    "resourceSetName": "res014_no023",
+    "characterId": 14,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "608": {
+    "resourceSetName": "res015_no022",
+    "characterId": 15,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "609": {
+    "resourceSetName": "res016_no023",
+    "characterId": 16,
+    "rarity": 3,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "612": {
+    "resourceSetName": "res017_no025",
+    "characterId": 17,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "613": {
+    "resourceSetName": "res019_no024",
+    "characterId": 19,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "614": {
+    "resourceSetName": "res020_no023",
+    "characterId": 20,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "615": {
+    "resourceSetName": "res026_no025",
+    "characterId": 26,
+    "rarity": 3,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "617": {
+    "resourceSetName": "res022_no024",
+    "characterId": 22,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "618": {
+    "resourceSetName": "res023_no025",
+    "characterId": 23,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "619": {
+    "resourceSetName": "res004_no025",
+    "characterId": 4,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "620": {
+    "resourceSetName": "res010_no023",
+    "characterId": 10,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "621": {
+    "resourceSetName": "res019_no025",
+    "characterId": 19,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "622": {
+    "resourceSetName": "res021_no033",
+    "characterId": 21,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "623": {
+    "resourceSetName": "res015_no023",
+    "characterId": 15,
+    "rarity": 3,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "624": {
+    "resourceSetName": "res002_no024",
+    "characterId": 2,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "625": {
+    "resourceSetName": "res003_no027",
+    "characterId": 3,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "626": {
+    "resourceSetName": "res025_no025",
+    "characterId": 25,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "627": {
+    "resourceSetName": "res001_no023",
+    "characterId": 1,
+    "rarity": 3,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "630": {
+    "resourceSetName": "res007_no024",
+    "characterId": 7,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "631": {
+    "resourceSetName": "res006_no024",
+    "characterId": 6,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "632": {
+    "resourceSetName": "res008_no025",
+    "characterId": 8,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "633": {
+    "resourceSetName": "res026_no026",
+    "characterId": 26,
+    "rarity": 3,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "636": {
+    "resourceSetName": "res020_no024",
+    "characterId": 20,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "637": {
+    "resourceSetName": "res018_no025",
+    "characterId": 18,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "638": {
+    "resourceSetName": "res024_no026",
+    "characterId": 24,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "639": {
+    "resourceSetName": "res023_no026",
+    "characterId": 23,
+    "rarity": 3,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "642": {
+    "resourceSetName": "res006_no025",
+    "characterId": 6,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "643": {
+    "resourceSetName": "res001_no024",
+    "characterId": 1,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "644": {
+    "resourceSetName": "res021_no034",
+    "characterId": 21,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "645": {
+    "resourceSetName": "res002_no026",
+    "characterId": 2,
+    "rarity": 3,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "648": {
+    "resourceSetName": "res015_no025",
+    "characterId": 15,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "649": {
+    "resourceSetName": "res016_no024",
+    "characterId": 16,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "650": {
+    "resourceSetName": "res026_no027",
+    "characterId": 26,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "651": {
+    "resourceSetName": "res014_no024",
+    "characterId": 14,
+    "rarity": 3,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "654": {
+    "resourceSetName": "res003_no028",
+    "characterId": 3,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "655": {
+    "resourceSetName": "res014_no025",
+    "characterId": 14,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "656": {
+    "resourceSetName": "res017_no026",
+    "characterId": 17,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "657": {
+    "resourceSetName": "res022_no025",
+    "characterId": 22,
+    "rarity": 3,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "659": {
+    "resourceSetName": "res010_no024",
+    "characterId": 10,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "660": {
+    "resourceSetName": "res012_no025",
+    "characterId": 12,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "661": {
+    "resourceSetName": "res022_no026",
+    "characterId": 22,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "662": {
+    "resourceSetName": "res011_no025",
+    "characterId": 11,
+    "rarity": 3,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "664": {
+    "resourceSetName": "res005_no024",
+    "characterId": 5,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "665": {
+    "resourceSetName": "res007_no025",
+    "characterId": 7,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "666": {
+    "resourceSetName": "res023_no027",
+    "characterId": 23,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "667": {
+    "resourceSetName": "res008_no026",
+    "characterId": 8,
+    "rarity": 3,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "670": {
+    "resourceSetName": "res009_no026",
+    "characterId": 9,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "671": {
+    "resourceSetName": "res011_no026",
+    "characterId": 11,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "672": {
+    "resourceSetName": "res016_no026",
+    "characterId": 16,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "673": {
+    "resourceSetName": "res008_no027",
+    "characterId": 8,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "674": {
+    "resourceSetName": "res013_no025",
+    "characterId": 13,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "675": {
+    "resourceSetName": "res018_no026",
+    "characterId": 18,
+    "rarity": 3,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "677": {
+    "resourceSetName": "res018_no027",
+    "characterId": 18,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "678": {
+    "resourceSetName": "res017_no027",
+    "characterId": 17,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "679": {
+    "resourceSetName": "res019_no028",
+    "characterId": 19,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "680": {
+    "resourceSetName": "res020_no026",
+    "characterId": 20,
+    "rarity": 3,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "683": {
+    "resourceSetName": "res001_no025",
+    "characterId": 1,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "684": {
+    "resourceSetName": "res004_no027",
+    "characterId": 4,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "685": {
+    "resourceSetName": "res026_no028",
+    "characterId": 26,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "686": {
+    "resourceSetName": "res003_no029",
+    "characterId": 3,
+    "rarity": 3,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "689": {
+    "resourceSetName": "res007_no027",
+    "characterId": 7,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "690": {
+    "resourceSetName": "res002_no028",
+    "characterId": 2,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "691": {
+    "resourceSetName": "res020_no027",
+    "characterId": 20,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "692": {
+    "resourceSetName": "res005_no025",
+    "characterId": 5,
+    "rarity": 3,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "694": {
+    "resourceSetName": "res009_no027",
+    "characterId": 9,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "695": {
+    "resourceSetName": "res011_no027",
+    "characterId": 11,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "696": {
+    "resourceSetName": "res012_no026",
+    "characterId": 12,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "697": {
+    "resourceSetName": "res010_no026",
+    "characterId": 10,
+    "rarity": 3,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "700": {
+    "resourceSetName": "res014_no027",
+    "characterId": 14,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "701": {
+    "resourceSetName": "res015_no027",
+    "characterId": 15,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "702": {
+    "resourceSetName": "res025_no026",
+    "characterId": 25,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "703": {
+    "resourceSetName": "res016_no027",
+    "characterId": 16,
+    "rarity": 3,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "707": {
+    "resourceSetName": "res021_no037",
+    "characterId": 21,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "708": {
+    "resourceSetName": "res022_no027",
+    "characterId": 22,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "709": {
+    "resourceSetName": "res023_no028",
+    "characterId": 23,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "710": {
+    "resourceSetName": "res024_no028",
+    "characterId": 24,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "711": {
+    "resourceSetName": "res025_no027",
+    "characterId": 25,
+    "rarity": 3,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "714": {
+    "resourceSetName": "res002_no029",
+    "characterId": 2,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "715": {
+    "resourceSetName": "res004_no028",
+    "characterId": 4,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "716": {
+    "resourceSetName": "res006_no027",
+    "characterId": 6,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "717": {
+    "resourceSetName": "res014_no029",
+    "characterId": 14,
+    "rarity": 3,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "719": {
+    "resourceSetName": "res010_no027",
+    "characterId": 10,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "720": {
+    "resourceSetName": "res016_no028",
+    "characterId": 16,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "721": {
+    "resourceSetName": "res020_no029",
+    "characterId": 20,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "722": {
+    "resourceSetName": "res013_no027",
+    "characterId": 13,
+    "rarity": 3,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "760": {
+    "resourceSetName": "res025_no030",
+    "characterId": 25,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "761": {
+    "resourceSetName": "res026_no032",
+    "characterId": 26,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "762": {
+    "resourceSetName": "res001_no028",
+    "characterId": 1,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "763": {
+    "resourceSetName": "res005_no027",
+    "characterId": 5,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "764": {
+    "resourceSetName": "res013_no029",
+    "characterId": 13,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "765": {
+    "resourceSetName": "res017_no029",
+    "characterId": 17,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "766": {
+    "resourceSetName": "res009_no029",
+    "characterId": 9,
+    "rarity": 3,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "768": {
+    "resourceSetName": "res011_no030",
+    "characterId": 11,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "769": {
+    "resourceSetName": "res009_no030",
+    "characterId": 9,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "770": {
+    "resourceSetName": "res024_no031",
+    "characterId": 24,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "771": {
+    "resourceSetName": "res012_no028",
+    "characterId": 12,
+    "rarity": 3,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "773": {
+    "resourceSetName": "res004_no030",
+    "characterId": 4,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "774": {
+    "resourceSetName": "res003_no031",
+    "characterId": 3,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "775": {
+    "resourceSetName": "res022_no030",
+    "characterId": 22,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "776": {
+    "resourceSetName": "res001_no029",
+    "characterId": 1,
+    "rarity": 3,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "779": {
+    "resourceSetName": "res008_no029",
+    "characterId": 8,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "780": {
+    "resourceSetName": "res006_no030",
+    "characterId": 6,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "781": {
+    "resourceSetName": "res007_no030",
+    "characterId": 7,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "782": {
+    "resourceSetName": "res023_no031",
+    "characterId": 23,
+    "rarity": 3,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "785": {
+    "resourceSetName": "res017_no030",
+    "characterId": 17,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "786": {
+    "resourceSetName": "res018_no029",
+    "characterId": 18,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "787": {
+    "resourceSetName": "res019_no030",
+    "characterId": 19,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "788": {
+    "resourceSetName": "res020_no031",
+    "characterId": 20,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "791": {
+    "resourceSetName": "res013_no030",
+    "characterId": 13,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "792": {
+    "resourceSetName": "res016_no030",
+    "characterId": 16,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "793": {
+    "resourceSetName": "res025_no032",
+    "characterId": 25,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "794": {
+    "resourceSetName": "res014_no031",
+    "characterId": 14,
+    "rarity": 3,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "796": {
+    "resourceSetName": "res015_no030",
+    "characterId": 15,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "797": {
+    "resourceSetName": "res011_no032",
+    "characterId": 11,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "798": {
+    "resourceSetName": "res023_no032",
+    "characterId": 23,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "799": {
+    "resourceSetName": "res010_no030",
+    "characterId": 10,
+    "rarity": 3,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "801": {
+    "resourceSetName": "res021_no045",
+    "characterId": 21,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "802": {
+    "resourceSetName": "res002_no032",
+    "characterId": 2,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "803": {
+    "resourceSetName": "res007_no031",
+    "characterId": 7,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "804": {
+    "resourceSetName": "res012_no030",
+    "characterId": 12,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "805": {
+    "resourceSetName": "res014_no032",
+    "characterId": 14,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "806": {
+    "resourceSetName": "res019_no031",
+    "characterId": 19,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "828": {
+    "resourceSetName": "res005_no030",
+    "characterId": 5,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "829": {
+    "resourceSetName": "res004_no032",
+    "characterId": 4,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "830": {
+    "resourceSetName": "res024_no033",
+    "characterId": 24,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "831": {
+    "resourceSetName": "res001_no031",
+    "characterId": 1,
+    "rarity": 3,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "833": {
+    "resourceSetName": "res017_no032",
+    "characterId": 17,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "834": {
+    "resourceSetName": "res018_no031",
+    "characterId": 18,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "835": {
+    "resourceSetName": "res026_no034",
+    "characterId": 26,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "836": {
+    "resourceSetName": "res019_no032",
+    "characterId": 19,
+    "rarity": 3,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "840": {
+    "resourceSetName": "res005_no031",
+    "characterId": 5,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "841": {
+    "resourceSetName": "res008_no032",
+    "characterId": 8,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "842": {
+    "resourceSetName": "res020_no033",
+    "characterId": 20,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "843": {
+    "resourceSetName": "res004_no033",
+    "characterId": 4,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "844": {
+    "resourceSetName": "res025_no034",
+    "characterId": 25,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "845": {
+    "resourceSetName": "res018_no032",
+    "characterId": 18,
+    "rarity": 3,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "848": {
+    "resourceSetName": "res009_no032",
+    "characterId": 9,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "849": {
+    "resourceSetName": "res010_no032",
+    "characterId": 10,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "850": {
+    "resourceSetName": "res011_no034",
+    "characterId": 11,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "851": {
+    "resourceSetName": "res012_no031",
+    "characterId": 12,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "854": {
+    "resourceSetName": "res016_no032",
+    "characterId": 16,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "855": {
+    "resourceSetName": "res015_no032",
+    "characterId": 15,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "856": {
+    "resourceSetName": "res022_no034",
+    "characterId": 22,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "857": {
+    "resourceSetName": "res013_no032",
+    "characterId": 13,
+    "rarity": 3,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "861": {
+    "resourceSetName": "res009_no033",
+    "characterId": 9,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "862": {
+    "resourceSetName": "res006_no033",
+    "characterId": 6,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "863": {
+    "resourceSetName": "res019_no033",
+    "characterId": 19,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "864": {
+    "resourceSetName": "res012_no032",
+    "characterId": 12,
+    "rarity": 3,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "867": {
+    "resourceSetName": "res003_no034",
+    "characterId": 3,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "868": {
+    "resourceSetName": "res001_no032",
+    "characterId": 1,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "869": {
+    "resourceSetName": "res026_no035",
+    "characterId": 26,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "870": {
+    "resourceSetName": "res004_no035",
+    "characterId": 4,
+    "rarity": 3,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "873": {
+    "resourceSetName": "res005_no032",
+    "characterId": 5,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "874": {
+    "resourceSetName": "res006_no034",
+    "characterId": 6,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "875": {
+    "resourceSetName": "res021_no046",
+    "characterId": 21,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "876": {
+    "resourceSetName": "res007_no032",
+    "characterId": 7,
+    "rarity": 3,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "878": {
+    "resourceSetName": "res017_no034",
+    "characterId": 17,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "879": {
+    "resourceSetName": "res001_no033",
+    "characterId": 1,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "880": {
+    "resourceSetName": "res018_no034",
+    "characterId": 18,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "881": {
+    "resourceSetName": "res005_no033",
+    "characterId": 5,
+    "rarity": 3,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "884": {
+    "resourceSetName": "res013_no033",
+    "characterId": 13,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "885": {
+    "resourceSetName": "res014_no034",
+    "characterId": 14,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "886": {
+    "resourceSetName": "res015_no033",
+    "characterId": 15,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "887": {
+    "resourceSetName": "res016_no033",
+    "characterId": 16,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "890": {
+    "resourceSetName": "res012_no033",
+    "characterId": 12,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "891": {
+    "resourceSetName": "res010_no033",
+    "characterId": 10,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "892": {
+    "resourceSetName": "res025_no036",
+    "characterId": 25,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "893": {
+    "resourceSetName": "res026_no038",
+    "characterId": 26,
+    "rarity": 3,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "895": {
+    "resourceSetName": "res002_no035",
+    "characterId": 2,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "896": {
+    "resourceSetName": "res013_no034",
+    "characterId": 13,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "897": {
+    "resourceSetName": "res014_no035",
+    "characterId": 14,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "898": {
+    "resourceSetName": "res011_no035",
+    "characterId": 11,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "899": {
+    "resourceSetName": "res003_no035",
+    "characterId": 3,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "900": {
+    "resourceSetName": "res026_no039",
+    "characterId": 26,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "901": {
+    "resourceSetName": "res005_no034",
+    "characterId": 5,
+    "rarity": 3,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "903": {
+    "resourceSetName": "res019_no034",
+    "characterId": 19,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "904": {
+    "resourceSetName": "res018_no035",
+    "characterId": 18,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "905": {
+    "resourceSetName": "res023_no036",
+    "characterId": 23,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "906": {
+    "resourceSetName": "res017_no035",
+    "characterId": 17,
+    "rarity": 3,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "909": {
+    "resourceSetName": "res002_no036",
+    "characterId": 2,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "910": {
+    "resourceSetName": "res004_no036",
+    "characterId": 4,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "911": {
+    "resourceSetName": "res025_no037",
+    "characterId": 25,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "912": {
+    "resourceSetName": "res001_no034",
+    "characterId": 1,
+    "rarity": 3,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "915": {
+    "resourceSetName": "res010_no034",
+    "characterId": 10,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "916": {
+    "resourceSetName": "res009_no036",
+    "characterId": 9,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "917": {
+    "resourceSetName": "res012_no034",
+    "characterId": 12,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "918": {
+    "resourceSetName": "res024_no036",
+    "characterId": 24,
+    "rarity": 3,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "921": {
+    "resourceSetName": "res005_no036",
+    "characterId": 5,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "922": {
+    "resourceSetName": "res006_no035",
+    "characterId": 6,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "923": {
+    "resourceSetName": "res007_no035",
+    "characterId": 7,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "924": {
+    "resourceSetName": "res008_no034",
+    "characterId": 8,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "927": {
+    "resourceSetName": "res014_no036",
+    "characterId": 14,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "928": {
+    "resourceSetName": "res013_no036",
+    "characterId": 13,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "929": {
+    "resourceSetName": "res023_no037",
+    "characterId": 23,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "930": {
+    "resourceSetName": "res016_no035",
+    "characterId": 16,
+    "rarity": 3,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "933": {
+    "resourceSetName": "res005_no037",
+    "characterId": 5,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "934": {
+    "resourceSetName": "res015_no035",
+    "characterId": 15,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "935": {
+    "resourceSetName": "res024_no037",
+    "characterId": 24,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "936": {
+    "resourceSetName": "res004_no037",
+    "characterId": 4,
+    "rarity": 3,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "938": {
+    "resourceSetName": "res006_no036",
+    "characterId": 6,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "939": {
+    "resourceSetName": "res008_no035",
+    "characterId": 8,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "940": {
+    "resourceSetName": "res026_no040",
+    "characterId": 26,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "941": {
+    "resourceSetName": "res007_no036",
+    "characterId": 7,
+    "rarity": 3,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "943": {
+    "resourceSetName": "res018_no036",
+    "characterId": 18,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "944": {
+    "resourceSetName": "res020_no035",
+    "characterId": 20,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "945": {
+    "resourceSetName": "res022_no036",
+    "characterId": 22,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "946": {
+    "resourceSetName": "res019_no037",
+    "characterId": 19,
+    "rarity": 3,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "949": {
+    "resourceSetName": "res017_no037",
+    "characterId": 17,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "950": {
+    "resourceSetName": "res025_no038",
+    "characterId": 25,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "951": {
+    "resourceSetName": "res009_no037",
+    "characterId": 9,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "952": {
+    "resourceSetName": "res011_no037",
+    "characterId": 11,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "953": {
+    "resourceSetName": "res021_no047",
+    "characterId": 21,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "954": {
+    "resourceSetName": "res010_no035",
+    "characterId": 10,
+    "rarity": 3,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "956": {
+    "resourceSetName": "res013_no037",
+    "characterId": 13,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "957": {
+    "resourceSetName": "res016_no037",
+    "characterId": 16,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "958": {
+    "resourceSetName": "res024_no038",
+    "characterId": 24,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "959": {
+    "resourceSetName": "res014_no037",
+    "characterId": 14,
+    "rarity": 3,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "961": {
+    "resourceSetName": "res001_no035",
+    "characterId": 1,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "962": {
+    "resourceSetName": "res002_no038",
+    "characterId": 2,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "963": {
+    "resourceSetName": "res003_no037",
+    "characterId": 3,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "964": {
+    "resourceSetName": "res004_no038",
+    "characterId": 4,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "968": {
+    "resourceSetName": "res007_no037",
+    "characterId": 7,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "969": {
+    "resourceSetName": "res006_no037",
+    "characterId": 6,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "970": {
+    "resourceSetName": "res008_no036",
+    "characterId": 8,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "971": {
+    "resourceSetName": "res022_no037",
+    "characterId": 22,
+    "rarity": 3,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "973": {
+    "resourceSetName": "res012_no037",
+    "characterId": 12,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "974": {
+    "resourceSetName": "res017_no038",
+    "characterId": 17,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "975": {
+    "resourceSetName": "res010_no037",
+    "characterId": 10,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "976": {
+    "resourceSetName": "res018_no037",
+    "characterId": 18,
+    "rarity": 3,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "979": {
+    "resourceSetName": "res021_no048",
+    "characterId": 21,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "980": {
+    "resourceSetName": "res022_no038",
+    "characterId": 22,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "981": {
+    "resourceSetName": "res023_no039",
+    "characterId": 23,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "982": {
+    "resourceSetName": "res024_no040",
+    "characterId": 24,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "983": {
+    "resourceSetName": "res025_no039",
+    "characterId": 25,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "984": {
+    "resourceSetName": "res026_no041",
+    "characterId": 26,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "987": {
+    "resourceSetName": "res014_no038",
+    "characterId": 14,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "988": {
+    "resourceSetName": "res018_no038",
+    "characterId": 18,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "989": {
+    "resourceSetName": "res003_no038",
+    "characterId": 3,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "990": {
+    "resourceSetName": "res008_no037",
+    "characterId": 8,
+    "rarity": 3,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "993": {
+    "resourceSetName": "res006_no038",
+    "characterId": 6,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "994": {
+    "resourceSetName": "res011_no038",
+    "characterId": 11,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "995": {
+    "resourceSetName": "res013_no038",
+    "characterId": 13,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "996": {
+    "resourceSetName": "res025_no040",
+    "characterId": 25,
+    "rarity": 3,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "998": {
+    "resourceSetName": "res001_no037",
+    "characterId": 1,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "999": {
+    "resourceSetName": "res002_no040",
+    "characterId": 2,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "1000": {
+    "resourceSetName": "res023_no040",
+    "characterId": 23,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "1001": {
+    "resourceSetName": "res003_no039",
+    "characterId": 3,
+    "rarity": 3,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "1003": {
+    "resourceSetName": "res016_no038",
+    "characterId": 16,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "1004": {
+    "resourceSetName": "res022_no039",
+    "characterId": 22,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "1005": {
+    "resourceSetName": "res015_no038",
+    "characterId": 15,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "1006": {
+    "resourceSetName": "res004_no040",
+    "characterId": 4,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "1007": {
+    "resourceSetName": "res007_no038",
+    "characterId": 7,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "1008": {
+    "resourceSetName": "res012_no038",
+    "characterId": 12,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "1009": {
+    "resourceSetName": "res019_no038",
+    "characterId": 19,
+    "rarity": 3,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "1011": {
+    "resourceSetName": "res020_no038",
+    "characterId": 20,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "1012": {
+    "resourceSetName": "res019_no039",
+    "characterId": 19,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "1013": {
+    "resourceSetName": "res026_no042",
+    "characterId": 26,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "1014": {
+    "resourceSetName": "res018_no039",
+    "characterId": 18,
+    "rarity": 3,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "1016": {
+    "resourceSetName": "res011_no039",
+    "characterId": 11,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "1017": {
+    "resourceSetName": "res009_no038",
+    "characterId": 9,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "1018": {
+    "resourceSetName": "res010_no039",
+    "characterId": 10,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "1019": {
+    "resourceSetName": "res026_no043",
+    "characterId": 26,
+    "rarity": 3,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "1022": {
+    "resourceSetName": "res002_no041",
+    "characterId": 2,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "1023": {
+    "resourceSetName": "res001_no038",
+    "characterId": 1,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "1024": {
+    "resourceSetName": "res003_no041",
+    "characterId": 3,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "1025": {
+    "resourceSetName": "res024_no041",
+    "characterId": 24,
+    "rarity": 3,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "1028": {
+    "resourceSetName": "res004_no042",
+    "characterId": 4,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "1029": {
+    "resourceSetName": "res008_no038",
+    "characterId": 8,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "1030": {
+    "resourceSetName": "res022_no040",
+    "characterId": 22,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "1031": {
+    "resourceSetName": "res002_no042",
+    "characterId": 2,
+    "rarity": 3,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "1034": {
+    "resourceSetName": "res015_no039",
+    "characterId": 15,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "1035": {
+    "resourceSetName": "res014_no040",
+    "characterId": 14,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "1036": {
+    "resourceSetName": "res023_no041",
+    "characterId": 23,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "1037": {
+    "resourceSetName": "res013_no040",
+    "characterId": 13,
+    "rarity": 3,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "1039": {
+    "resourceSetName": "res019_no040",
+    "characterId": 19,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "1040": {
+    "resourceSetName": "res020_no039",
+    "characterId": 20,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "1041": {
+    "resourceSetName": "res025_no042",
+    "characterId": 25,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "1042": {
+    "resourceSetName": "res017_no040",
+    "characterId": 17,
+    "rarity": 3,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "1045": {
+    "resourceSetName": "res008_no040",
+    "characterId": 8,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "1046": {
+    "resourceSetName": "res005_no039",
+    "characterId": 5,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "1047": {
+    "resourceSetName": "res021_no050",
+    "characterId": 21,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "1048": {
+    "resourceSetName": "res006_no040",
+    "characterId": 6,
+    "rarity": 3,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "1050": {
+    "resourceSetName": "res016_no040",
+    "characterId": 16,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "1051": {
+    "resourceSetName": "res009_no039",
+    "characterId": 9,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "1052": {
+    "resourceSetName": "res024_no042",
+    "characterId": 24,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "1053": {
+    "resourceSetName": "res011_no041",
+    "characterId": 11,
+    "rarity": 3,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "1057": {
+    "resourceSetName": "res006_no041",
+    "characterId": 6,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "1058": {
+    "resourceSetName": "res010_no040",
+    "characterId": 10,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "1059": {
+    "resourceSetName": "res011_no042",
+    "characterId": 11,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "1060": {
+    "resourceSetName": "res007_no040",
+    "characterId": 7,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "1061": {
+    "resourceSetName": "res026_no044",
+    "characterId": 26,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "1062": {
+    "resourceSetName": "res012_no040",
+    "characterId": 12,
+    "rarity": 3,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "1065": {
+    "resourceSetName": "res012_no041",
+    "characterId": 12,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "1066": {
+    "resourceSetName": "res009_no040",
+    "characterId": 9,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "1067": {
+    "resourceSetName": "res023_no043",
+    "characterId": 23,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "1068": {
+    "resourceSetName": "res011_no043",
+    "characterId": 11,
+    "rarity": 3,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "1096": {
+    "resourceSetName": "res021_no052",
+    "characterId": 21,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "1097": {
+    "resourceSetName": "res017_no042",
+    "characterId": 17,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "1098": {
+    "resourceSetName": "res002_no044",
+    "characterId": 2,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "1099": {
+    "resourceSetName": "res022_no043",
+    "characterId": 22,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "1100": {
+    "resourceSetName": "res009_no042",
+    "characterId": 9,
+    "rarity": 3,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "1104": {
+    "resourceSetName": "res008_no042",
+    "characterId": 8,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "1105": {
+    "resourceSetName": "res018_no043",
+    "characterId": 18,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "1106": {
+    "resourceSetName": "res023_no045",
+    "characterId": 23,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "1107": {
+    "resourceSetName": "res020_no041",
+    "characterId": 20,
+    "rarity": 3,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "1110": {
+    "resourceSetName": "res006_no044",
+    "characterId": 6,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "1111": {
+    "resourceSetName": "res005_no041",
+    "characterId": 5,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "1112": {
+    "resourceSetName": "res024_no045",
+    "characterId": 24,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "1113": {
+    "resourceSetName": "res008_no043",
+    "characterId": 8,
+    "rarity": 3,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "1115": {
+    "resourceSetName": "res011_no045",
+    "characterId": 11,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "1116": {
+    "resourceSetName": "res012_no043",
+    "characterId": 12,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "1117": {
+    "resourceSetName": "res013_no042",
+    "characterId": 13,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "1118": {
+    "resourceSetName": "res016_no042",
+    "characterId": 16,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "1122": {
+    "resourceSetName": "res003_no043",
+    "characterId": 3,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "1123": {
+    "resourceSetName": "res015_no041",
+    "characterId": 15,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "1124": {
+    "resourceSetName": "res025_no044",
+    "characterId": 25,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "1125": {
+    "resourceSetName": "res001_no041",
+    "characterId": 1,
+    "rarity": 3,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "1127": {
+    "resourceSetName": "res002_no045",
+    "characterId": 2,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "1128": {
+    "resourceSetName": "res014_no043",
+    "characterId": 14,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "1129": {
+    "resourceSetName": "res022_no044",
+    "characterId": 22,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "1130": {
+    "resourceSetName": "res004_no045",
+    "characterId": 4,
+    "rarity": 3,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "1133": {
+    "resourceSetName": "res013_no043",
+    "characterId": 13,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "1134": {
+    "resourceSetName": "res007_no043",
+    "characterId": 7,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "1135": {
+    "resourceSetName": "res020_no042",
+    "characterId": 20,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "1136": {
+    "resourceSetName": "res015_no042",
+    "characterId": 15,
+    "rarity": 3,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "1139": {
+    "resourceSetName": "res017_no044",
+    "characterId": 17,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "1140": {
+    "resourceSetName": "res018_no044",
+    "characterId": 18,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "1141": {
+    "resourceSetName": "res019_no043",
+    "characterId": 19,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "1142": {
+    "resourceSetName": "res022_no045",
+    "characterId": 22,
+    "rarity": 3,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "1144": {
+    "resourceSetName": "res003_no044",
+    "characterId": 3,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "1145": {
+    "resourceSetName": "res024_no046",
+    "characterId": 24,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "1146": {
+    "resourceSetName": "res004_no046",
+    "characterId": 4,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "1147": {
+    "resourceSetName": "res001_no042",
+    "characterId": 1,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "1148": {
+    "resourceSetName": "res021_no053",
+    "characterId": 21,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "1149": {
+    "resourceSetName": "res002_no046",
+    "characterId": 2,
+    "rarity": 3,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "1151": {
+    "resourceSetName": "res009_no044",
+    "characterId": 9,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "1152": {
+    "resourceSetName": "res010_no043",
+    "characterId": 10,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "1153": {
+    "resourceSetName": "res011_no046",
+    "characterId": 11,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "1154": {
+    "resourceSetName": "res012_no044",
+    "characterId": 12,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "1156": {
+    "resourceSetName": "res014_no044",
+    "characterId": 14,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "1157": {
+    "resourceSetName": "res015_no043",
+    "characterId": 15,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "1158": {
+    "resourceSetName": "res026_no048",
+    "characterId": 26,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "1159": {
+    "resourceSetName": "res016_no044",
+    "characterId": 16,
+    "rarity": 3,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "1162": {
+    "resourceSetName": "res018_no045",
+    "characterId": 18,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "1163": {
+    "resourceSetName": "res017_no045",
+    "characterId": 17,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "1164": {
+    "resourceSetName": "res023_no047",
+    "characterId": 23,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "1165": {
+    "resourceSetName": "res020_no044",
+    "characterId": 20,
+    "rarity": 3,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "1167": {
+    "resourceSetName": "res021_no054",
+    "characterId": 21,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "1169": {
+    "resourceSetName": "res013_no045",
+    "characterId": 13,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "1170": {
+    "resourceSetName": "res014_no045",
+    "characterId": 14,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "1171": {
+    "resourceSetName": "res015_no044",
+    "characterId": 15,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "1172": {
+    "resourceSetName": "res016_no045",
+    "characterId": 16,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "1174": {
+    "resourceSetName": "res007_no045",
+    "characterId": 7,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "1175": {
+    "resourceSetName": "res005_no044",
+    "characterId": 5,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "1176": {
+    "resourceSetName": "res025_no046",
+    "characterId": 25,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "1177": {
+    "resourceSetName": "res006_no045",
+    "characterId": 6,
+    "rarity": 3,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "1180": {
+    "resourceSetName": "res009_no045",
+    "characterId": 9,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "1181": {
+    "resourceSetName": "res012_no046",
+    "characterId": 12,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "1182": {
+    "resourceSetName": "res021_no055",
+    "characterId": 21,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "1183": {
+    "resourceSetName": "res011_no047",
+    "characterId": 11,
+    "rarity": 3,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "1185": {
+    "resourceSetName": "res017_no046",
+    "characterId": 17,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "1186": {
+    "resourceSetName": "res018_no046",
+    "characterId": 18,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "1187": {
+    "resourceSetName": "res019_no046",
+    "characterId": 19,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "1188": {
+    "resourceSetName": "res020_no045",
+    "characterId": 20,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "1189": {
+    "resourceSetName": "res001_no043",
+    "characterId": 1,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "1190": {
+    "resourceSetName": "res002_no048",
+    "characterId": 2,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "1191": {
+    "resourceSetName": "res003_no045",
+    "characterId": 3,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "1192": {
+    "resourceSetName": "res004_no047",
+    "characterId": 4,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "1194": {
+    "resourceSetName": "res019_no047",
+    "characterId": 19,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "1195": {
+    "resourceSetName": "res026_no049",
+    "characterId": 26,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "1196": {
+    "resourceSetName": "res016_no047",
+    "characterId": 16,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "1197": {
+    "resourceSetName": "res013_no047",
+    "characterId": 13,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "1198": {
+    "resourceSetName": "res015_no045",
+    "characterId": 15,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "1199": {
+    "resourceSetName": "res024_no047",
+    "characterId": 24,
+    "rarity": 3,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "1201": {
+    "resourceSetName": "res003_no046",
+    "characterId": 3,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "1202": {
+    "resourceSetName": "res001_no044",
+    "characterId": 1,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "1203": {
+    "resourceSetName": "res022_no047",
+    "characterId": 22,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "1204": {
+    "resourceSetName": "res004_no048",
+    "characterId": 4,
+    "rarity": 3,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "1207": {
+    "resourceSetName": "res005_no045",
+    "characterId": 5,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "1208": {
+    "resourceSetName": "res006_no046",
+    "characterId": 6,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "1209": {
+    "resourceSetName": "res008_no045",
+    "characterId": 8,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "1210": {
+    "resourceSetName": "res007_no046",
+    "characterId": 7,
+    "rarity": 3,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "1213": {
+    "resourceSetName": "res010_no046",
+    "characterId": 10,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "1214": {
+    "resourceSetName": "res012_no047",
+    "characterId": 12,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "1215": {
+    "resourceSetName": "res024_no048",
+    "characterId": 24,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "1216": {
+    "resourceSetName": "res009_no046",
+    "characterId": 9,
+    "rarity": 3,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "1218": {
+    "resourceSetName": "res005_no046",
+    "characterId": 5,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "1219": {
+    "resourceSetName": "res006_no047",
+    "characterId": 6,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "1220": {
+    "resourceSetName": "res007_no047",
+    "characterId": 7,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "1221": {
+    "resourceSetName": "res008_no046",
+    "characterId": 8,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "1223": {
+    "resourceSetName": "res020_no046",
+    "characterId": 20,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "1224": {
+    "resourceSetName": "res019_no048",
+    "characterId": 19,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "1225": {
+    "resourceSetName": "res023_no048",
+    "characterId": 23,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "1226": {
+    "resourceSetName": "res017_no047",
+    "characterId": 17,
+    "rarity": 3,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "1229": {
+    "resourceSetName": "res013_no048",
+    "characterId": 13,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "1230": {
+    "resourceSetName": "res014_no047",
+    "characterId": 14,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "1231": {
+    "resourceSetName": "res016_no048",
+    "characterId": 16,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "1232": {
+    "resourceSetName": "res021_no056",
+    "characterId": 21,
+    "rarity": 3,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "1235": {
+    "resourceSetName": "res021_no058",
+    "characterId": 21,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "1236": {
+    "resourceSetName": "res022_no048",
+    "characterId": 22,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "1237": {
+    "resourceSetName": "res023_no049",
+    "characterId": 23,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "1238": {
+    "resourceSetName": "res024_no049",
+    "characterId": 24,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "1239": {
+    "resourceSetName": "res025_no048",
+    "characterId": 25,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "1240": {
+    "resourceSetName": "res026_no051",
+    "characterId": 26,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "1242": {
+    "resourceSetName": "res021_no059",
+    "characterId": 21,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "1243": {
+    "resourceSetName": "res004_no049",
+    "characterId": 4,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "1244": {
+    "resourceSetName": "res009_no047",
+    "characterId": 9,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "1245": {
+    "resourceSetName": "res015_no048",
+    "characterId": 15,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "1252": {
+    "resourceSetName": "res005_no047",
+    "characterId": 5,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "1253": {
+    "resourceSetName": "res011_no049",
+    "characterId": 11,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "1254": {
+    "resourceSetName": "res010_no048",
+    "characterId": 10,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "1255": {
+    "resourceSetName": "res002_no049",
+    "characterId": 2,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "1256": {
+    "resourceSetName": "res006_no048",
+    "characterId": 6,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "1257": {
+    "resourceSetName": "res020_no049",
+    "characterId": 20,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "1258": {
+    "resourceSetName": "res014_no049",
+    "characterId": 14,
+    "rarity": 3,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "1261": {
+    "resourceSetName": "res001_no046",
+    "characterId": 1,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "1262": {
+    "resourceSetName": "res003_no048",
+    "characterId": 3,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "1263": {
+    "resourceSetName": "res004_no050",
+    "characterId": 4,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "1264": {
+    "resourceSetName": "res025_no050",
+    "characterId": 25,
+    "rarity": 3,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "1266": {
+    "resourceSetName": "res008_no048",
+    "characterId": 8,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "1267": {
+    "resourceSetName": "res007_no048",
+    "characterId": 7,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "1268": {
+    "resourceSetName": "res025_no051",
+    "characterId": 25,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "1269": {
+    "resourceSetName": "res005_no048",
+    "characterId": 5,
+    "rarity": 3,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "1272": {
+    "resourceSetName": "res019_no049",
+    "characterId": 19,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "1273": {
+    "resourceSetName": "res017_no048",
+    "characterId": 17,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "1274": {
+    "resourceSetName": "res026_no052",
+    "characterId": 26,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "1275": {
+    "resourceSetName": "res021_no061",
+    "characterId": 21,
+    "rarity": 3,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "1279": {
+    "resourceSetName": "res015_no049",
+    "characterId": 15,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "1280": {
+    "resourceSetName": "res014_no050",
+    "characterId": 14,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "1281": {
+    "resourceSetName": "res022_no049",
+    "characterId": 22,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "1282": {
+    "resourceSetName": "res013_no049",
+    "characterId": 13,
+    "rarity": 3,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "1284": {
+    "resourceSetName": "res011_no051",
+    "characterId": 11,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "1285": {
+    "resourceSetName": "res009_no048",
+    "characterId": 9,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "1286": {
+    "resourceSetName": "res010_no049",
+    "characterId": 10,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "1287": {
+    "resourceSetName": "res023_no050",
+    "characterId": 23,
+    "rarity": 3,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "1289": {
+    "resourceSetName": "res002_no051",
+    "characterId": 2,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "1290": {
+    "resourceSetName": "res001_no047",
+    "characterId": 1,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "1291": {
+    "resourceSetName": "res003_no050",
+    "characterId": 3,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "1292": {
+    "resourceSetName": "res024_no050",
+    "characterId": 24,
+    "rarity": 3,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "1295": {
+    "resourceSetName": "res018_no049",
+    "characterId": 18,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "1296": {
+    "resourceSetName": "res009_no049",
+    "characterId": 9,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "1297": {
+    "resourceSetName": "res024_no051",
+    "characterId": 24,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "1298": {
+    "resourceSetName": "res014_no051",
+    "characterId": 14,
+    "rarity": 3,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "1300": {
+    "resourceSetName": "res006_no051",
+    "characterId": 6,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "1301": {
+    "resourceSetName": "res007_no049",
+    "characterId": 7,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "1302": {
+    "resourceSetName": "res023_no051",
+    "characterId": 23,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "1303": {
+    "resourceSetName": "res008_no050",
+    "characterId": 8,
+    "rarity": 3,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "1307": {
+    "resourceSetName": "res004_no052",
+    "characterId": 4,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "1308": {
+    "resourceSetName": "res014_no052",
+    "characterId": 14,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "1309": {
+    "resourceSetName": "res005_no050",
+    "characterId": 5,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "1310": {
+    "resourceSetName": "res012_no049",
+    "characterId": 12,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "1311": {
+    "resourceSetName": "res022_no051",
+    "characterId": 22,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "1312": {
+    "resourceSetName": "res013_no050",
+    "characterId": 13,
+    "rarity": 3,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "1315": {
+    "resourceSetName": "res017_no049",
+    "characterId": 17,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "1316": {
+    "resourceSetName": "res019_no050",
+    "characterId": 19,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "1317": {
+    "resourceSetName": "res025_no053",
+    "characterId": 25,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "1318": {
+    "resourceSetName": "res020_no050",
+    "characterId": 20,
+    "rarity": 3,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "1320": {
+    "resourceSetName": "res012_no050",
+    "characterId": 12,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "1321": {
+    "resourceSetName": "res010_no050",
+    "characterId": 10,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "1322": {
+    "resourceSetName": "res026_no053",
+    "characterId": 26,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "1323": {
+    "resourceSetName": "res011_no052",
+    "characterId": 11,
+    "rarity": 3,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "1327": {
+    "resourceSetName": "res013_no051",
+    "characterId": 13,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "1328": {
+    "resourceSetName": "res011_no053",
+    "characterId": 11,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "1329": {
+    "resourceSetName": "res020_no051",
+    "characterId": 20,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "1330": {
+    "resourceSetName": "res016_no051",
+    "characterId": 16,
+    "rarity": 3,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "1333": {
+    "resourceSetName": "res004_no054",
+    "characterId": 4,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "1334": {
+    "resourceSetName": "res002_no052",
+    "characterId": 2,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "1335": {
+    "resourceSetName": "res024_no053",
+    "characterId": 24,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "1336": {
+    "resourceSetName": "res001_no049",
+    "characterId": 1,
+    "rarity": 3,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "1339": {
+    "resourceSetName": "res014_no053",
+    "characterId": 14,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "1340": {
+    "resourceSetName": "res016_no052",
+    "characterId": 16,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "1341": {
+    "resourceSetName": "res022_no052",
+    "characterId": 22,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "1342": {
+    "resourceSetName": "res015_no050",
+    "characterId": 15,
+    "rarity": 3,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "1345": {
+    "resourceSetName": "res019_no051",
+    "characterId": 19,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "1346": {
+    "resourceSetName": "res009_no053",
+    "characterId": 9,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "1347": {
+    "resourceSetName": "res023_no053",
+    "characterId": 23,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "1348": {
+    "resourceSetName": "res003_no052",
+    "characterId": 3,
+    "rarity": 3,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "1350": {
+    "resourceSetName": "res007_no050",
+    "characterId": 7,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "1351": {
+    "resourceSetName": "res005_no051",
+    "characterId": 5,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "1352": {
+    "resourceSetName": "res008_no051",
+    "characterId": 8,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "1353": {
+    "resourceSetName": "res006_no052",
+    "characterId": 6,
+    "rarity": 3,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "1356": {
+    "resourceSetName": "res020_no052",
+    "characterId": 20,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "1357": {
+    "resourceSetName": "res017_no052",
+    "characterId": 17,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "1358": {
+    "resourceSetName": "res021_no062",
+    "characterId": 21,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "1359": {
+    "resourceSetName": "res018_no052",
+    "characterId": 18,
+    "rarity": 3,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "1361": {
+    "resourceSetName": "res008_no052",
+    "characterId": 8,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "1362": {
+    "resourceSetName": "res018_no053",
+    "characterId": 18,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "1363": {
+    "resourceSetName": "res016_no053",
+    "characterId": 16,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "1364": {
+    "resourceSetName": "res015_no051",
+    "characterId": 15,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "1365": {
+    "resourceSetName": "res025_no054",
+    "characterId": 25,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "1366": {
+    "resourceSetName": "res013_no053",
+    "characterId": 13,
+    "rarity": 3,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "1368": {
+    "resourceSetName": "res010_no051",
+    "characterId": 10,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "1369": {
+    "resourceSetName": "res011_no054",
+    "characterId": 11,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "1370": {
+    "resourceSetName": "res024_no054",
+    "characterId": 24,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "1371": {
+    "resourceSetName": "res009_no054",
+    "characterId": 9,
+    "rarity": 3,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "1374": {
+    "resourceSetName": "res021_no063",
+    "characterId": 21,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "1375": {
+    "resourceSetName": "res001_no050",
+    "characterId": 1,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "1376": {
+    "resourceSetName": "res006_no053",
+    "characterId": 6,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "1377": {
+    "resourceSetName": "res014_no055",
+    "characterId": 14,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "1378": {
+    "resourceSetName": "res017_no053",
+    "characterId": 17,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "1380": {
+    "resourceSetName": "res003_no053",
+    "characterId": 3,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "1381": {
+    "resourceSetName": "res002_no053",
+    "characterId": 2,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "1382": {
+    "resourceSetName": "res023_no054",
+    "characterId": 23,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "1383": {
+    "resourceSetName": "res004_no055",
+    "characterId": 4,
+    "rarity": 3,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "1386": {
+    "resourceSetName": "res009_no055",
+    "characterId": 9,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "1387": {
+    "resourceSetName": "res011_no055",
+    "characterId": 11,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "1388": {
+    "resourceSetName": "res012_no053",
+    "characterId": 12,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "1389": {
+    "resourceSetName": "res010_no052",
+    "characterId": 10,
+    "rarity": 3,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "1392": {
+    "resourceSetName": "res022_no053",
+    "characterId": 22,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "1393": {
+    "resourceSetName": "res023_no055",
+    "characterId": 23,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "1394": {
+    "resourceSetName": "res004_no056",
+    "characterId": 4,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "1395": {
+    "resourceSetName": "res005_no053",
+    "characterId": 5,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "1396": {
+    "resourceSetName": "res010_no053",
+    "characterId": 10,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "1397": {
+    "resourceSetName": "res013_no055",
+    "characterId": 13,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "1399": {
+    "resourceSetName": "res020_no053",
+    "characterId": 20,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "1400": {
+    "resourceSetName": "res007_no052",
+    "characterId": 7,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "1401": {
+    "resourceSetName": "res026_no057",
+    "characterId": 26,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "1402": {
+    "resourceSetName": "res008_no053",
+    "characterId": 8,
+    "rarity": 3,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "1404": {
+    "resourceSetName": "res024_no055",
+    "characterId": 24,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "1405": {
+    "resourceSetName": "res003_no054",
+    "characterId": 3,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "1406": {
+    "resourceSetName": "res008_no054",
+    "characterId": 8,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "1407": {
+    "resourceSetName": "res009_no056",
+    "characterId": 9,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "1408": {
+    "resourceSetName": "res018_no054",
+    "characterId": 18,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "1410": {
+    "resourceSetName": "res013_no056",
+    "characterId": 13,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "1411": {
+    "resourceSetName": "res014_no056",
+    "characterId": 14,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "1412": {
+    "resourceSetName": "res016_no055",
+    "characterId": 16,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "1413": {
+    "resourceSetName": "res015_no052",
+    "characterId": 15,
+    "rarity": 3,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "1415": {
+    "resourceSetName": "res012_no055",
+    "characterId": 12,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "1416": {
+    "resourceSetName": "res015_no053",
+    "characterId": 15,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "1417": {
+    "resourceSetName": "res005_no054",
+    "characterId": 5,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "1418": {
+    "resourceSetName": "res006_no054",
+    "characterId": 6,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "1419": {
+    "resourceSetName": "res021_no064",
+    "characterId": 21,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "1420": {
+    "resourceSetName": "res007_no053",
+    "characterId": 7,
+    "rarity": 3,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "1422": {
+    "resourceSetName": "res019_no054",
+    "characterId": 19,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "1423": {
+    "resourceSetName": "res018_no055",
+    "characterId": 18,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "1424": {
+    "resourceSetName": "res025_no055",
+    "characterId": 25,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "1425": {
+    "resourceSetName": "res017_no055",
+    "characterId": 17,
+    "rarity": 3,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "1428": {
+    "resourceSetName": "res026_no058",
+    "characterId": 26,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "1429": {
+    "resourceSetName": "res002_no055",
+    "characterId": 2,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "1430": {
+    "resourceSetName": "res012_no056",
+    "characterId": 12,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "1431": {
+    "resourceSetName": "res016_no056",
+    "characterId": 16,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "1432": {
+    "resourceSetName": "res020_no055",
+    "characterId": 20,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "1434": {
+    "resourceSetName": "res001_no052",
+    "characterId": 1,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "1435": {
+    "resourceSetName": "res004_no057",
+    "characterId": 4,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "1436": {
+    "resourceSetName": "res022_no054",
+    "characterId": 22,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "1437": {
+    "resourceSetName": "res023_no057",
+    "characterId": 23,
+    "rarity": 3,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "1440": {
+    "resourceSetName": "res006_no055",
+    "characterId": 6,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "1441": {
+    "resourceSetName": "res005_no055",
+    "characterId": 5,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "1442": {
+    "resourceSetName": "res008_no056",
+    "characterId": 8,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "1443": {
+    "resourceSetName": "res026_no059",
+    "characterId": 26,
+    "rarity": 3,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "1445": {
+    "resourceSetName": "res025_no056",
+    "characterId": 25,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "1446": {
+    "resourceSetName": "res007_no055",
+    "characterId": 7,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "1447": {
+    "resourceSetName": "res011_no056",
+    "characterId": 11,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "1448": {
+    "resourceSetName": "res015_no055",
+    "characterId": 15,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "1449": {
+    "resourceSetName": "res019_no055",
+    "characterId": 19,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "1452": {
+    "resourceSetName": "res024_no056",
+    "characterId": 24,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "1453": {
+    "resourceSetName": "res023_no058",
+    "characterId": 23,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "1454": {
+    "resourceSetName": "res026_no060",
+    "characterId": 26,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "1458": {
+    "resourceSetName": "res001_no054",
+    "characterId": 1,
+    "rarity": 4,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "1459": {
+    "resourceSetName": "res008_no057",
+    "characterId": 8,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "1460": {
+    "resourceSetName": "res010_no055",
+    "characterId": 10,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "1461": {
+    "resourceSetName": "res013_no057",
+    "characterId": 13,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "1462": {
+    "resourceSetName": "res017_no056",
+    "characterId": 17,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "1463": {
+    "resourceSetName": "res025_no058",
+    "characterId": 25,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "1465": {
+    "resourceSetName": "res011_no057",
+    "characterId": 11,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "1466": {
+    "resourceSetName": "res012_no057",
+    "characterId": 12,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "1467": {
+    "resourceSetName": "res022_no056",
+    "characterId": 22,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "1468": {
+    "resourceSetName": "res010_no056",
+    "characterId": 10,
+    "rarity": 3,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "1470": {
+    "resourceSetName": "res015_no056",
+    "characterId": 15,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "1471": {
+    "resourceSetName": "res014_no058",
+    "characterId": 14,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "1472": {
+    "resourceSetName": "res024_no057",
+    "characterId": 24,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "1473": {
+    "resourceSetName": "res016_no057",
+    "characterId": 16,
+    "rarity": 3,
+    "attribute": "mysterious",
+    "stat": {
+      "training": true
+    }
+  },
+  "1475": {
+    "resourceSetName": "res002_no056",
+    "characterId": 2,
+    "rarity": 4,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  },
+  "1476": {
+    "resourceSetName": "res021_no067",
+    "characterId": 21,
+    "rarity": 4,
+    "attribute": "cute",
+    "stat": {
+      "training": true
+    }
+  },
+  "1477": {
+    "resourceSetName": "res007_no056",
+    "characterId": 7,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "1478": {
+    "resourceSetName": "res009_no058",
+    "characterId": 9,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "1479": {
+    "resourceSetName": "res016_no058",
+    "characterId": 16,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "1480": {
+    "resourceSetName": "res019_no056",
+    "characterId": 19,
+    "rarity": 4,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "1481": {
+    "resourceSetName": "res001_no055",
+    "characterId": 1,
+    "rarity": 3,
+    "attribute": "cool",
+    "stat": {
+      "training": true
+    }
+  },
+  "1483": {
+    "resourceSetName": "res003_no056",
+    "characterId": 3,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "1484": {
+    "resourceSetName": "res001_no056",
+    "characterId": 1,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "1485": {
+    "resourceSetName": "res025_no059",
+    "characterId": 25,
+    "rarity": 4,
+    "attribute": "pure",
+    "stat": {
+      "training": true
+    }
+  },
+  "1486": {
+    "resourceSetName": "res002_no057",
+    "characterId": 2,
+    "rarity": 3,
+    "attribute": "happy",
+    "stat": {
+      "training": true
+    }
+  }
+}

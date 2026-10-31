@@ -1,0 +1,568 @@
+{
+  "bangdream": [
+    {
+      "src": "/brand/kasumi.png",
+      "alt": "户山香澄",
+      "width": 900,
+      "height": 900,
+      "top": -128,
+      "left": -100
+    },
+    {
+      "src": "/brand/hero/bangdream/hanazono-tae.webp",
+      "alt": "花园多惠",
+      "width": 540,
+      "height": 800,
+      "top": 8,
+      "left": 80
+    },
+    {
+      "src": "/brand/hero/bangdream/ichigaya-arisa.webp",
+      "alt": "市谷有咲",
+      "width": 432,
+      "height": 800,
+      "top": 8,
+      "left": 134
+    },
+    {
+      "src": "/brand/hero/bangdream/mitake-ran.webp",
+      "alt": "美竹兰",
+      "width": 440,
+      "height": 800,
+      "top": 8,
+      "left": 130
+    },
+    {
+      "src": "/brand/hero/bangdream/aoba-moca.webp",
+      "alt": "青叶摩卡",
+      "width": 425,
+      "height": 800,
+      "top": 8,
+      "left": 138
+    },
+    {
+      "src": "/brand/hero/bangdream/maruyama-aya.webp",
+      "alt": "丸山彩",
+      "width": 376,
+      "height": 800,
+      "top": 8,
+      "left": 162
+    },
+    {
+      "src": "/brand/hero/bangdream/shirasagi-chisato.webp",
+      "alt": "白鹭千圣",
+      "width": 432,
+      "height": 800,
+      "top": 8,
+      "left": 134
+    },
+    {
+      "src": "/brand/hero/bangdream/minato-yukina.webp",
+      "alt": "凑友希那",
+      "width": 609,
+      "height": 800,
+      "top": 8,
+      "left": 46
+    },
+    {
+      "src": "/brand/hero/bangdream/hikawa-sayo.webp",
+      "alt": "冰川纱夜",
+      "width": 413,
+      "height": 800,
+      "top": 8,
+      "left": 144
+    },
+    {
+      "src": "/brand/hero/bangdream/imai-lisa.webp",
+      "alt": "今井莉莎",
+      "width": 504,
+      "height": 800,
+      "top": 8,
+      "left": 98
+    },
+    {
+      "src": "/brand/hero/bangdream/tsurumaki-kokoro.webp",
+      "alt": "弦卷心",
+      "width": 511,
+      "height": 800,
+      "top": 8,
+      "left": 95
+    },
+    {
+      "src": "/brand/hero/bangdream/okusawa-misaki.webp",
+      "alt": "奥泽美咲",
+      "width": 298,
+      "height": 800,
+      "top": 8,
+      "left": 201
+    },
+    {
+      "src": "/brand/hero/bangdream/kurata-mashiro.webp",
+      "alt": "仓田真白",
+      "width": 335,
+      "height": 800,
+      "top": 8,
+      "left": 183
+    },
+    {
+      "src": "/brand/hero/bangdream/kirigaya-toko.webp",
+      "alt": "桐谷透子",
+      "width": 460,
+      "height": 800,
+      "top": 8,
+      "left": 120
+    },
+    {
+      "src": "/brand/hero/bangdream/layer.webp",
+      "alt": "LAYER",
+      "width": 448,
+      "height": 800,
+      "top": 8,
+      "left": 126
+    },
+    {
+      "src": "/brand/hero/bangdream/lock.webp",
+      "alt": "LOCK",
+      "width": 443,
+      "height": 800,
+      "top": 8,
+      "left": 129
+    },
+    {
+      "src": "/brand/hero/bangdream/chu2.webp",
+      "alt": "CHU²",
+      "width": 396,
+      "height": 800,
+      "top": 8,
+      "left": 152
+    },
+    {
+      "src": "/brand/hero/bangdream/takamatsu-tomori.webp",
+      "alt": "高松灯",
+      "width": 399,
+      "height": 800,
+      "top": 8,
+      "left": 151
+    },
+    {
+      "src": "/brand/hero/bangdream/chihaya-anon.webp",
+      "alt": "千早爱音",
+      "width": 469,
+      "height": 800,
+      "top": 8,
+      "left": 116
+    },
+    {
+      "src": "/brand/hero/bangdream/shiina-taki.webp",
+      "alt": "椎名立希",
+      "width": 321,
+      "height": 800,
+      "top": 8,
+      "left": 190
+    }
+  ],
+  "sekai": [
+    {
+      "src": "/brand/miku-sekai.webp",
+      "alt": "初音未来",
+      "width": 640,
+      "height": 742,
+      "top": 8,
+      "left": 65
+    },
+    {
+      "src": "/brand/hero/sekai/rin.webp",
+      "alt": "镜音铃",
+      "width": 291,
+      "height": 800,
+      "top": 8,
+      "left": 205
+    },
+    {
+      "src": "/brand/hero/sekai/len.webp",
+      "alt": "镜音连",
+      "width": 262,
+      "height": 800,
+      "top": 8,
+      "left": 219
+    },
+    {
+      "src": "/brand/hero/sekai/luka.webp",
+      "alt": "巡音流歌",
+      "width": 336,
+      "height": 800,
+      "top": 8,
+      "left": 182
+    },
+    {
+      "src": "/brand/hero/sekai/meiko.webp",
+      "alt": "MEIKO",
+      "width": 259,
+      "height": 800,
+      "top": 8,
+      "left": 221
+    },
+    {
+      "src": "/brand/hero/sekai/kaito.webp",
+      "alt": "KAITO",
+      "width": 454,
+      "height": 800,
+      "top": 8,
+      "left": 123
+    },
+    {
+      "src": "/brand/hero/sekai/ichika.webp",
+      "alt": "星乃一歌",
+      "width": 371,
+      "height": 800,
+      "top": 8,
+      "left": 165
+    },
+    {
+      "src": "/brand/hero/sekai/saki.webp",
+      "alt": "天马咲希",
+      "width": 433,
+      "height": 800,
+      "top": 8,
+      "left": 134
+    },
+    {
+      "src": "/brand/hero/sekai/honami.webp",
+      "alt": "望月穗波",
+      "width": 410,
+      "height": 800,
+      "top": 8,
+      "left": 145
+    },
+    {
+      "src": "/brand/hero/sekai/shiho.webp",
+      "alt": "日野森志步",
+      "width": 437,
+      "height": 800,
+      "top": 8,
+      "left": 132
+    },
+    {
+      "src": "/brand/hero/sekai/minori.webp",
+      "alt": "花里实乃理",
+      "width": 432,
+      "height": 800,
+      "top": 8,
+      "left": 134
+    },
+    {
+      "src": "/brand/hero/sekai/haruka.webp",
+      "alt": "桐谷遥",
+      "width": 349,
+      "height": 800,
+      "top": 8,
+      "left": 176
+    },
+    {
+      "src": "/brand/hero/sekai/airi.webp",
+      "alt": "桃井爱莉",
+      "width": 406,
+      "height": 800,
+      "top": 8,
+      "left": 147
+    },
+    {
+      "src": "/brand/hero/sekai/shizuku.webp",
+      "alt": "日野森雫",
+      "width": 443,
+      "height": 800,
+      "top": 8,
+      "left": 129
+    },
+    {
+      "src": "/brand/hero/sekai/kohane.webp",
+      "alt": "小豆泽心羽",
+      "width": 252,
+      "height": 800,
+      "top": 8,
+      "left": 224
+    },
+    {
+      "src": "/brand/hero/sekai/an.webp",
+      "alt": "白石杏",
+      "width": 302,
+      "height": 800,
+      "top": 8,
+      "left": 199
+    },
+    {
+      "src": "/brand/hero/sekai/akito.webp",
+      "alt": "东云彰人",
+      "width": 305,
+      "height": 800,
+      "top": 8,
+      "left": 198
+    },
+    {
+      "src": "/brand/hero/sekai/toya.webp",
+      "alt": "青柳冬弥",
+      "width": 230,
+      "height": 800,
+      "top": 8,
+      "left": 235
+    },
+    {
+      "src": "/brand/hero/sekai/tsukasa.webp",
+      "alt": "天马司",
+      "width": 564,
+      "height": 800,
+      "top": 8,
+      "left": 68
+    },
+    {
+      "src": "/brand/hero/sekai/emu.webp",
+      "alt": "凤笑梦",
+      "width": 439,
+      "height": 800,
+      "top": 8,
+      "left": 131
+    },
+    {
+      "src": "/brand/hero/sekai/nene.webp",
+      "alt": "草薙宁宁",
+      "width": 312,
+      "height": 800,
+      "top": 8,
+      "left": 194
+    },
+    {
+      "src": "/brand/hero/sekai/rui.webp",
+      "alt": "神代类",
+      "width": 291,
+      "height": 800,
+      "top": 8,
+      "left": 205
+    },
+    {
+      "src": "/brand/hero/sekai/kanade.webp",
+      "alt": "宵崎奏",
+      "width": 258,
+      "height": 800,
+      "top": 8,
+      "left": 221
+    },
+    {
+      "src": "/brand/hero/sekai/mafuyu.webp",
+      "alt": "朝比奈真冬",
+      "width": 229,
+      "height": 800,
+      "top": 8,
+      "left": 236
+    },
+    {
+      "src": "/brand/hero/sekai/ena.webp",
+      "alt": "东云绘名",
+      "width": 275,
+      "height": 800,
+      "top": 8,
+      "left": 213
+    },
+    {
+      "src": "/brand/hero/sekai/mizuki.webp",
+      "alt": "晓山瑞希",
+      "width": 249,
+      "height": 800,
+      "top": 8,
+      "left": 226
+    }
+  ],
+  "bluearchive": [
+    {
+      "src": "/brand/hero/bluearchive/shiroko.webp",
+      "alt": "砂狼白子",
+      "width": 397,
+      "height": 800,
+      "top": 8,
+      "left": 152
+    },
+    {
+      "src": "/brand/hero/bluearchive/hoshino.webp",
+      "alt": "小鸟游星野",
+      "width": 449,
+      "height": 800,
+      "top": 8,
+      "left": 126
+    },
+    {
+      "src": "/brand/hero/bluearchive/serika.webp",
+      "alt": "黑见芹香",
+      "width": 353,
+      "height": 800,
+      "top": 8,
+      "left": 174
+    },
+    {
+      "src": "/brand/hero/bluearchive/nonomi.webp",
+      "alt": "十六夜野宫",
+      "width": 470,
+      "height": 800,
+      "top": 8,
+      "left": 115
+    },
+    {
+      "src": "/brand/hero/bluearchive/ayane.webp",
+      "alt": "奥空绫音",
+      "width": 205,
+      "height": 800,
+      "top": 8,
+      "left": 248
+    },
+    {
+      "src": "/brand/hero/bluearchive/hina.webp",
+      "alt": "空崎日奈",
+      "width": 1195,
+      "height": 800,
+      "top": 8,
+      "left": -247
+    },
+    {
+      "src": "/brand/hero/bluearchive/aru.webp",
+      "alt": "陆八魔阿露",
+      "width": 435,
+      "height": 800,
+      "top": 8,
+      "left": 133
+    },
+    {
+      "src": "/brand/hero/bluearchive/kayoko.webp",
+      "alt": "鬼方佳代子",
+      "width": 283,
+      "height": 800,
+      "top": 8,
+      "left": 209
+    },
+    {
+      "src": "/brand/hero/bluearchive/mutsuki.webp",
+      "alt": "浅黄睦月",
+      "width": 615,
+      "height": 800,
+      "top": 8,
+      "left": 43
+    },
+    {
+      "src": "/brand/hero/bluearchive/iroha.webp",
+      "alt": "枣伊吕波",
+      "width": 443,
+      "height": 800,
+      "top": 8,
+      "left": 129
+    },
+    {
+      "src": "/brand/hero/bluearchive/yuuka.webp",
+      "alt": "早濑优香",
+      "width": 342,
+      "height": 800,
+      "top": 8,
+      "left": 179
+    },
+    {
+      "src": "/brand/hero/bluearchive/noa.webp",
+      "alt": "生盐诺亚",
+      "width": 441,
+      "height": 800,
+      "top": 8,
+      "left": 130
+    },
+    {
+      "src": "/brand/hero/bluearchive/neru.webp",
+      "alt": "美甘宁瑠",
+      "width": 577,
+      "height": 800,
+      "top": 8,
+      "left": 62
+    },
+    {
+      "src": "/brand/hero/bluearchive/aris.webp",
+      "alt": "天童爱丽丝",
+      "width": 709,
+      "height": 800,
+      "top": 8,
+      "left": -4
+    },
+    {
+      "src": "/brand/hero/bluearchive/asuna.webp",
+      "alt": "一之濑明日奈",
+      "width": 524,
+      "height": 800,
+      "top": 8,
+      "left": 88
+    },
+    {
+      "src": "/brand/hero/bluearchive/karin.webp",
+      "alt": "角楯花凛",
+      "width": 642,
+      "height": 800,
+      "top": 8,
+      "left": 29
+    },
+    {
+      "src": "/brand/hero/bluearchive/wakamo.webp",
+      "alt": "狐坂若藻",
+      "width": 609,
+      "height": 800,
+      "top": 8,
+      "left": 46
+    },
+    {
+      "src": "/brand/hero/bluearchive/izuna.webp",
+      "alt": "久田泉奈",
+      "width": 475,
+      "height": 800,
+      "top": 8,
+      "left": 113
+    },
+    {
+      "src": "/brand/hero/bluearchive/mika.webp",
+      "alt": "圣园未花",
+      "width": 476,
+      "height": 800,
+      "top": 8,
+      "left": 112
+    },
+    {
+      "src": "/brand/hero/bluearchive/hifumi.webp",
+      "alt": "阿慈谷日富美",
+      "width": 379,
+      "height": 800,
+      "top": 8,
+      "left": 161
+    },
+    {
+      "src": "/brand/hero/bluearchive/azusa.webp",
+      "alt": "白洲梓",
+      "width": 601,
+      "height": 800,
+      "top": 8,
+      "left": 50
+    },
+    {
+      "src": "/brand/hero/bluearchive/koharu.webp",
+      "alt": "下江小春",
+      "width": 541,
+      "height": 800,
+      "top": 8,
+      "left": 80
+    },
+    {
+      "src": "/brand/hero/bluearchive/hanako.webp",
+      "alt": "浦和花子",
+      "width": 380,
+      "height": 800,
+      "top": 8,
+      "left": 160
+    },
+    {
+      "src": "/brand/hero/bluearchive/shun.webp",
+      "alt": "春",
+      "width": 350,
+      "height": 800,
+      "top": 8,
+      "left": 175
+    }
+  ]
+}

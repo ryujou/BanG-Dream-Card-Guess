@@ -1,0 +1,271 @@
+.page {
+  max-width: 1220px;
+  padding: 64px 28px 96px;
+  margin: auto;
+  color: #161616;
+}
+.heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 28px;
+  border-bottom: 2px solid #161616;
+  padding-bottom: 30px;
+}
+.eyebrow {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.15em;
+}
+.heading h1 {
+  font-size: clamp(34px, 4.9vw, 62px);
+  letter-spacing: -0.055em;
+  margin: 20px 0;
+  line-height: 1.15;
+}
+.heading h1 span {
+  color: #f43f78;
+}
+.heading > div > p:last-child {
+  color: #666;
+  font-size: 15px;
+  margin-bottom: 0;
+}
+.button,
+.secondary,
+.danger {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  padding: 14px 24px;
+  min-height: 46px;
+  border: 1px solid #161616;
+  background: #161616;
+  color: #fff;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.button:hover {
+  background: #f43f78;
+  border-color: #f43f78;
+}
+.secondary {
+  color: #161616;
+  background: #fff;
+}
+.danger {
+  background: #a7193f;
+  border-color: #a7193f;
+}
+.button:disabled,
+.secondary:disabled,
+.danger:disabled {
+  opacity: 0.5;
+  cursor: wait;
+}
+.meta {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  font-size: 12px;
+  color: #777;
+  padding: 20px 0;
+}
+.meta > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.online,
+.offline {
+  width: 6px;
+  height: 6px;
+  display: inline-block;
+  border-radius: 50%;
+  background: #f43f78;
+}
+.offline {
+  background: #bbb;
+}
+.meta button {
+  margin-left: auto;
+  border: 0;
+  background: transparent;
+  color: #a81940;
+  font: inherit;
+  cursor: pointer;
+}
+.tabs {
+  display: flex;
+  gap: 30px;
+  border-bottom: 1px solid #ccc;
+  margin-top: 26px;
+}
+.tabs button {
+  border: 0;
+  background: transparent;
+  padding: 18px 0;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -1px;
+  font: inherit;
+  font-size: 18px;
+  font-weight: 700;
+  color: #888;
+  cursor: pointer;
+}
+.tabs button[aria-selected="true"] {
+  color: #161616;
+  border-bottom-color: #f43f78;
+}
+.tabs span {
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  margin-left: 8px;
+  font-weight: 400;
+}
+.tableWrap {
+  overflow-x: auto;
+}
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  white-space: nowrap;
+}
+.table th {
+  text-align: left;
+  font-size: 11px;
+  font-weight: 400;
+  color: #888;
+  padding: 20px 14px;
+}
+.table th:first-child,
+.table td:first-child {
+  padding-left: 0;
+}
+.table td {
+  border-top: 1px solid #ddd;
+  padding: 24px 14px;
+  font-variant-numeric: tabular-nums;
+}
+.rank,
+.firstRank {
+  font-size: 28px;
+  letter-spacing: -0.04em;
+  font-weight: 800;
+}
+.rank {
+  color: #aaa;
+}
+.firstRank {
+  color: #f43f78;
+}
+.table td strong {
+  font-size: 17px;
+}
+.table td small {
+  display: block;
+  color: #999;
+  font-size: 11px;
+  margin-top: 6px;
+}
+.score {
+  font-size: 25px;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+}
+.time {
+  font-size: 12px;
+  color: #888;
+}
+.delete {
+  border: 0;
+  background: transparent;
+  color: #a81940;
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+.empty {
+  padding: 64px 24px;
+  text-align: center;
+  color: #777;
+}
+.empty > span {
+  color: #f43f78;
+  font-size: 70px;
+  line-height: 1;
+  font-weight: 800;
+  letter-spacing: -0.05em;
+}
+.empty h2 {
+  color: #161616;
+  font-size: 30px;
+  margin: 22px 0 12px;
+}
+.empty p {
+  font-size: 14px;
+  line-height: 1.8;
+  margin-bottom: 28px;
+}
+.error {
+  padding: 15px 18px;
+  background: #fff1f5;
+  color: #a81940;
+  font-size: 14px;
+}
+.status {
+  padding: 15px 18px;
+  background: #f5f3f0;
+  font-size: 14px;
+}
+.confirm {
+  border: 1px solid #a81940;
+  padding: 24px;
+  background: #fff7f9;
+  margin: 24px 0;
+}
+.confirm h2 {
+  font-size: 23px;
+  margin: 0 0 12px;
+}
+.confirm p {
+  color: #666;
+  font-size: 14px;
+}
+.confirm > div {
+  display: flex;
+  gap: 12px;
+  margin-top: 24px;
+}
+@media (max-width: 750px) {
+  .page {
+    padding: 40px 20px 64px;
+  }
+  .heading {
+    align-items: start;
+    flex-direction: column;
+    gap: 20px;
+  }
+  .meta {
+    gap: 12px;
+    flex-wrap: wrap;
+    font-size: 11px;
+  }
+  .meta button {
+    margin-left: 0;
+  }
+  .table td {
+    padding: 20px 14px;
+  }
+  .tabs {
+    gap: 24px;
+  }
+  .tabs button {
+    font-size: 16px;
+  }
+}

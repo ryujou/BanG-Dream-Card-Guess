@@ -1,0 +1,95 @@
+.scene {
+  position: relative;
+  width: 100%;
+  isolation: isolate;
+  container-type: inline-size;
+}
+.scene > svg {
+  width: 100%;
+  height: auto;
+  display: block;
+  overflow: visible;
+}
+.scene > span {
+  position: absolute;
+  font-family: "Ma Shan Zheng", cursive;
+  font-weight: 400;
+  color: var(--home-accent, #8c365b);
+  line-height: 1;
+}
+.wanlouLabel {
+  left: 14%;
+  top: 33%;
+  font-size: clamp(9px, 5.5cqw, 28px);
+  writing-mode: vertical-rl;
+  transform: rotate(-7deg);
+  letter-spacing: 0.12em;
+}
+.wheelLabel {
+  right: 12%;
+  top: 6%;
+  font-size: clamp(9px, 5cqw, 26px);
+  transform: rotate(-7deg);
+}
+.riverLabel {
+  right: 6%;
+  bottom: 3%;
+  font-size: clamp(8px, 4.6cqw, 24px);
+  transform: rotate(-5deg);
+}
+.rotor {
+  transform-origin: 660px 180px;
+  animation: turn 70s linear infinite;
+}
+.cabin {
+  transform-origin: 0 0;
+  animation: counterTurn 70s linear infinite;
+}
+.river {
+  animation: flow 8s linear infinite;
+}
+.lanterns {
+  animation: glow 4s ease-in-out infinite alternate;
+}
+.sparkles {
+  animation: glow 3s ease-in-out infinite alternate;
+}
+.scene[data-running="false"] * {
+  animation-play-state: paused !important;
+}
+@keyframes turn {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes counterTurn {
+  to {
+    transform: rotate(-360deg);
+  }
+}
+@keyframes flow {
+  to {
+    stroke-dashoffset: -258;
+  }
+}
+@keyframes glow {
+  from {
+    opacity: 0.4;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .scene * {
+    animation: none !important;
+  }
+}
+@media (max-width: 650px) {
+  .wanlouLabel {
+    left: 11%;
+  }
+  .wheelLabel {
+    top: 0;
+  }
+}

@@ -1,0 +1,11 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>华容道 · 湘潭 BanG Dream! 同好会</title><link rel="stylesheet" href="style.css?v=parity-20261031"><script defer src="engine.js?v=parity-20261031"></script></head>
+<body>
+  <main id="game-wrapper">
+    <header class="game-heading"><div><span class="eyebrow">XT BANG! / ARCADE 02</span><h1>给米歇尔<br>让个位置<span>。</span></h1><p>滑动角色，为米歇尔打开下方出口。</p></div><div class="floor-badge"><span>FLOOR</span><strong id="elevator-floor">1</strong></div></header>
+    <div class="play-layout"><div id="board-inner"><div id="board" aria-label="华容道棋盘"></div><div class="exit-label">EXIT ↓</div></div>
+    <aside id="control-panel"><div class="step-card"><span id="step-label">你的移动 / MOVES</span><strong id="step-display">0</strong></div><button class="btn primary" id="btn-hint">提示</button><button class="btn" id="btn-reset">重新开始</button><button class="btn toggle-on" id="btn-voice" aria-pressed="true">♫ 角色音效</button><div class="instructions"><strong>HOW TO PLAY</strong><p>拖动角色，让粉色的米歇尔到达棋盘下方中央。</p><p>也可以选中角色后，用方向键移动。卡住时点击「提示」走一步。</p><span>进度自动保存在这台设备。</span></div><details class="floor-settings"><summary>电梯楼层装饰</summary><div class="floor-control"><input type="number" id="custom-floor" value="1" min="1" step="1" aria-label="装饰楼层"><button class="btn" id="random-floor">随机</button></div></details></aside></div>
+  </main>
+  <section id="victory-overlay" role="dialog" aria-modal="true" aria-label="通关成功"><div id="victory-box"><span class="eyebrow">THE STAGE IS YOURS</span><img alt="米歇尔"><h2>成功逃出！</h2><p>米歇尔的这次冒险，用了 <strong id="victory-steps">0</strong> 步。</p><button class="btn primary">再来一局 ↗</button></div></section>
+</body></html>
+

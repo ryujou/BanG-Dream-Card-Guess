@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Pre-detect anime face boxes for cached BanG Dream card images.
 
-The game server reads data/face-boxes.json at startup and uses these boxes
+The game server reads resource/face-boxes.json at startup and uses these boxes
 to avoid, prefer, or force face crops without running YOLO during gameplay.
 """
 
@@ -21,7 +21,7 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Detect anime faces in cached card images.")
     parser.add_argument("--weights", default=str(root / "weight" / "best.pt"), help="YOLO .pt weights path")
     parser.add_argument("--cards", default=str(root / "public" / "cards"), help="cached cards directory")
-    parser.add_argument("--output", default=str(root / "data" / "face-boxes.json"), help="output JSON path")
+    parser.add_argument("--output", default=str(root / "resource" / "face-boxes.json"), help="output JSON path")
     parser.add_argument("--imgsz", type=int, default=1280, help="YOLO inference image size")
     parser.add_argument("--conf", type=float, default=0.10, help="confidence threshold")
     parser.add_argument("--batch", type=int, default=8, help="batch size")
@@ -67,9 +67,9 @@ def chunks(items: list[Path], size: int):
 
 def main() -> None:
     args = parse_args()
-    weights = Path(args.weights)
-    cards_dir = Path(args.cards)
-    output = Path(args.output)
+    weights = Path(args.weights).resolve()
+    cards_dir = Path(args.cards).resolve()
+    output = Path(args.output).resolve()
 
     if not weights.exists():
         raise SystemExit(f"weights not found: {weights}")
@@ -156,3 +156,4 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+

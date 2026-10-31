@@ -1,0 +1,194 @@
+.layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 710px;
+  max-width: 1600px;
+  margin: auto;
+}
+.poster {
+  background: var(--pink);
+  position: relative;
+  overflow: hidden;
+  padding: 50px;
+}
+.poster > span {
+  font-family: Impact, "Arial Narrow", sans-serif;
+  display: block;
+  color: #fff;
+  font-size: clamp(65px, 8.5vw, 130px);
+  line-height: 0.92;
+  font-style: italic;
+  position: relative;
+  z-index: 1;
+  letter-spacing: -0.025em;
+}
+.poster em {
+  font-style: inherit;
+  color: #15161c;
+}
+.poster p {
+  font-size: 22px;
+  font-weight: 800;
+  color: white;
+  position: absolute;
+  bottom: 28px;
+  left: 36px;
+  z-index: 3;
+}
+.poster img {
+  position: absolute;
+  right: -29%;
+  bottom: -3%;
+  width: 113%;
+  max-width: none;
+  z-index: 2;
+  transform: rotate(-4deg);
+}
+.formSection {
+  padding: 65px 15%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.formSection > .text-link {
+  font-size: 12px;
+}
+.loginIcon {
+  width: 38px;
+  height: 38px;
+  margin-top: 48px;
+  color: var(--pink);
+  stroke-width: 1.5;
+}
+.formSection h1 {
+  font-size: 40px;
+  letter-spacing: -0.05em;
+  margin: 20px 0 10px;
+}
+.formSection > p {
+  font-size: 14px;
+  color: var(--muted);
+  margin: 0 0 30px;
+}
+.formSection form {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+.formSection label {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font-size: 13px;
+  font-weight: 700;
+}
+.formSection form > .button {
+  margin-top: 6px;
+  width: 100%;
+}
+.password {
+  position: relative;
+}
+.password input {
+  width: 100%;
+  padding-right: 50px;
+}
+.password button {
+  position: absolute;
+  inset: 0 0 0 auto;
+  width: 45px;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  color: var(--muted);
+}
+.formSection .playerHint {
+  margin-top: 32px;
+  font-size: 12px;
+  line-height: 2;
+}
+.playerHint a {
+  color: var(--pink);
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-left: 6px;
+  font-weight: 650;
+}
+@media (max-width: 900px) {
+  .formSection {
+    padding: 50px 10%;
+  }
+  .poster {
+    padding: 50px 25px;
+  }
+  .poster > span {
+    font-size: 95px;
+  }
+  .poster img {
+    right: -50%;
+    width: 145%;
+  }
+  .formSection h1 {
+    font-size: 32px;
+  }
+}
+@media (max-width: 650px) {
+  .layout {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+  .poster {
+    height: 175px;
+    padding: 22px;
+    flex-shrink: 0;
+  }
+  .poster > span {
+    font-size: 61px;
+    max-width: 210px;
+    line-height: 1;
+  }
+  .poster > span br:nth-of-type(2),
+  .poster > span br:nth-of-type(3) {
+    display: none;
+  }
+  .poster > span {
+    font-size: 0;
+  }
+  .poster > span:before {
+    content: "LET'S MAKE\A SOME NOISE.";
+    white-space: pre;
+    display: block;
+    font-size: 45px;
+    line-height: 1.1;
+  }
+  .poster em {
+    display: none;
+  }
+  .poster p {
+    display: none;
+  }
+  .poster img {
+    height: 330px;
+    width: 330px;
+    right: -64px;
+    bottom: -90px;
+    transform: rotate(-8deg);
+  }
+  .formSection {
+    padding: 35px 25px 55px;
+  }
+  .loginIcon {
+    margin-top: 28px;
+    width: 32px;
+    height: 32px;
+  }
+  .formSection h1 {
+    font-size: 35px;
+    margin-top: 15px;
+  }
+  .formSection > p {
+    margin-bottom: 28px;
+  }
+}

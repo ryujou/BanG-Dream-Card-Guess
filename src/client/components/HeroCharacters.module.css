@@ -1,0 +1,8 @@
+.characters { position: absolute; inset: 0; overflow: clip; }
+.portrait { position: absolute; max-width: none; object-fit: contain; }
+.entering { animation: portraitIn 600ms ease both; }
+.leaving { animation: portraitOut 600ms ease both; }
+@keyframes portraitIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes portraitOut { from { opacity: 1; } to { opacity: 0; } }
+.error { position: absolute; bottom: 78px; right: 12px; max-width: 240px; padding: 8px 12px; color: var(--home-accent); background: white; font-size: 12px; }
+@media (prefers-reduced-motion: reduce) { .entering, .leaving { animation: none; } }

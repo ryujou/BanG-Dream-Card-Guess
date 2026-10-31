@@ -1,0 +1,1067 @@
+.gamePage {
+  max-width: 1600px;
+  margin: 0 auto;
+}
+.gameTop {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: center;
+  padding: 9px 32px;
+  border-bottom: 2px solid var(--ink);
+  font-size: 14px;
+}
+.gameTop > a {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+.connection {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.connection > svg {
+  color: #16a15d;
+}
+.connection i {
+  height: 16px;
+  border-left: 1px solid #ddd;
+  margin: 0 7px;
+}
+.connection strong {
+  font-size: 16px;
+}
+.connection em {
+  font-style: normal;
+  color: var(--pink);
+  letter-spacing: 0.12em;
+  font-size: 22px;
+}
+.gameAlert {
+  margin: 16px 32px;
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+}
+.gameAlert button {
+  background: none;
+  border: 0;
+  text-decoration: underline;
+  font: inherit;
+  cursor: pointer;
+}
+.gameLayout {
+  display: grid;
+  grid-template-columns: 3fr 2fr;
+  background: white;
+  border-bottom: 3px solid var(--ink);
+}
+.gameLayout:fullscreen {
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  overflow: auto;
+}
+.stage {
+  position: relative;
+  background: var(--paper);
+  overflow: hidden;
+  min-height: 650px;
+}
+.stageRail {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 23%;
+  pointer-events: none;
+}
+.stageRail > svg {
+  width: 100%;
+  height: 100%;
+}
+.stageContent {
+  position: relative;
+  padding: 5px 4.5% 24px 20%;
+}
+.stageContent > h1 {
+  position: relative;
+  font-size: clamp(55px, 9vw, 144px);
+  font-weight: 900;
+  letter-spacing: -0.085em;
+  color: #050505;
+  line-height: 1.02;
+  margin: 0 0 10px;
+  white-space: nowrap;
+  transform: skew(-10deg);
+  text-align: center;
+}
+.stageContent > h1:after {
+  content: "";
+  position: absolute;
+  left: 1%;
+  bottom: -8px;
+  width: 42%;
+  height: 5px;
+  background: var(--pink);
+  clip-path: polygon(0 100%, 100% 0, 96% 70%);
+  transform: rotate(-5deg);
+}
+.stageDescription {
+  font-size: 15px;
+  font-style: italic;
+  text-align: center;
+  min-height: 24px;
+  margin: 0 0 18px;
+  color: var(--ink);
+}
+.cropFrame {
+  position: relative;
+  width: 72%;
+  max-width: 420px;
+  aspect-ratio: 1.04;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.cardImage {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  image-rendering: auto;
+}
+.cropFrame:not(.revealed) .cardImage {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.revealed {
+  aspect-ratio: 1.45;
+  width: 100%;
+  max-width: 610px;
+}
+.waitStage {
+  height: 100%;
+  width: 100%;
+  min-height: 260px;
+  border: 1px dashed #bec3ce;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  background: white;
+}
+.waitStage > span {
+  font-size: 155px;
+  font-weight: 950;
+  color: #ececf1;
+  font-style: italic;
+}
+.waitStage p {
+  font-size: 15px;
+  color: var(--muted);
+}
+.stageActions {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin: 24px 0 0;
+}
+.stageActions button {
+  min-width: 150px;
+  min-height: 60px;
+  font-size: 19px;
+  font-weight: 800;
+  border-width: 2px;
+}
+.stageActions > button:only-child,
+.stageActions > button:first-child:nth-last-child(2),
+.stageActions > button:first-child:nth-last-child(2) ~ button {
+  flex: 1;
+  max-width: 280px;
+}
+.stageActions svg {
+  width: 26px;
+  height: 26px;
+  stroke-width: 2.5;
+}
+.scoreboard {
+  border-left: 3px solid var(--ink);
+  display: flex;
+  flex-direction: column;
+}
+.timer {
+  background: var(--pink);
+  color: #111;
+  padding: 30px 8%;
+  position: relative;
+  overflow: hidden;
+  min-height: 310px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.timer > span:first-child {
+  font-size: 25px;
+  font-weight: 900;
+  align-self: flex-start;
+  position: relative;
+  z-index: 1;
+}
+.timer > span:first-child:after {
+  content: "";
+  display: block;
+  background: #111;
+  width: 50px;
+  height: 5px;
+  margin-top: 15px;
+}
+.timer > strong {
+  font-family: "Noto Sans SC", sans-serif;
+  font-size: clamp(80px, 12.7vw, 204px);
+  font-weight: 900;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.045em;
+  line-height: 1.05;
+  position: relative;
+  z-index: 1;
+  white-space: nowrap;
+}
+.timerDigits {
+  transform: scaleX(0.73);
+  transform-origin: left center;
+  width: 137%;
+}
+.timer > .timerStatus {
+  font-size: clamp(25px, 3.3vw, 48px);
+  margin-top: 22px;
+}
+.timerLogo {
+  position: absolute;
+  right: 3%;
+  top: 43%;
+  width: 24%;
+  filter: brightness(0) invert(1);
+  transform: rotate(-16deg);
+  pointer-events: none;
+}
+.timer > [data-decoration="timer"] {
+  position: absolute;
+  top: 0;
+  right: 1%;
+  width: 27%;
+  height: 100%;
+  pointer-events: none;
+}
+.teams > [data-decoration="score"] {
+  position: absolute;
+  top: 28px;
+  right: 6%;
+  width: 35px;
+  height: 75px;
+  pointer-events: none;
+}
+.teamCheer {
+  margin: 10px 0 0;
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+}
+.renameForm {
+  display: grid;
+  gap: 16px;
+}
+.renameForm label {
+  font-size: 14px;
+  font-weight: 700;
+}
+.teams {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  flex: 1;
+  padding: 28px 0 30px;
+}
+.teams > div {
+  padding: 0 10%;
+  min-width: 0;
+}
+.teams > div + div {
+  border-left: 1px solid var(--pink);
+}
+.teams > div > span {
+  font-size: 12px;
+  color: var(--muted);
+}
+.teams h3 {
+  font-size: clamp(25px, 3vw, 44px);
+  font-weight: 900;
+  margin: 14px 0 6px;
+  word-break: break-all;
+  text-wrap: balance;
+}
+.teams strong {
+  display: block;
+  font-family: Impact, "Arial Narrow", sans-serif;
+  font-size: clamp(86px, 9.5vw, 150px);
+  line-height: 1;
+  letter-spacing: -0.07em;
+  font-weight: 950;
+  margin-bottom: 10px;
+}
+.currentTeam h3,
+.currentTeam strong {
+  color: var(--pink);
+}
+.currentTeam > span {
+  background: var(--pink);
+  color: #fff !important;
+  display: inline-block;
+  padding: 5px 16px;
+  transform: skew(-12deg);
+  font-weight: 700;
+}
+.soloScore {
+  padding: 40px 32px;
+  flex: 1;
+}
+.soloScore > span {
+  font-size: 18px;
+  font-weight: 800;
+}
+.soloScore > strong {
+  display: block;
+  font-size: 100px;
+  font-weight: 950;
+  color: var(--pink);
+  letter-spacing: -0.06em;
+  line-height: 1.1;
+}
+.soloScore p {
+  font-size: 13px;
+  color: var(--muted);
+  margin-top: 25px;
+}
+.scoreFooter {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  position: relative;
+  padding: 16px 26px;
+  border-top: 2px solid var(--ink);
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  font-weight: 800;
+}
+.scoreFooter b {
+  font-size: 12px;
+  letter-spacing: 0;
+}
+.scoreFooter i {
+  display: block;
+  width: 22px;
+  height: 27px;
+  border-inline: 7px solid var(--pink);
+  transform: skew(-25deg);
+  flex-shrink: 0;
+}
+.hostAnswer {
+  padding: 24px;
+  border-top: 1px solid var(--border);
+}
+.hostAnswer > span {
+  font-size: 12px;
+  color: var(--muted);
+}
+.hostAnswer h3 {
+  font-size: 24px;
+}
+.hostAnswer p {
+  font-size: 12px;
+  line-height: 1.8;
+  color: var(--muted);
+}
+.hostAnswer > div {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+.hostAnswer a {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 700;
+}
+.hostControls {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  padding-top: 18px;
+  border-top: 1px solid var(--border);
+  margin-top: 22px;
+}
+.hostControls button {
+  font-size: 13px;
+  padding: 12px 15px;
+  min-height: 44px;
+  gap: 5px;
+}
+.history {
+  padding: 20px 32px 40px;
+}
+.history > div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.history h2 {
+  font-size: 24px;
+  margin: 0;
+  background: var(--ink);
+  color: #fff;
+  transform: skew(-8deg);
+  position: relative;
+  padding: 8px 18px;
+}
+.history h2:after {
+  content: "";
+  position: absolute;
+  left: calc(100% + 6px);
+  top: 0;
+  bottom: 0;
+  width: 8px;
+  background: var(--pink);
+}
+.history > div > span {
+  font-size: 13px;
+}
+.history > div > span strong {
+  font-size: 27px;
+  color: var(--pink);
+  padding: 0 5px;
+}
+.history ol {
+  padding: 0;
+  list-style: none;
+  max-width: 1000px;
+  margin: 22px 0 0;
+}
+.history li {
+  display: grid;
+  grid-template-columns: 40px 65px 1fr 60px;
+  gap: 18px;
+  align-items: center;
+  border-bottom: 1px solid var(--border);
+  padding: 16px 8px;
+  font-size: 13px;
+}
+.history li strong {
+  font-size: 14px;
+  font-weight: 650;
+}
+.history li em {
+  font-style: normal;
+  font-size: 12px;
+  text-align: center;
+  padding: 3px 5px;
+}
+.correct {
+  color: #168341;
+  background: #e0f8e6;
+}
+.wrong {
+  color: #b25034;
+  background: #fff0e8;
+}
+.historyEmpty {
+  font-size: 14px;
+  color: var(--muted);
+  padding: 24px 0;
+}
+.guessForm {
+  max-width: 500px;
+  display: flex;
+  margin: 20px auto 0;
+  gap: 8px;
+}
+.guessForm input {
+  min-width: 0;
+  flex: 1;
+}
+.answer {
+  text-align: center;
+  font-size: 26px;
+  color: var(--pink);
+  margin: 20px 0 0;
+}
+.loadingOverlay {
+  position: absolute;
+  inset: 0;
+  background: #ffffffdb;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  color: var(--muted);
+  font-size: 14px;
+}
+.createRoom {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 28px;
+  background: var(--paper);
+  border-top: 2px solid var(--ink);
+  margin-bottom: 45px;
+}
+.createRoom label {
+  font-weight: 750;
+  white-space: nowrap;
+}
+.createRoom input {
+  flex: 1;
+  min-width: 100px;
+}
+.createRoom button {
+  white-space: nowrap;
+}
+.roomHeading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+.roomHeading h2 {
+  font-size: 25px;
+}
+.roomHeading h2 span {
+  font-size: 14px;
+  color: var(--pink);
+  margin-left: 10px;
+}
+.roomList {
+  border-top: 1px solid var(--ink);
+}
+.room {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 28px 0;
+  border-bottom: 1px solid var(--border);
+  gap: 20px;
+}
+.room > div:first-child {
+  flex: 1;
+  min-width: 0;
+  max-width: 100%;
+}
+.roomCode {
+  font-size: 16px;
+  letter-spacing: 0.15em;
+  color: var(--pink);
+  font-weight: 800;
+}
+.room h3 {
+  font-size: 24px;
+  margin: 8px 0;
+  overflow-wrap: anywhere;
+  text-wrap: balance;
+}
+.room p {
+  font-size: 13px;
+  color: var(--muted);
+}
+.roomActions {
+  display: flex;
+  flex-shrink: 0;
+  gap: 12px;
+  align-items: center;
+}
+.adminLinks {
+  display: flex;
+  gap: 24px;
+  margin-top: 36px;
+  flex-wrap: wrap;
+}
+.adminLinks a {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  font-size: 14px;
+}
+.qrPanel {
+  display: flex;
+  align-items: center;
+  gap: 65px;
+  border-top: 2px solid var(--ink);
+  border-bottom: 1px solid var(--border);
+  padding: 44px 30px;
+}
+.qrPanel img {
+  max-width: 100%;
+}
+.qrPanel h2 {
+  font-size: 32px;
+  letter-spacing: 0.04em;
+}
+.qrPanel span {
+  font-size: 13px;
+  color: var(--muted);
+}
+.qrPanel a {
+  display: block;
+  word-break: break-all;
+  margin-bottom: 24px;
+  font-size: 14px;
+  color: var(--muted);
+}
+.settingsForm fieldset {
+  border: 0;
+  padding: 0;
+  margin: 0;
+}
+.settingsForm section {
+  border-top: 1px solid var(--border);
+  padding: 25px 0 32px;
+}
+.settingsForm h2 {
+  font-size: 22px;
+  margin: 0 0 26px;
+}
+.fields {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+.fields label {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font-size: 13px;
+  font-weight: 650;
+  min-width: 0;
+}
+.fields input,
+.fields select {
+  width: 100%;
+}
+.checks {
+  display: flex;
+  gap: 18px 26px;
+  margin-top: 24px;
+  flex-wrap: wrap;
+}
+.checks label {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  font-size: 14px;
+}
+.checks input {
+  accent-color: var(--pink);
+  width: 16px;
+  height: 16px;
+}
+@media (max-width: 1000px) {
+  .gameLayout {
+    grid-template-columns: 3fr 2fr;
+  }
+  .stageRail {
+    width: 22%;
+  }
+  .stageRail span {
+    display: none;
+  }
+  .stageContent {
+    padding: 16px 5% 24px 18%;
+  }
+  .stage {
+    min-height: 540px;
+  }
+  .stageContent > h1 {
+    font-size: 7vw;
+  }
+  .timer {
+    padding: 24px 8%;
+    min-height: 240px;
+  }
+  .timer > strong {
+    font-size: 12.7vw;
+  }
+  .teams > div {
+    padding: 0 17px;
+  }
+  .teams strong {
+    font-size: 10vw;
+  }
+  .teams h3 {
+    font-size: 26px;
+  }
+  .teams {
+    padding-block: 26px;
+  }
+  .stageActions button {
+    min-width: 0;
+    padding: 12px 16px;
+    font-size: 13px;
+    min-height: 48px;
+  }
+  .fields {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .stageDescription {
+    font-size: 12px;
+  }
+  .timer > span:first-child {
+    font-size: 19px;
+  }
+  .teamCheer {
+    font-size: 13px;
+  }
+  .scoreFooter {
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 16px;
+  }
+  .scoreFooter span {
+    font-size: 8px;
+  }
+}
+@media (max-width: 650px) {
+  .gameTop {
+    padding: 18px 16px;
+    font-size: 11px;
+    gap: 8px;
+  }
+  .connection {
+    gap: 5px;
+    font-size: 11px;
+  }
+  .connection i {
+    margin-inline: 3px;
+  }
+  .connection strong {
+    font-size: 12px;
+  }
+  .connection em {
+    font-size: 15px;
+    letter-spacing: 0.06em;
+  }
+  .connection > svg {
+    width: 15px;
+  }
+  .gameLayout {
+    display: flex;
+    flex-direction: column;
+  }
+  .scoreboard {
+    border-left: 0;
+    border-bottom: 1px solid var(--ink);
+    order: -1;
+    display: grid;
+    grid-template-columns: 0.95fr 1.05fr;
+    border-bottom-width: 2px;
+  }
+  .timer {
+    min-height: 0;
+    padding: 18px 12px;
+    height: 156px;
+  }
+  .timer > span:first-child {
+    font-size: 13px;
+  }
+  .timer > span:first-child:after {
+    height: 2px;
+    width: 18px;
+    margin-top: 7px;
+  }
+  .timer > strong {
+    font-size: clamp(51px, 15vw, 80px);
+    letter-spacing: -0.04em;
+    line-height: 1.15;
+  }
+  .teams {
+    padding: 14px 0;
+    border-left: 1px solid var(--ink);
+  }
+  .teams > div {
+    padding: 0 10px;
+  }
+  .teams h3 {
+    font-size: 17px;
+    margin: 10px 0 4px;
+  }
+  .teams strong {
+    font-size: 45px;
+    margin: 0;
+  }
+  .teams > div > span {
+    font-size: 9px;
+    padding: 3px 5px;
+    white-space: nowrap;
+  }
+  .teams button {
+    font-size: 10px;
+    margin-top: 10px;
+  }
+  .scoreFooter {
+    display: none;
+  }
+  .soloScore {
+    padding: 22px 18px;
+    border-left: 1px solid var(--ink);
+  }
+  .soloScore > span {
+    font-size: 12px;
+  }
+  .soloScore > strong {
+    font-size: 52px;
+  }
+  .soloScore p {
+    font-size: 10px;
+    margin: 8px 0 0;
+  }
+  .hostAnswer {
+    grid-column: span 2;
+    padding: 16px 20px;
+  }
+  .hostAnswer h3 {
+    font-size: 20px;
+    margin: 8px 0;
+  }
+  .hostAnswer p {
+    margin: 8px 0;
+  }
+  .hostAnswer > div {
+    gap: 25px;
+    margin-top: 12px;
+  }
+  .stage {
+    min-height: 0;
+  }
+  .stageContent {
+    padding: 24px 6% 28px 15%;
+  }
+  .stageContent > h1 {
+    font-size: clamp(39px, 10.5vw, 65px);
+    text-align: center;
+    letter-spacing: -0.06em;
+    white-space: nowrap;
+  }
+  .stageDescription {
+    font-size: 12px;
+    margin-bottom: 16px;
+  }
+  .stageRail {
+    width: 15%;
+  }
+  .cropFrame {
+    aspect-ratio: 1.04;
+    max-width: 420px;
+    width: 100%;
+  }
+  .cropFrame:not(.revealed) .cardImage {
+    width: 100%;
+    height: 100%;
+  }
+  .stageActions {
+    gap: 8px;
+    margin-top: 20px;
+  }
+  .stageActions button {
+    padding: 11px 14px;
+    font-size: 13px;
+    min-height: 46px;
+    min-width: 0;
+    flex: 1 1 42%;
+  }
+  .stageActions svg {
+    width: 18px;
+    height: 18px;
+  }
+  .guessForm {
+    gap: 6px;
+  }
+  .guessForm input {
+    font-size: 13px;
+    padding: 12px;
+  }
+  .guessForm button {
+    font-size: 12px;
+    padding: 12px;
+    gap: 4px;
+  }
+  .hostControls {
+    gap: 7px;
+  }
+  .hostControls button {
+    font-size: 12px;
+    padding: 9px 11px;
+    min-height: 44px;
+  }
+  .history {
+    padding: 22px 16px;
+  }
+  .history h2 {
+    font-size: 19px;
+    padding: 7px 14px;
+  }
+  .history li {
+    grid-template-columns: 26px 42px 1fr 44px;
+    gap: 9px;
+    font-size: 11px;
+    padding: 13px 2px;
+  }
+  .history li strong {
+    font-size: 12px;
+  }
+  .historyEmpty {
+    font-size: 12px;
+  }
+  .gameAlert {
+    margin: 12px 16px;
+    font-size: 12px;
+  }
+  .createRoom {
+    padding: 20px;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .createRoom label {
+    width: 100%;
+    font-size: 13px;
+  }
+  .createRoom input {
+    width: 100%;
+    flex: auto;
+  }
+  .createRoom button {
+    width: 100%;
+    margin-top: 4px;
+  }
+  .room {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .roomActions {
+    width: 100%;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .roomActions > .button:first-child {
+    flex: 1;
+    font-size: 13px;
+  }
+  .room h3 {
+    font-size: 23px;
+  }
+  .roomCode {
+    font-size: 15px;
+  }
+  .qrPanel {
+    flex-direction: column;
+    gap: 22px;
+    padding: 28px 0;
+  }
+  .qrPanel > div {
+    text-align: center;
+  }
+  .qrPanel h2 {
+    font-size: 27px;
+  }
+  .qrPanel .button {
+    margin: auto;
+  }
+  .fields {
+    grid-template-columns: 1fr 1fr;
+    gap: 18px 12px;
+  }
+  .fields label {
+    font-size: 11px;
+  }
+  .fields input,
+  .fields select {
+    font-size: 13px;
+    padding: 12px 10px;
+  }
+  .settingsForm section {
+    padding-top: 22px;
+  }
+  .settingsForm h2 {
+    font-size: 20px;
+  }
+  .checks {
+    gap: 18px;
+  }
+  .checks label {
+    font-size: 12px;
+  }
+  .adminLinks {
+    gap: 20px;
+  }
+  .stageRail > svg {
+    height: 100%;
+  }
+  .stageRail [data-rail-copy] {
+    display: none;
+  }
+  .stageContent > h1:after {
+    bottom: -5px;
+    height: 3px;
+  }
+  .cropFrame.revealed {
+    aspect-ratio: 1.45;
+  }
+  .timer > [data-decoration="timer"] {
+    opacity: 0.5;
+    right: -3%;
+    width: 28%;
+  }
+  .timerLogo {
+    width: 23%;
+    right: 1%;
+    top: 70%;
+  }
+  .timer > .timerStatus {
+    font-size: 25px;
+  }
+  .teams > [data-decoration="score"] {
+    width: 17px;
+    height: 38px;
+    right: 2%;
+    top: 18px;
+  }
+  .teamCheer {
+    font-size: 10px;
+    margin-top: 4px;
+    letter-spacing: 0.06em;
+  }
+}
+.filterGroup {
+  margin-top: 24px;
+}
+.filterGroup h3 {
+  font-size: 14px;
+  margin: 0;
+}
+.filterGroup .checks {
+  margin-top: 14px;
+}
+.importButton {
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+}
+.importButton input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+  width: 100%;
+  height: 100%;
+}

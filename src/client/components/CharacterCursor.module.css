@@ -1,0 +1,25 @@
+.layer { position: fixed; inset: 0; z-index: 5000; pointer-events: none; overflow: hidden; user-select: none; }
+.followers { opacity: 0; transition: opacity 0.4s; }
+.layer[data-mode="follow"][data-active="true"] .followers { opacity: 1; }
+.main, .mascot { position: absolute; left: 0; top: 0; will-change: transform; }
+.main img { display: block; width: 64px; height: 64px; margin: 10px 0 0 20px; object-fit: contain; }
+.mascot img { display: block; width: 46px; height: 46px; margin: 70px 0 0 70px; object-fit: contain; }
+.burst { position: absolute; width: 64px; height: 64px; object-fit: contain; animation: scatter 800ms ease-out forwards; }
+.smallBurst { width: 46px; height: 46px; }
+@keyframes scatter {
+  0% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+  15% { opacity: 1; }
+  100% { opacity: 0; transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(1); }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  :global(body[data-character-cursor="bangdream"]) { --character-pointer: url("/brand/cursor/kasumi-pointer.png") 4 5; --character-hover: url("/brand/cursor/kasumi-pointer-hover.png") 5 6; }
+  :global(body[data-character-cursor="sekai"]) { --character-pointer: url("/brand/cursor/miku-pointer.png") 5 5; --character-hover: url("/brand/cursor/miku-pointer-hover.png") 6 6; }
+  :global(body[data-character-cursor="bluearchive"]) { --character-pointer: url("/brand/bluearchive/mouse-icon.webp") 8 7; --character-hover: url("/brand/bluearchive/mouse-icon_hover.png") 8 7; }
+  :global(body[data-character-cursor]) { cursor: var(--character-pointer), auto; }
+  :global(body[data-character-cursor] :is(a, button, summary, [role="button"], select):not(:disabled)) { cursor: var(--character-hover), pointer; }
+  :global(body[data-character-cursor] :is(input, textarea, [contenteditable="true"])) { cursor: text; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .layer { display: none; }
+}

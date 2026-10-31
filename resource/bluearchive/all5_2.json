@@ -1,0 +1,2432 @@
+{
+  "23000": {
+    "resourceSetName": "23000",
+    "characterId": 23000,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "16015": {
+    "resourceSetName": "16015",
+    "characterId": 16015,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "13000": {
+    "resourceSetName": "13000",
+    "characterId": 13000,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "20019": {
+    "resourceSetName": "20019",
+    "characterId": 20019,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "20057": {
+    "resourceSetName": "20057",
+    "characterId": 20057,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "13002": {
+    "resourceSetName": "13002",
+    "characterId": 13002,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "20034": {
+    "resourceSetName": "20034",
+    "characterId": 20034,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "20008": {
+    "resourceSetName": "20008",
+    "characterId": 20008,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10087": {
+    "resourceSetName": "10087",
+    "characterId": 10087,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10151": {
+    "resourceSetName": "10151",
+    "characterId": 10151,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "16017": {
+    "resourceSetName": "16017",
+    "characterId": 16017,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10015": {
+    "resourceSetName": "10015",
+    "characterId": 10015,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10134": {
+    "resourceSetName": "10134",
+    "characterId": 10134,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10000": {
+    "resourceSetName": "10000",
+    "characterId": 10000,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10089": {
+    "resourceSetName": "10089",
+    "characterId": 10089,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10031": {
+    "resourceSetName": "10031",
+    "characterId": 10031,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "16001": {
+    "resourceSetName": "16001",
+    "characterId": 16001,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10028": {
+    "resourceSetName": "10028",
+    "characterId": 10028,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10112": {
+    "resourceSetName": "10112",
+    "characterId": 10112,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10042": {
+    "resourceSetName": "10042",
+    "characterId": 10042,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "26013": {
+    "resourceSetName": "26013",
+    "characterId": 26013,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "23005": {
+    "resourceSetName": "23005",
+    "characterId": 23005,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "26007": {
+    "resourceSetName": "26007",
+    "characterId": 26007,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "23005-2": {
+    "resourceSetName": "23005-2",
+    "characterId": 23005,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10019": {
+    "resourceSetName": "10019",
+    "characterId": 10019,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10021": {
+    "resourceSetName": "10021",
+    "characterId": 10021,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10017": {
+    "resourceSetName": "10017",
+    "characterId": 10017,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "20009": {
+    "resourceSetName": "20009",
+    "characterId": 20009,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10107": {
+    "resourceSetName": "10107",
+    "characterId": 10107,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "26016": {
+    "resourceSetName": "26016",
+    "characterId": 26016,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "20013": {
+    "resourceSetName": "20013",
+    "characterId": 20013,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "26000": {
+    "resourceSetName": "26000",
+    "characterId": 26000,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10030": {
+    "resourceSetName": "10030",
+    "characterId": 10030,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "13001": {
+    "resourceSetName": "13001",
+    "characterId": 13001,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10047": {
+    "resourceSetName": "10047",
+    "characterId": 10047,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10001": {
+    "resourceSetName": "10001",
+    "characterId": 10001,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10136": {
+    "resourceSetName": "10136",
+    "characterId": 10136,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "20032": {
+    "resourceSetName": "20032",
+    "characterId": 20032,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10125": {
+    "resourceSetName": "10125",
+    "characterId": 10125,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "20058": {
+    "resourceSetName": "20058",
+    "characterId": 20058,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "20062": {
+    "resourceSetName": "20062",
+    "characterId": 20062,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "16008": {
+    "resourceSetName": "16008",
+    "characterId": 16008,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "20037": {
+    "resourceSetName": "20037",
+    "characterId": 20037,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "23001": {
+    "resourceSetName": "23001",
+    "characterId": 23001,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "20022": {
+    "resourceSetName": "20022",
+    "characterId": 20022,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10128": {
+    "resourceSetName": "10128",
+    "characterId": 10128,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "23002": {
+    "resourceSetName": "23002",
+    "characterId": 23002,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "20021": {
+    "resourceSetName": "20021",
+    "characterId": 20021,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "23007": {
+    "resourceSetName": "23007",
+    "characterId": 23007,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "23003": {
+    "resourceSetName": "23003",
+    "characterId": 23003,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10085": {
+    "resourceSetName": "10085",
+    "characterId": 10085,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "16000": {
+    "resourceSetName": "16000",
+    "characterId": 16000,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10141": {
+    "resourceSetName": "10141",
+    "characterId": 10141,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10002": {
+    "resourceSetName": "10002",
+    "characterId": 10002,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10057": {
+    "resourceSetName": "10057",
+    "characterId": 10057,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "20030": {
+    "resourceSetName": "20030",
+    "characterId": 20030,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "13003": {
+    "resourceSetName": "13003",
+    "characterId": 13003,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "16011": {
+    "resourceSetName": "16011",
+    "characterId": 16011,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10124": {
+    "resourceSetName": "10124",
+    "characterId": 10124,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "20007": {
+    "resourceSetName": "20007",
+    "characterId": 20007,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "20000": {
+    "resourceSetName": "20000",
+    "characterId": 20000,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "16010": {
+    "resourceSetName": "16010",
+    "characterId": 16010,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10003": {
+    "resourceSetName": "10003",
+    "characterId": 10003,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "20005": {
+    "resourceSetName": "20005",
+    "characterId": 20005,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10117": {
+    "resourceSetName": "10117",
+    "characterId": 10117,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "20020": {
+    "resourceSetName": "20020",
+    "characterId": 20020,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "20054": {
+    "resourceSetName": "20054",
+    "characterId": 20054,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10004": {
+    "resourceSetName": "10004",
+    "characterId": 10004,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10086": {
+    "resourceSetName": "10086",
+    "characterId": 10086,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10022": {
+    "resourceSetName": "10022",
+    "characterId": 10022,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10036": {
+    "resourceSetName": "10036",
+    "characterId": 10036,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "20017": {
+    "resourceSetName": "20017",
+    "characterId": 20017,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10102": {
+    "resourceSetName": "10102",
+    "characterId": 10102,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10005": {
+    "resourceSetName": "10005",
+    "characterId": 10005,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10098": {
+    "resourceSetName": "10098",
+    "characterId": 10098,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10045": {
+    "resourceSetName": "10045",
+    "characterId": 10045,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10005-2": {
+    "resourceSetName": "10005-2",
+    "characterId": 10005,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "16014": {
+    "resourceSetName": "16014",
+    "characterId": 16014,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "20060": {
+    "resourceSetName": "20060",
+    "characterId": 20060,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10077": {
+    "resourceSetName": "10077",
+    "characterId": 10077,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "26015": {
+    "resourceSetName": "26015",
+    "characterId": 26015,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10006": {
+    "resourceSetName": "10006",
+    "characterId": 10006,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10023": {
+    "resourceSetName": "10023",
+    "characterId": 10023,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "20016": {
+    "resourceSetName": "20016",
+    "characterId": 20016,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10148": {
+    "resourceSetName": "10148",
+    "characterId": 10148,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10009": {
+    "resourceSetName": "10009",
+    "characterId": 10009,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "20043": {
+    "resourceSetName": "20043",
+    "characterId": 20043,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "16006": {
+    "resourceSetName": "16006",
+    "characterId": 16006,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10014": {
+    "resourceSetName": "10014",
+    "characterId": 10014,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10046": {
+    "resourceSetName": "10046",
+    "characterId": 10046,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "13007": {
+    "resourceSetName": "13007",
+    "characterId": 13007,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "16012": {
+    "resourceSetName": "16012",
+    "characterId": 16012,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "26002": {
+    "resourceSetName": "26002",
+    "characterId": 26002,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10114": {
+    "resourceSetName": "10114",
+    "characterId": 10114,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "20015": {
+    "resourceSetName": "20015",
+    "characterId": 20015,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10065": {
+    "resourceSetName": "10065",
+    "characterId": 10065,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "20023": {
+    "resourceSetName": "20023",
+    "characterId": 20023,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10096": {
+    "resourceSetName": "10096",
+    "characterId": 10096,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10126": {
+    "resourceSetName": "10126",
+    "characterId": 10126,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "20001": {
+    "resourceSetName": "20001",
+    "characterId": 20001,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10027": {
+    "resourceSetName": "10027",
+    "characterId": 10027,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "26014": {
+    "resourceSetName": "26014",
+    "characterId": 26014,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10078": {
+    "resourceSetName": "10078",
+    "characterId": 10078,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "20061": {
+    "resourceSetName": "20061",
+    "characterId": 20061,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "13005": {
+    "resourceSetName": "13005",
+    "characterId": 13005,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10088": {
+    "resourceSetName": "10088",
+    "characterId": 10088,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10049": {
+    "resourceSetName": "10049",
+    "characterId": 10049,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10091": {
+    "resourceSetName": "10091",
+    "characterId": 10091,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10135": {
+    "resourceSetName": "10135",
+    "characterId": 10135,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10083": {
+    "resourceSetName": "10083",
+    "characterId": 10083,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "20047": {
+    "resourceSetName": "20047",
+    "characterId": 20047,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10093": {
+    "resourceSetName": "10093",
+    "characterId": 10093,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "13012": {
+    "resourceSetName": "13012",
+    "characterId": 13012,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "26012": {
+    "resourceSetName": "26012",
+    "characterId": 26012,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "20039": {
+    "resourceSetName": "20039",
+    "characterId": 20039,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10145": {
+    "resourceSetName": "10145",
+    "characterId": 10145,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10020": {
+    "resourceSetName": "10020",
+    "characterId": 10020,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10050": {
+    "resourceSetName": "10050",
+    "characterId": 10050,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10149": {
+    "resourceSetName": "10149",
+    "characterId": 10149,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10137": {
+    "resourceSetName": "10137",
+    "characterId": 10137,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "26001": {
+    "resourceSetName": "26001",
+    "characterId": 26001,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10084": {
+    "resourceSetName": "10084",
+    "characterId": 10084,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10150": {
+    "resourceSetName": "10150",
+    "characterId": 10150,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "16002": {
+    "resourceSetName": "16002",
+    "characterId": 16002,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10076": {
+    "resourceSetName": "10076",
+    "characterId": 10076,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10063": {
+    "resourceSetName": "10063",
+    "characterId": 10063,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "20056": {
+    "resourceSetName": "20056",
+    "characterId": 20056,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10140": {
+    "resourceSetName": "10140",
+    "characterId": 10140,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10007": {
+    "resourceSetName": "10007",
+    "characterId": 10007,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "20042": {
+    "resourceSetName": "20042",
+    "characterId": 20042,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "20033": {
+    "resourceSetName": "20033",
+    "characterId": 20033,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10146": {
+    "resourceSetName": "10146",
+    "characterId": 10146,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "23008": {
+    "resourceSetName": "23008",
+    "characterId": 23008,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10105": {
+    "resourceSetName": "10105",
+    "characterId": 10105,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10054": {
+    "resourceSetName": "10054",
+    "characterId": 10054,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10037": {
+    "resourceSetName": "10037",
+    "characterId": 10037,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10103": {
+    "resourceSetName": "10103",
+    "characterId": 10103,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "20003": {
+    "resourceSetName": "20003",
+    "characterId": 20003,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "20004": {
+    "resourceSetName": "20004",
+    "characterId": 20004,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10060": {
+    "resourceSetName": "10060",
+    "characterId": 10060,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10075": {
+    "resourceSetName": "10075",
+    "characterId": 10075,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "16009": {
+    "resourceSetName": "16009",
+    "characterId": 16009,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "20053": {
+    "resourceSetName": "20053",
+    "characterId": 20053,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10016": {
+    "resourceSetName": "10016",
+    "characterId": 10016,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10095": {
+    "resourceSetName": "10095",
+    "characterId": 10095,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10059": {
+    "resourceSetName": "10059",
+    "characterId": 10059,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10122": {
+    "resourceSetName": "10122",
+    "characterId": 10122,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10034": {
+    "resourceSetName": "10034",
+    "characterId": 10034,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "20029": {
+    "resourceSetName": "20029",
+    "characterId": 20029,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10070": {
+    "resourceSetName": "10070",
+    "characterId": 10070,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10058": {
+    "resourceSetName": "10058",
+    "characterId": 10058,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "16016": {
+    "resourceSetName": "16016",
+    "characterId": 16016,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "20026": {
+    "resourceSetName": "20026",
+    "characterId": 20026,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10079": {
+    "resourceSetName": "10079",
+    "characterId": 10079,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10041": {
+    "resourceSetName": "10041",
+    "characterId": 10041,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "20049": {
+    "resourceSetName": "20049",
+    "characterId": 20049,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10038": {
+    "resourceSetName": "10038",
+    "characterId": 10038,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10071": {
+    "resourceSetName": "10071",
+    "characterId": 10071,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10127": {
+    "resourceSetName": "10127",
+    "characterId": 10127,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10039": {
+    "resourceSetName": "10039",
+    "characterId": 10039,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "26010": {
+    "resourceSetName": "26010",
+    "characterId": 26010,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "20018": {
+    "resourceSetName": "20018",
+    "characterId": 20018,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10097": {
+    "resourceSetName": "10097",
+    "characterId": 10097,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "13013": {
+    "resourceSetName": "13013",
+    "characterId": 13013,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "13011": {
+    "resourceSetName": "13011",
+    "characterId": 13011,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10094": {
+    "resourceSetName": "10094",
+    "characterId": 10094,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "13006": {
+    "resourceSetName": "13006",
+    "characterId": 13006,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "20059": {
+    "resourceSetName": "20059",
+    "characterId": 20059,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10032": {
+    "resourceSetName": "10032",
+    "characterId": 10032,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "20024": {
+    "resourceSetName": "20024",
+    "characterId": 20024,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "20048": {
+    "resourceSetName": "20048",
+    "characterId": 20048,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10119": {
+    "resourceSetName": "10119",
+    "characterId": 10119,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10142": {
+    "resourceSetName": "10142",
+    "characterId": 10142,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10029": {
+    "resourceSetName": "10029",
+    "characterId": 10029,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10120": {
+    "resourceSetName": "10120",
+    "characterId": 10120,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10008": {
+    "resourceSetName": "10008",
+    "characterId": 10008,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10026": {
+    "resourceSetName": "10026",
+    "characterId": 10026,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10111": {
+    "resourceSetName": "10111",
+    "characterId": 10111,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10139": {
+    "resourceSetName": "10139",
+    "characterId": 10139,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "20046": {
+    "resourceSetName": "20046",
+    "characterId": 20046,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10052": {
+    "resourceSetName": "10052",
+    "characterId": 10052,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10109": {
+    "resourceSetName": "10109",
+    "characterId": 10109,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "26006": {
+    "resourceSetName": "26006",
+    "characterId": 26006,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "20010": {
+    "resourceSetName": "20010",
+    "characterId": 20010,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "13004": {
+    "resourceSetName": "13004",
+    "characterId": 13004,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10044": {
+    "resourceSetName": "10044",
+    "characterId": 10044,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "13004-2": {
+    "resourceSetName": "13004-2",
+    "characterId": 13004,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10118": {
+    "resourceSetName": "10118",
+    "characterId": 10118,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "16020": {
+    "resourceSetName": "16020",
+    "characterId": 16020,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "16004": {
+    "resourceSetName": "16004",
+    "characterId": 16004,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "20045": {
+    "resourceSetName": "20045",
+    "characterId": 20045,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "16018": {
+    "resourceSetName": "16018",
+    "characterId": 16018,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10115": {
+    "resourceSetName": "10115",
+    "characterId": 10115,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10104": {
+    "resourceSetName": "10104",
+    "characterId": 10104,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10068": {
+    "resourceSetName": "10068",
+    "characterId": 10068,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "20051": {
+    "resourceSetName": "20051",
+    "characterId": 20051,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10138": {
+    "resourceSetName": "10138",
+    "characterId": 10138,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10082": {
+    "resourceSetName": "10082",
+    "characterId": 10082,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "13014": {
+    "resourceSetName": "13014",
+    "characterId": 13014,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "20041": {
+    "resourceSetName": "20041",
+    "characterId": 20041,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10133": {
+    "resourceSetName": "10133",
+    "characterId": 10133,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "20050": {
+    "resourceSetName": "20050",
+    "characterId": 20050,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10069": {
+    "resourceSetName": "10069",
+    "characterId": 10069,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "20014": {
+    "resourceSetName": "20014",
+    "characterId": 20014,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10072": {
+    "resourceSetName": "10072",
+    "characterId": 10072,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10061": {
+    "resourceSetName": "10061",
+    "characterId": 10061,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10106": {
+    "resourceSetName": "10106",
+    "characterId": 10106,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10048": {
+    "resourceSetName": "10048",
+    "characterId": 10048,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10116": {
+    "resourceSetName": "10116",
+    "characterId": 10116,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10101": {
+    "resourceSetName": "10101",
+    "characterId": 10101,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "26011": {
+    "resourceSetName": "26011",
+    "characterId": 26011,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "20040": {
+    "resourceSetName": "20040",
+    "characterId": 20040,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10147": {
+    "resourceSetName": "10147",
+    "characterId": 10147,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "20002": {
+    "resourceSetName": "20002",
+    "characterId": 20002,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "20006": {
+    "resourceSetName": "20006",
+    "characterId": 20006,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10110": {
+    "resourceSetName": "10110",
+    "characterId": 10110,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10123": {
+    "resourceSetName": "10123",
+    "characterId": 10123,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "20012": {
+    "resourceSetName": "20012",
+    "characterId": 20012,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10113": {
+    "resourceSetName": "10113",
+    "characterId": 10113,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "13008": {
+    "resourceSetName": "13008",
+    "characterId": 13008,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "20011": {
+    "resourceSetName": "20011",
+    "characterId": 20011,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "20036": {
+    "resourceSetName": "20036",
+    "characterId": 20036,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "13008-2": {
+    "resourceSetName": "13008-2",
+    "characterId": 13008,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "26003": {
+    "resourceSetName": "26003",
+    "characterId": 26003,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10056": {
+    "resourceSetName": "10056",
+    "characterId": 10056,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10055": {
+    "resourceSetName": "10055",
+    "characterId": 10055,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "20031": {
+    "resourceSetName": "20031",
+    "characterId": 20031,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "26004": {
+    "resourceSetName": "26004",
+    "characterId": 26004,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10010": {
+    "resourceSetName": "10010",
+    "characterId": 10010,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10024": {
+    "resourceSetName": "10024",
+    "characterId": 10024,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "20027": {
+    "resourceSetName": "20027",
+    "characterId": 20027,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10010-2": {
+    "resourceSetName": "10010-2",
+    "characterId": 10010,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10100": {
+    "resourceSetName": "10100",
+    "characterId": 10100,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "23006": {
+    "resourceSetName": "23006",
+    "characterId": 23006,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "26008": {
+    "resourceSetName": "26008",
+    "characterId": 26008,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10011": {
+    "resourceSetName": "10011",
+    "characterId": 10011,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10025": {
+    "resourceSetName": "10025",
+    "characterId": 10025,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10130": {
+    "resourceSetName": "10130",
+    "characterId": 10130,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10012": {
+    "resourceSetName": "10012",
+    "characterId": 10012,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "20044": {
+    "resourceSetName": "20044",
+    "characterId": 20044,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "16003": {
+    "resourceSetName": "16003",
+    "characterId": 16003,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10129": {
+    "resourceSetName": "10129",
+    "characterId": 10129,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10131": {
+    "resourceSetName": "10131",
+    "characterId": 10131,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10062": {
+    "resourceSetName": "10062",
+    "characterId": 10062,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "16019": {
+    "resourceSetName": "16019",
+    "characterId": 16019,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "16007": {
+    "resourceSetName": "16007",
+    "characterId": 16007,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "20038": {
+    "resourceSetName": "20038",
+    "characterId": 20038,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "13009": {
+    "resourceSetName": "13009",
+    "characterId": 13009,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "20035": {
+    "resourceSetName": "20035",
+    "characterId": 20035,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10040": {
+    "resourceSetName": "10040",
+    "characterId": 10040,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10132": {
+    "resourceSetName": "10132",
+    "characterId": 10132,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10013": {
+    "resourceSetName": "10013",
+    "characterId": 10013,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "16005": {
+    "resourceSetName": "16005",
+    "characterId": 16005,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10035": {
+    "resourceSetName": "10035",
+    "characterId": 10035,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10090": {
+    "resourceSetName": "10090",
+    "characterId": 10090,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "23004": {
+    "resourceSetName": "23004",
+    "characterId": 23004,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10051": {
+    "resourceSetName": "10051",
+    "characterId": 10051,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10033": {
+    "resourceSetName": "10033",
+    "characterId": 10033,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10043": {
+    "resourceSetName": "10043",
+    "characterId": 10043,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "20052": {
+    "resourceSetName": "20052",
+    "characterId": 20052,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "26005": {
+    "resourceSetName": "26005",
+    "characterId": 26005,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10092": {
+    "resourceSetName": "10092",
+    "characterId": 10092,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10081": {
+    "resourceSetName": "10081",
+    "characterId": 10081,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10121": {
+    "resourceSetName": "10121",
+    "characterId": 10121,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "13010": {
+    "resourceSetName": "13010",
+    "characterId": 13010,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10108": {
+    "resourceSetName": "10108",
+    "characterId": 10108,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10053": {
+    "resourceSetName": "10053",
+    "characterId": 10053,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "10018": {
+    "resourceSetName": "10018",
+    "characterId": 10018,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "20055": {
+    "resourceSetName": "20055",
+    "characterId": 20055,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  },
+  "26009": {
+    "resourceSetName": "26009",
+    "characterId": 26009,
+    "rarity": 0,
+    "attribute": "",
+    "stat": {
+      "training": null
+    }
+  }
+}

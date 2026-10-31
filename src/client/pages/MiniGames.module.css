@@ -1,0 +1,537 @@
+.page {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 48px 28px 64px;
+  color: #211f23;
+}
+.pageHeader {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 28px;
+}
+.eyebrow {
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  font-weight: 800;
+}
+.pageHeader h1 {
+  font-size: clamp(32px, 4vw, 54px);
+  line-height: 1.1;
+  letter-spacing: -0.06em;
+  margin: 14px 0 12px;
+  font-weight: 900;
+}
+.pageHeader h1 span {
+  color: var(--arcade-accent, #f43f78);
+}
+.pageHeader p {
+  color: #8a7a82;
+  font-size: 13px;
+  line-height: 1.6;
+  margin: 0;
+  text-wrap: balance;
+}
+.headerActions {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  flex-shrink: 0;
+}
+.headerActions a,
+.backLink {
+  color: #211f23;
+  font-size: 12px;
+  text-decoration: none;
+  font-weight: 700;
+}
+.headerActions button {
+  border: 1px solid #ded5da;
+  background: #fff;
+  border-radius: 3px;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 11px 16px;
+  cursor: pointer;
+}
+.notice {
+  padding: 12px 16px;
+  font-size: 12px;
+  border-left: 3px solid var(--arcade-accent, #f43f78);
+  background: #ffeaf1;
+  color: #7b374c;
+}
+.frameStage {
+  background: #f3edef;
+  border: 1px solid #e8dfe4;
+  overflow: hidden;
+}
+.portraitStage {
+  display: grid;
+  grid-template-columns: 1fr 520px;
+  align-items: center;
+  min-height: 740px;
+  background:
+    repeating-linear-gradient(
+      135deg,
+      transparent,
+      transparent 40px,
+      #eddee4 40px,
+      #eddee4 41px
+    ),
+    #f7edf1;
+}
+.stageAside {
+  padding: clamp(30px, 6vw, 82px);
+}
+.stageAside > p {
+  font-size: clamp(32px, 4vw, 56px);
+  line-height: 1.18;
+  font-weight: 900;
+  letter-spacing: -0.055em;
+  margin: 25px 0;
+}
+.stageAside > p span {
+  color: var(--arcade-accent, #f43f78);
+}
+.stageCaption {
+  font-size: 13px;
+  line-height: 2;
+  color: #8a7a82;
+  display: block;
+}
+.stageAside a {
+  display: inline-block;
+  margin-top: 32px;
+  font-size: 12px;
+  font-weight: 750;
+  color: #211f23;
+  text-decoration: none;
+  border-bottom: 2px solid var(--arcade-accent, #f43f78);
+  padding-bottom: 7px;
+}
+.gameFrame {
+  display: block;
+  width: 100%;
+  border: 0;
+  background: #fcf9fa;
+}
+.portraitFrame {
+  height: 780px;
+  max-width: 520px;
+}
+.klotskiFrame {
+  height: 855px;
+}
+.landscapeFrame {
+  aspect-ratio: 1792 / 828;
+  height: auto;
+}
+.landscapePage .headerActions a,
+.landscapePage .headerActions button {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+}
+.gameAttribution {
+  font-size: 12px;
+  line-height: 1.7;
+  color: #647084;
+  margin: 12px 0 0;
+}
+.gameAttribution a {
+  color: var(--arcade-accent, #1d66ed);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.gameFrame:fullscreen {
+  height: 100dvh;
+  width: 100vw;
+  max-width: none;
+  background: #fcf9fa;
+}
+.gameNav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 28px;
+  margin-top: 26px;
+  padding-top: 20px;
+  border-top: 1px solid #e8dfe4;
+}
+.gameNav a {
+  font-size: 11px;
+  color: #8a7a82;
+  text-decoration: none;
+  font-weight: 700;
+}
+.gameNav a:hover {
+  color: var(--arcade-accent, #f43f78);
+}
+.stopwatchStage {
+  background: #fcf9fa;
+  border: 1px solid #e3d9df;
+  position: relative;
+  overflow: hidden;
+}
+.stopwatchStage:before {
+  content: "";
+  position: absolute;
+  width: 450px;
+  height: 450px;
+  border: 1px solid #f43f781c;
+  border-radius: 50%;
+  left: 40%;
+  top: -210px;
+  box-shadow:
+    0 0 0 70px #f43f7805,
+    0 0 0 140px #f43f7805;
+  pointer-events: none;
+}
+.stopwatchHeading {
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+  padding: 20px 28px;
+  border-bottom: 1px solid #e3d9df;
+  font-weight: 800;
+  font-size: 10px;
+  letter-spacing: 0.16em;
+}
+.page[data-arcade-theme="bluearchive"] .portraitStage {
+  background: repeating-linear-gradient(135deg, transparent, transparent 40px, #dce8fc 40px, #dce8fc 41px), #f3f7ff;
+}
+.page[data-arcade-theme="bluearchive"] .stopwatchStage { background:#f3f7ff; border-color:#bdd1fc; }
+.page[data-arcade-theme="bluearchive"] .stopwatchStage:before { border-color:#1d66ed1c; box-shadow:0 0 0 70px #1d66ed05, 0 0 0 140px #1d66ed05; }
+.stopwatchHeading span:last-child {
+  color: #a3949c;
+}
+.timerBody {
+  display: grid;
+  grid-template-columns: 150px minmax(0, 1fr) 160px;
+  align-items: center;
+  gap: 26px;
+  padding: 60px 35px;
+  position: relative;
+}
+.target {
+  align-self: start;
+  padding-top: 20px;
+}
+.target > span,
+.timerLabel {
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  color: #9a8993;
+  font-weight: 800;
+}
+.target strong {
+  display: block;
+  font-size: 42px;
+  letter-spacing: -0.06em;
+  font-weight: 900;
+  line-height: 1.3;
+  margin-top: 9px;
+}
+.target small {
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  padding-left: 6px;
+  font-weight: 700;
+  color: #9a8993;
+}
+.target p {
+  font-size: 10px;
+  color: #9a8993;
+}
+.timerCenter {
+  text-align: center;
+}
+.timerDigits {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 8px;
+  line-height: 1;
+  margin: 20px 0 26px;
+  color: var(--arcade-accent, #f43f78);
+  white-space: nowrap;
+}
+.timerDigits output {
+  font-size: clamp(80px, 10vw, 142px);
+  font-weight: 900;
+  letter-spacing: -0.085em;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+.timerDigits > span {
+  font-size: 27px;
+  font-weight: 800;
+  color: #211f23;
+}
+.timerResult {
+  font-weight: 700;
+  font-size: 13px;
+  margin: 0 0 7px;
+}
+.delta {
+  font-size: 11px;
+  color: #a3949c;
+  height: 18px;
+  margin: 0;
+  font-variant-numeric: tabular-nums;
+}
+.holdPad {
+  position: relative;
+  aspect-ratio: 1;
+  width: 160px;
+  border-radius: 50%;
+  border: 0;
+  background: #211f23;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 0 10px #211f2308;
+  cursor: pointer;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  transition:
+    background 0.15s,
+    transform 0.15s;
+}
+.holdPad > span {
+  font-size: 29px;
+  font-weight: 850;
+}
+.holdPad small {
+  font-size: 8px;
+  letter-spacing: 0.17em;
+  margin-top: 7px;
+}
+.holdPad i {
+  font-size: 18px;
+  font-style: normal;
+  position: absolute;
+  right: 22px;
+  top: 16px;
+}
+.holdPad:disabled {
+  opacity: 0.5;
+  cursor: wait;
+}
+.holdPad:focus-visible {
+  outline: 3px solid var(--arcade-accent, #f43f78);
+  outline-offset: 7px;
+}
+.stopwatchStage[data-mode="holding"] .holdPad {
+  background: var(--arcade-accent, #f43f78);
+  transform: scale(0.96);
+  box-shadow: 0 0 0 12px #f43f7815;
+}
+.stopwatchStage[data-mode="win"] .timerDigits {
+  color: #158d68;
+}
+.stopwatchFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 20px 28px;
+  background: #211f23;
+  color: #b9aeb5;
+  font-size: 11px;
+}
+.stopwatchFooter button {
+  background: transparent;
+  border: 0;
+  font: inherit;
+  color: white;
+  font-weight: 700;
+  cursor: pointer;
+}
+.stopwatchFooter button:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+.gameNote {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 25px;
+  font-size: 10px;
+  letter-spacing: 0.025em;
+  color: #a3949c;
+}
+@media (max-width: 1050px) {
+  .portraitStage {
+    grid-template-columns: 1fr 460px;
+  }
+  .stageAside {
+    padding: 35px;
+  }
+  .portraitFrame {
+    max-width: 460px;
+  }
+  .timerBody {
+    grid-template-columns: 125px minmax(0, 1fr) 125px;
+    gap: 16px;
+    padding: 45px 25px;
+  }
+  .holdPad {
+    width: 125px;
+  }
+  .holdPad > span {
+    font-size: 25px;
+  }
+  .timerDigits output {
+    font-size: 100px;
+  }
+}
+@media (max-width: 760px) {
+  .landscapePage .pageHeader {
+    flex-direction: column;
+  }
+  .landscapePage .headerActions {
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-between;
+  }
+  .page {
+    padding: 28px 16px 45px;
+  }
+  .pageHeader {
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .pageHeader h1 {
+    font-size: 34px;
+  }
+  .pageHeader p {
+    font-size: 11px;
+  }
+  .headerActions {
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px;
+    padding-top: 6px;
+  }
+  .headerActions a,
+  .backLink {
+    font-size: 10px;
+    white-space: nowrap;
+  }
+  .headerActions button {
+    font-size: 10px;
+    padding: 8px 10px;
+    white-space: nowrap;
+  }
+  .portraitStage {
+    display: block;
+    border: 0;
+    background: transparent;
+    min-height: 0;
+  }
+  .stageAside {
+    display: none;
+  }
+  .portraitFrame {
+    max-width: 520px;
+    margin: auto;
+    height: clamp(540px, calc(100svh - 240px), 760px);
+  }
+  .klotskiFrame {
+    height: 925px;
+  }
+  .gameNav {
+    gap: 16px;
+  }
+  .gameNav a {
+    font-size: 10px;
+  }
+  .timerBody {
+    grid-template-columns: 1fr;
+    gap: 22px;
+    padding: 26px 16px 35px;
+  }
+  .target {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 0;
+  }
+  .target strong {
+    font-size: 30px;
+    margin: 0;
+  }
+  .target p {
+    width: 100%;
+    text-align: center;
+    margin: 0;
+  }
+  .timerDigits {
+    margin-top: 10px;
+    margin-bottom: 18px;
+  }
+  .timerDigits output {
+    font-size: 112px;
+  }
+  .holdPad {
+    width: 128px;
+    margin: auto;
+  }
+  .stopwatchHeading {
+    padding: 15px 16px;
+    font-size: 8px;
+  }
+  .stopwatchFooter {
+    padding: 16px;
+    font-size: 10px;
+    gap: 12px;
+  }
+  .stopwatchFooter button {
+    white-space: nowrap;
+  }
+  .gameNote {
+    flex-direction: column;
+    gap: 9px;
+    margin-top: 20px;
+  }
+  .timerResult {
+    font-size: 12px;
+  }
+  .stopwatchStage:before {
+    left: 0;
+    top: -290px;
+  }
+}
+@media (max-width: 375px) {
+  .page {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+  .portraitFrame {
+    height: clamp(540px, calc(100svh - 240px), 735px);
+  }
+  .timerDigits output {
+    font-size: 92px;
+  }
+  .pageHeader h1 {
+    font-size: 30px;
+  }
+  .headerActions {
+    gap: 8px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .page * {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}

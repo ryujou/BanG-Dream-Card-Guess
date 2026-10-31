@@ -1,42 +1,48 @@
 {
-  "name": "bangbangcai-booth-game",
-  "description": "邦邦猜本地摊位互动 Web 游戏",
-  "version": "1.5.1",
+  "name": "xtbang-next",
+  "version": "1.0.0",
   "private": true,
-  "main": "server.mjs",
+  "type": "module",
   "scripts": {
-    "dev": "vite --host 127.0.0.1",
-    "build": "vite build",
-    "preview": "vite preview --host 127.0.0.1",
-    "start": "node server.mjs --booth",
-    "booth": "npm run build && node server.mjs --booth",
-    "solo": "npm run build && node server.mjs --solo",
-    "cache-cards": "node scripts/cache-cards.mjs",
-    "detect-faces": "python scripts/detect-faces.py"
+    "preview:frontend": "vite preview --host 127.0.0.1",
+    "dev:frontend": "vite --host 127.0.0.1",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "build": "npm run build:frontend && npm run build:backend",
+    "test": "npm run test:frontend && npm run test:backend",
+    "test:e2e": "playwright test",
+    "dev": "concurrently -k \"npm run dev:frontend\" \"npm run dev:backend\"",
+    "test:frontend": "vitest run --coverage",
+    "start:backend": "go -C backend run .",
+    "build:frontend": "npm run typecheck && node scripts/build-frontend.mjs",
+    "test:backend": "go -C backend test ./...",
+    "build:backend": "node scripts/build-backend.mjs",
+    "dev:backend": "go -C backend run ."
   },
-  "license": "MIT",
-  "contributors": [
-    "azigongzhu <437831752@qq.com>",
-    "shangxueink <1919892171@qq.com>",
-    "windbullet <2536810643@qq.com>"
-  ],
-  "keywords": [
-    "bangdream",
-    "booth-game",
-    "邦多利卡面",
-    "本地互动游戏"
-  ],
   "dependencies": {
-    "@json-editor/json-editor": "^1.17.0",
-    "jimp": "^1.6.0",
-    "qrcode": "^1.5.4",
-    "three": "^0.166.1",
-    "ws": "^8.20.0"
+    "@remotion/player": "4.0.534",
+    "lucide-react": "^0.468.0",
+    "motion": "^12.23.24",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "react-router-dom": "^7.9.4",
+    "remotion": "4.0.534"
   },
   "devDependencies": {
-    "@vitest/coverage-v8": "^4.1.6",
-    "playwright": "^1.60.0",
+    "@playwright/test": "^1.60.0",
+    "@types/node": "^24.10.0",
+    "@types/react": "^19.2.2",
+    "@types/react-dom": "^19.2.2",
+    "@vitejs/plugin-react": "^6.0.1",
+    "@vitest/browser-playwright": "4.1.12",
+    "@vitest/coverage-v8": "4.1.12",
+    "concurrently": "^9.2.1",
+    "sharp": "^0.35.5",
+    "typescript": "^6.0.3",
     "vite": "^8.0.12",
-    "vitest": "^4.1.6"
+    "vitest": "4.1.12",
+    "vitest-browser-react": "2.3.0"
+  },
+  "engines": {
+    "node": ">=24 <25"
   }
 }
